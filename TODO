@@ -1,0 +1,6 @@
+TODO:
+
+Get Environment/LocalEnv directories working (i.e. scripts can reference across directories)
+Get Flyway working (dummy script)
+Get data loaded from database to display in React template
+Done!
