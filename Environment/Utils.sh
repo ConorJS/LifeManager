@@ -65,10 +65,7 @@ function download_and_extract_to {
 		echo "Downloading and unpacking first."
 	fi
 	
-	# See if the directory already exists
-	if [ -d "$output_directory" ]; then
-		echo test
-	fi
+	mkdir $output_directory
 	
 	# Get the file extension.
 	filename=$(split_string_and_get_last $url '/')
@@ -80,8 +77,10 @@ function download_and_extract_to {
 		exit
 	fi
 	
-	curl -s $url -o "$output_directory/$filename"
+	#-s hides download progress bar
+	curl $url -o "$output_directory/$filename"
 	7z x "$output_directory/$filename" "-o$output_directory" >> /dev/null
+	rm "$output_directory/$filename"
 	
 	# Output a warning if the produced directory *still* doesn't have the same hash as what we expect
 	# (likely this means we haven't updated the expected CRC32 hash in the script calling this)
