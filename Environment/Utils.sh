@@ -12,13 +12,14 @@ function fail_if_not_command {
 	validate_arg_count $# ${FUNCNAME[0]} 1 2
 	
 	if ! (type $command_string) &>/dev/null; then
-		echo \'$command_string\' is not on the path.
+		echo "ERROR in ${FUNCNAME[0]}: \'$command_string\' is not on the path."
 		
 		if [ ! -z "$additional_error_message" ]; then
 			echo $additional_error_message
 		fi
-    exit
-fi
+		
+		exit 1
+	fi
 }
 
 # Downloads and extracts a compressed file to a directory.
@@ -72,9 +73,9 @@ function download_and_extract_to {
 	extension=$(split_string_and_get_last $filename '.')
 	
 	# See if the extracting this kind of file is supported 
-	if [[ ! " ${supported_formats[@]} " =~ " ${extension} " ]]; then
-		echo "The file extension '.$extension' is not supported by download_and_extract_to"
-		exit
+	if [[ ! " ${supported_formats[@]} " == " ${extension} " ]]; then
+		echo "ERROR in ${FUNCNAME[0]}: The file extension '.$extension' is not supported by download_and_extract_to"
+		exit 1
 	fi
 	
 	#-s hides download progress bar
@@ -87,15 +88,16 @@ function download_and_extract_to {
 	if [ -d "$output_directory" ]; then
 		hash=$(hash_folder_contents $output_directory)
 		if [ ! "$hash" = "$expected_hash" ]; then 
+			echo "ERROR in ${FUNCNAME[0]}:"
 			echo "The folder contents for $english_name were downloaded and extracted successfully."
 			echo "However, the expected CRC32 hash was $expected_hash, and the actual hash is $hash"
 			echo "If the downloaded hash is correct, the script should be updated before continuing."
-			exit
+			exit 1
 		fi
 	else
-		echo "Downloading and extracting of $filename failed."
+		echo "ERROR in ${FUNCNAME[0]}: Downloading and extracting of $filename failed."
 		echo "$english_name was not installed."
-		exit
+		exit 1
 	fi 
 }
 
@@ -121,7 +123,7 @@ function hash_folder_contents {
 #
 # 1 string: 	The string to split.
 # 2 delimiter:	The delimiting character. 
-# 3 n:			The section index.
+# 3 n:			The section index (0 indexed, so when 5 sections are found, a value higher than 4 is invalid)
 #
 # Returns:		The position n section of the string, when sectioned by the given delimiter.
 # Example IN: 	1: Something55to55see55here 2: 55 3: 1
@@ -139,14 +141,16 @@ function split_string_and_get_nth {
 	IFS=$temp
 	
 	if (( ${#ADDR[@]} <= n )); then
-		echo "String $string has only ${#ADDR[@]} sections (split by $delimiter); index $n is out of bounds."
+		echo "ERROR in ${FUNCNAME[0]}: String $string has only ${#ADDR[@]} sections (split by $delimiter); index $n is out of bounds."
+		exit 1
 	fi
 	
-	for i in "${ADDR[@]}"; do
-		if [ ${ADDR[$i]} = n ]; then
-			echo $i
-		fi
-	done
+	echo "${ADDR[$n]}"
+	# for i in "${ADDR[@]}"; do
+		# if [ ${ADDR[$i]} = n ]; then
+			# echo $i
+		# fi
+	# done
 }
 
 # Splits a string by a given delimiter, and echoes the last section.
@@ -185,28 +189,65 @@ function validate_arg_count {
 	
 	# Validate validate_arg_count's own arguments
 	if [ ! -z $5 ]; then
-		echo "More than 4 arguments ($#) provided to validate_arg_count"
-		exit
+		echo "ERROR in ${FUNCNAME[0]}: More than 4 arguments ($#) provided to validate_arg_count"
+		exit 1
 	fi
 	
 	if (( $# < 4 )); then
-		echo "Fewer than $min_arguments arguments ($#) provided to validate_arg_count"
-		exit
+		echo "ERROR in ${FUNCNAME[0]}: Fewer than $min_arguments arguments ($#) provided to validate_arg_count"
+		exit 1
 	fi
 	
 	# Validate the number of arguments suggested by arguments_array_length
 	if (( $arguments_array_length > $max_arguments )); then
-		echo "More than $max_arguments arguments ($arguments_array_length) provided to $function_name"
-		exit
+		echo "ERROR in ${FUNCNAME[0]}: More than $max_arguments arguments ($arguments_array_length) provided to $function_name"
+		exit 1
 	fi
 	
 	if (( $arguments_array_length < $min_arguments )); then
-		echo "Fewer than $min_arguments arguments ($arguments_array_length) provided to $function_name"
-		exit
+		echo "ERROR in ${FUNCNAME[0]}: Fewer than $min_arguments arguments ($arguments_array_length) provided to $function_name"
+		exit 1
 	fi
 }
 
+# Converts a MinGW path to a Windows path.
+#
+# 1 The MinGW (or Windows) path. 
+#
+# Returns:		The path, in UNIX form.
+# Example IN: 	1: /c/my/path
+# Example OUT: 	2: C:/my/path
+function convert_mingw_path_to_windows {
+	mingw_path=$1
+	
+    validate_arg_count $# ${FUNCNAME[0]} 1 1
+	
+	if [[ "${mingw_path:0:1}" == "/" ]] && [[ "${mingw_path:2:1}" == "/" ]]; then 
+		# Convert a path like '/c/my/path'
+		echo "${mingw_path:1:1}:${mingw_path:2:${#mingw_path}}"
+	elif [[ "${mingw_path:1:1}" == "/" ]]; then
+		# Convert a path like 'c/my/path'
+		echo "${mingw_path:0:1}:${mingw_path:1:${#mingw_path}}"
+	elif [[ "${mingw_path:1:2}" == ":/" ]]; then
+		# Return a path like 'C:/my/path'
+		echo "${mingw_path:0:1}:${mingw_path:2:${#mingw_path}}"
+	else
+		echo "ERROR in ${FUNCNAME[0]}: '$mingw_path' is not a valid UNIX or Windows path."
+		exit 1
+	fi
+}
 
-
-
-
+# Exits if an error code is set, with an accompanying message.
+#
+# 1 The name of the step in the script which 
+function exit_if_error_code {
+	error_code=$1
+	step_descriptor=$2
+	
+	if [ $error_code -ne 0 ]; then
+		echo ""
+		echo "Step '$2' failed."
+		echo "Exiting..."
+		exit 1
+	fi
+}
