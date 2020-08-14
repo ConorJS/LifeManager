@@ -111,11 +111,33 @@ function download_and_extract_to {
 function hash_folder_contents {
 	folder=$1
 	
+	validate_arg_count $# ${FUNCNAME[0]} 1 1
+	
 	fail_if_not_command 7z "hash_folder_contents needs 7-zip to calculate CRC hashes"
 	
 	hash_line=$(7z h $folder | grep "CRC32  for data and names")
 
 	hash=$(split_string_and_get_last "$hash_line" " ")
+	echo $hash
+}
+
+# Calculates the CRC hash of the contents of a folder (including the names)
+#
+# 1 folder:	The relative or absolute path to the folder.
+#
+# Returns: 		The 8 hex character CRC32 hash of the whole folder, names included
+# Example IN: 	/path/to/file
+# Example OUT: 	FB34CA12
+function folder_size {
+	folder=$1
+	
+	validate_arg_count $# ${FUNCNAME[0]} 1 1
+	
+	fail_if_not_command 7z "folder_size needs 7-zip to see folder size"
+	
+	size_line=$(7z h $folder | grep "Size:")
+
+	hash=$(split_string_and_get_last "$size_line" " ")
 	echo $hash
 }
 
@@ -251,3 +273,174 @@ function exit_if_error_code {
 		exit 1
 	fi
 }
+
+# Prompts the user for either 'Yes' or 'No', with a message.
+# If the user provides an incorrect input, the prompt will reoccur. 
+#
+# 1 The message to prompt with.
+#
+# Returns: 0 if 'No', 1 if 'Yes.'
+function prompt_yes_no {
+    message=$1
+    
+    validate_arg_count $# ${FUNCNAME[0]} 1 1
+    
+    while true; do
+        read -p "$message: " user_input
+        case $user_input in 
+            [Yy]* ) return 0;;
+            [Nn]* ) return 1;;
+            * ) echo "Enter Y(es) or N(o).";;
+        esac
+    done
+    
+    echo "ERROR in ${FUNCNAME[0]}: - should not escape while loop."
+}
+
+# Prompts the user for n options (max 254). 
+#
+# Options will be selected based on the shortest unique leading substring.
+# 
+# 1 	A message string to prompt with, describing the selection being made by the user.
+# 2...n Between one and n options for the user to choose from.
+#
+# Returns an exit code 1...n
+function prompt_options {
+	prompt_message=$1
+	
+	validate_arg_count $# ${FUNCNAME[0]} 3 255
+	
+	# Fail if there are duplicate strings
+	i=0
+	for var_i in "$@"
+	do
+		j=0
+		for var_j in "$@"
+		do
+			if [[ ! $i == $j ]] && [[ $var_i == $var_j ]]; then
+				echo "ERROR in ${FUNCNAME[0]}: - Argument '$var_i' was provided more than once."
+				echo "ERROR in ${FUNCNAME[0]}: Args: $@"
+				exit 255
+			fi
+			
+			j=$(($j+1))
+		done
+		i=$(($i+1))
+	done
+	
+	# Determine the minimal unique leading substring for each option string
+	# For each option string...
+	minimal_unique_leading_substrings=()
+	i=0
+	for var_i in "$@"
+	do
+		minimum_length_required_to_be_unique=1
+	
+		# Compare to each other option string...
+		j=0
+		for var_j in "$@"
+		do
+			if [[ ! $var_i == $var_j ]]; then
+				# Find the shorter string, we will iterate across both strings in parallel
+				# until we reach the end of the shorter.
+				short_len=0
+				if [[ "${#var_i}" -ge "${#var_j}" ]]; then
+					short_len="${#var_j}"
+				else
+					short_len="${#var_i}"
+				fi
+				
+				for index in $(eval echo "{1..$short_len}")
+				do
+					if [[ "${var_i:0:$index}" == "${var_j:0:$index}" ]] && [[ $index -ge $minimum_length_required_to_be_unique ]]; then
+						# If two leading substrings are unique, we know the substring must take at least 
+						# n+1 characters to ever be a unique leading substring (it isn't unique at n characters!)
+						minimum_length_required_to_be_unique=$(($index+1))
+					fi
+				done
+			fi
+			j=$(($j+1))
+		done
+		
+		minimal_unique_leading_substrings[$i]=${var_i:0:$minimum_length_required_to_be_unique}
+		
+		i=$(($i+1))
+	done
+	
+	all_options_prompt="Enter "
+	if [[ $# -gt 2 ]]; then
+		all_options_prompt+="one of "
+	fi
+	
+	# Set up the prompting string with all the options, with 
+	# parentheses placement indicating the minimal input require per option
+	index=0
+	for var in "$@"
+	do		
+		substring=${minimal_unique_leading_substrings[$index]}
+		substring_length=${#substring}
+		all_options_prompt+='('
+		all_options_prompt+="$substring"
+		all_options_prompt+=')'
+		all_options_prompt+=${var:$substring_length:$((${#var}-$substring_length))}
+		
+		index=$(($index+1))
+		
+		if [[ ! $index -eq $(($#)) ]]; then
+			if [[ $index -eq $(($#-1)) ]]; then
+				all_options_prompt+=" or "
+			else 
+				all_options_prompt+=", "
+			fi
+		fi
+	done
+	all_options_prompt+=": "
+	
+	# Prompt the user for an input
+	while true; do
+		echo $prompt_message
+        read -p "$all_options_prompt" user_input
+		user_input_length=${#user_input}
+		
+		# See if the user input matches any substrings
+		for index in $(eval echo "{0..$(($#-1))}")
+		do
+			substring=${minimal_unique_leading_substrings[$index]}
+			
+			# Can't do anything if the user input is shorter than the substring
+			if [[ $user_input_length -ge ${#substring} ]]; then
+			
+				# If the substring is empty, we're in a slot for which an argument was not provided, so skip.
+				if [[ ! -z "${minimal_unique_leading_substrings[$index]}" ]]; then
+				
+					# If the user input matches the substring, the option is considered selected. (case insensitive)
+					substring_length=${#substring}
+					if [[ $(upper_case $substring) == $(upper_case $user_input) ]]; then
+						#echo "$substring == ${user_input:0:$substring_length}" # DEBUG
+						return $(($index))
+					fi					
+				fi		
+			fi
+		done
+		
+		echo ""
+    done
+}
+
+# Converts a string to upper case.
+#
+# In BASH >=4.0, the ${string^^} syntax can be used, instead.
+#
+# 1 The string
+#
+# Returns the string, in upper case.
+function upper_case {
+	string=$1
+	
+	validate_arg_count $# ${FUNCNAME[0]} 1 1
+	
+	echo $(tr '[:lower:]' '[:upper:]' <<< ${string})
+}
+
+
+

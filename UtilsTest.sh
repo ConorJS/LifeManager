@@ -1,7 +1,13 @@
 #!/bin/bash
 
+#
+# Automatic bash script tests 
+#
+
 # ===== Imports
 . Environment/Utils.sh
+
+# ===== Methods
 
 # Asserts two values are the same.
 #
@@ -29,6 +35,8 @@ function assert_equals {
 		exit
 	fi
 }
+
+# ===== Tests
 
 echo 'Testing: split_string_and_get_nth'
 assert_equals '123123' "$(split_string_and_get_nth 'a b c d 123123' ' ' 4)" "Nth is last"
