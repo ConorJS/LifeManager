@@ -373,9 +373,11 @@ function prompt_options {
 		i=$(($i+1))
 	done
 	
-	all_options_prompt="Enter "
-	if [[ $# -gt 2 ]]; then
-		all_options_prompt+="one of "
+	all_options_prompt="[Select"
+	if [[ $# -gt 3 ]]; then
+		all_options_prompt+=" one of] "
+	else
+		all_options_prompt+="] "
 	fi
 	
 	# Set up the prompting string with all the options, with 
@@ -397,8 +399,8 @@ function prompt_options {
 		all_options_prompt+=')'
 		all_options_prompt+=${var:$substring_length:$((${#var}-$substring_length))}
 		
-		if [[ ! $index -eq $(($#)) ]]; then
-			if [[ $index -eq $(($#-1)) ]]; then
+		if [[ ! $index -eq $(($#-1)) ]]; then
+			if [[ $index -eq $(($#-2)) ]]; then
 				all_options_prompt+=" or "
 			else 
 				all_options_prompt+=", "
