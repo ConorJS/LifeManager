@@ -12,7 +12,7 @@ function fail_if_not_command {
 	validate_arg_count $# ${FUNCNAME[0]} 1 2
 	
 	if ! (type $command_string) &>/dev/null; then
-		echo "ERROR in ${FUNCNAME[0]}: \'$command_string\' is not on the path."
+		echo "ERROR in '${FUNCNAME[0]}': \'$command_string\' is not on the path."
 		
 		if [ ! -z "$additional_error_message" ]; then
 			echo $additional_error_message
@@ -74,7 +74,7 @@ function download_and_extract_to {
 	
 	# See if the extracting this kind of file is supported 
 	if [[ ! " ${supported_formats[@]} " == " ${extension} " ]]; then
-		echo "ERROR in ${FUNCNAME[0]}: The file extension '.$extension' is not supported by download_and_extract_to"
+		echo "ERROR in '${FUNCNAME[0]}': The file extension '.$extension' is not supported by download_and_extract_to"
 		exit 1
 	fi
 	
@@ -88,14 +88,14 @@ function download_and_extract_to {
 	if [ -d "$output_directory" ]; then
 		hash=$(hash_folder_contents $output_directory)
 		if [ ! "$hash" = "$expected_hash" ]; then 
-			echo "ERROR in ${FUNCNAME[0]}:"
+			echo "ERROR in '${FUNCNAME[0]}':"
 			echo "The folder contents for $english_name were downloaded and extracted successfully."
 			echo "However, the expected CRC32 hash was $expected_hash, and the actual hash is $hash"
 			echo "If the downloaded hash is correct, the script should be updated before continuing."
 			exit 1
 		fi
 	else
-		echo "ERROR in ${FUNCNAME[0]}: Downloading and extracting of $filename failed."
+		echo "ERROR in '${FUNCNAME[0]}': Downloading and extracting of $filename failed."
 		echo "$english_name was not installed."
 		exit 1
 	fi 
@@ -163,7 +163,7 @@ function split_string_and_get_nth {
 	IFS=$temp
 	
 	if (( ${#ADDR[@]} <= n )); then
-		echo "ERROR in ${FUNCNAME[0]}: String $string has only ${#ADDR[@]} sections (split by $delimiter); index $n is out of bounds."
+		echo "ERROR in '${FUNCNAME[0]}': String $string has only ${#ADDR[@]} sections (split by $delimiter); index $n is out of bounds."
 		exit 1
 	fi
 	
@@ -211,23 +211,23 @@ function validate_arg_count {
 	
 	# Validate validate_arg_count's own arguments
 	if [ ! -z $5 ]; then
-		echo "ERROR in ${FUNCNAME[0]}: More than 4 arguments ($#) provided to validate_arg_count"
+		echo "ERROR in '${FUNCNAME[0]}': More than 4 arguments ($#) provided to validate_arg_count"
 		exit 1
 	fi
 	
 	if (( $# < 4 )); then
-		echo "ERROR in ${FUNCNAME[0]}: Fewer than $min_arguments arguments ($#) provided to validate_arg_count"
+		echo "ERROR in '${FUNCNAME[0]}': Fewer than $min_arguments arguments ($#) provided to validate_arg_count"
 		exit 1
 	fi
 	
 	# Validate the number of arguments suggested by arguments_array_length
 	if (( $arguments_array_length > $max_arguments )); then
-		echo "ERROR in ${FUNCNAME[0]}: More than $max_arguments arguments ($arguments_array_length) provided to $function_name"
+		echo "ERROR in '${FUNCNAME[0]}': More than $max_arguments arguments ($arguments_array_length) provided to $function_name"
 		exit 1
 	fi
 	
 	if (( $arguments_array_length < $min_arguments )); then
-		echo "ERROR in ${FUNCNAME[0]}: Fewer than $min_arguments arguments ($arguments_array_length) provided to $function_name"
+		echo "ERROR in '${FUNCNAME[0]}': Fewer than $min_arguments arguments ($arguments_array_length) provided to $function_name"
 		exit 1
 	fi
 }
@@ -254,7 +254,7 @@ function convert_mingw_path_to_windows {
 		# Return a path like 'C:/my/path'
 		echo "${mingw_path:0:1}:${mingw_path:2:${#mingw_path}}"
 	else
-		echo "ERROR in ${FUNCNAME[0]}: '$mingw_path' is not a valid UNIX or Windows path."
+		echo "ERROR in '${FUNCNAME[0]}': '$mingw_path' is not a valid UNIX or Windows path."
 		exit 1
 	fi
 }
@@ -294,7 +294,7 @@ function prompt_yes_no {
         esac
     done
     
-    echo "ERROR in ${FUNCNAME[0]}: - should not escape while loop."
+    echo "ERROR in '${FUNCNAME[0]}': - should not escape while loop."
 }
 
 # Prompts the user for n options (max 254). 
@@ -318,8 +318,8 @@ function prompt_options {
 		for var_j in "$@"
 		do
 			if [[ ! $i == $j ]] && [[ $var_i == $var_j ]]; then
-				echo "ERROR in ${FUNCNAME[0]}: - Argument '$var_i' was provided more than once."
-				echo "ERROR in ${FUNCNAME[0]}: Args: $@"
+				echo "ERROR in '${FUNCNAME[0]}': - Argument '$var_i' was provided more than once."
+				echo "ERROR in '${FUNCNAME[0]}': Args: $@"
 				exit 255
 			fi
 			
