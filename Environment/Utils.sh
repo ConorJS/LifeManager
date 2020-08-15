@@ -330,7 +330,7 @@ function prompt_options {
 	
 	# Determine the minimal unique leading substring for each option string
 	# For each option string...
-	minimal_unique_leading_substrings=()
+	minimal_unique_leading_substring_lengths=()
 	i=0
 	for var_i in "$@"
 	do
@@ -368,7 +368,7 @@ function prompt_options {
 			j=$(($j+1))
 		done
 		
-		minimal_unique_leading_substrings[$i]=${var_i:0:$minimum_length_required_to_be_unique}
+		minimal_unique_leading_substring_lengths[$i]=$minimum_length_required_to_be_unique
 		
 		i=$(($i+1))
 	done
@@ -389,7 +389,7 @@ function prompt_options {
 			continue
 		fi
 		
-		substring=${minimal_unique_leading_substrings[$index]}
+		substring=${var:0:minimal_unique_leading_substring_lengths[$index]}
 		substring_length=${#substring}
 		all_options_prompt+='('
 		all_options_prompt+="$substring"
@@ -417,24 +417,30 @@ function prompt_options {
 		user_input_length=${#user_input}
 		
 		# See if the user input matches any substrings
-		for index in $(eval echo "{0..$(($#-1))}")
+		index=0
+		for var in "$@"
 		do
-			substring=${minimal_unique_leading_substrings[$index]}
+			# Skip the first argument (this is not an option string)
+			if [[ $index -eq 0 ]]; then
+				index=$(($index+1))
+				continue
+			fi
+			
+			substring_length=${minimal_unique_leading_substring_lengths[$index]}
 			
 			# Can't do anything if the user input is shorter than the substring
-			if [[ $user_input_length -ge ${#substring} ]]; then
-			
-				# If the substring is empty, we're in a slot for which an argument was not provided, so skip.
-				if [[ ! -z "${minimal_unique_leading_substrings[$index]}" ]]; then
-				
-					# If the user input matches the substring, the option is considered selected. (case insensitive)
-					substring_length=${#substring}
-					if [[ $(upper_case $substring) == $(upper_case $user_input) ]]; then
-						#echo "$substring == ${user_input:0:$substring_length}" # DEBUG
-						return $(($index))
-					fi					
-				fi		
+			if [[ $user_input_length -lt $substring_length ]]; then
+				continue
 			fi
+			
+			# If the user input matches the substring, the option is considered selected. (case insensitive)
+			comparison_string=${var:0:$user_input_length}
+			if [[ $(upper_case $comparison_string) == $(upper_case $user_input) ]]; then
+				#echo "$(upper_case $comparison_string) == $(upper_case $user_input)" # DEBUG
+				return $(($index))
+			fi					
+			
+			index=$(($index+1))
 		done
     done
 }
