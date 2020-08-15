@@ -334,6 +334,12 @@ function prompt_options {
 	i=0
 	for var_i in "$@"
 	do
+		# Skip the first argument (this is not an option string)
+		if [[ $i -eq 0 ]]; then
+			i=$(($i+1))
+			continue
+		fi
+		
 		minimum_length_required_to_be_unique=1
 	
 		# Compare to each other option string...
@@ -376,7 +382,13 @@ function prompt_options {
 	# parentheses placement indicating the minimal input require per option
 	index=0
 	for var in "$@"
-	do		
+	do
+		# Skip the first argument (this is not an option string)
+		if [[ $index -eq 0 ]]; then
+			index=$(($index+1))
+			continue
+		fi
+		
 		substring=${minimal_unique_leading_substrings[$index]}
 		substring_length=${#substring}
 		all_options_prompt+='('
@@ -398,7 +410,9 @@ function prompt_options {
 	
 	# Prompt the user for an input
 	while true; do
+		echo ""
 		echo $prompt_message
+		
         read -p "$all_options_prompt" user_input
 		user_input_length=${#user_input}
 		
@@ -422,8 +436,6 @@ function prompt_options {
 				fi		
 			fi
 		done
-		
-		echo ""
     done
 }
 
