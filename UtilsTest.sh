@@ -6,35 +6,7 @@
 
 # ===== Imports
 . Environment/Utils.sh
-
-# ===== Methods
-
-# Asserts two values are the same.
-#
-# If they are not, the program will exit with an appropriate error message.
-#
-# 1 The expected value.
-# 2 The actual value.
-# 3 The name of the test.
-function assert_equals {
-	expected=$1
-	actual=$2
-	test_name=$3
-	
-    validate_arg_count $# ${FUNCNAME[0]} 2 3
-	
-	if [ -z "$test_name" ]; then
-	    test_name='Unnamed test'
-	fi
-	
-	if [[ ! "$expected" == "$actual" ]]; then 
-	    echo ""
-		echo "[assert_equals] Assertion failure in '$test_name':" 
-		echo "Expected: '$expected'" 
-		echo "  Actual: '$actual'"
-		exit
-	fi
-}
+. Environment/TestUtils.sh
 
 # ===== Tests
 
@@ -49,5 +21,12 @@ echo 'Testing: convert_mingw_path_to_windows'
 assert_equals 'c:/whatever' "$(convert_mingw_path_to_windows 'c/whatever')" "MinGW path no leading forward slash"
 assert_equals 'c:/whatever' "$(convert_mingw_path_to_windows '/c/whatever')" "MinGW path with leading forward slash"
 assert_equals 'c:/whatever' "$(convert_mingw_path_to_windows 'c:/whatever')" "Already Windows-style path"
+
+echo 'Testing: upper_case'
+assert_equals 'A' "$(upper_case 'a')" "Single-character uppercase conversion"
+assert_equals 'AZ' "$(upper_case 'az')" "Multi-character uppercase conversion"
+assert_equals 'AB' "$(upper_case 'aB')" "Handle uppercase letters"
+assert_equals 'AB' "$(upper_case 'AB')" "Uppercase already"
+assert_equals 'A B C #' "$(upper_case 'A b c #')" "Handle spaces and symbols"
 
 echo 'All tests passed.'
