@@ -439,7 +439,7 @@ function prompt_options {
 			comparison_string=${var:0:$user_input_length}
 			if [[ $(upper_case $comparison_string) == $(upper_case $user_input) ]]; then
 				#echo "Is $var? $(upper_case $comparison_string) == $(upper_case $user_input)" # DEBUG
-				return $(($index))
+				return $index
 			fi					
 		done
     done
