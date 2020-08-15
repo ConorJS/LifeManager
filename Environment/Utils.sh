@@ -380,12 +380,13 @@ function prompt_options {
 	
 	# Set up the prompting string with all the options, with 
 	# parentheses placement indicating the minimal input require per option
-	index=0
+	index=-1
 	for var in "$@"
 	do
+		index=$(($index+1))
+		
 		# Skip the first argument (this is not an option string)
 		if [[ $index -eq 0 ]]; then
-			index=$(($index+1))
 			continue
 		fi
 		
@@ -395,8 +396,6 @@ function prompt_options {
 		all_options_prompt+="$substring"
 		all_options_prompt+=')'
 		all_options_prompt+=${var:$substring_length:$((${#var}-$substring_length))}
-		
-		index=$(($index+1))
 		
 		if [[ ! $index -eq $(($#)) ]]; then
 			if [[ $index -eq $(($#-1)) ]]; then
@@ -417,12 +416,13 @@ function prompt_options {
 		user_input_length=${#user_input}
 		
 		# See if the user input matches any substrings
-		index=0
+		index=-1
 		for var in "$@"
 		do
+			index=$(($index+1))
+			
 			# Skip the first argument (this is not an option string)
 			if [[ $index -eq 0 ]]; then
-				index=$(($index+1))
 				continue
 			fi
 			
@@ -436,11 +436,9 @@ function prompt_options {
 			# If the user input matches the substring, the option is considered selected. (case insensitive)
 			comparison_string=${var:0:$user_input_length}
 			if [[ $(upper_case $comparison_string) == $(upper_case $user_input) ]]; then
-				#echo "$(upper_case $comparison_string) == $(upper_case $user_input)" # DEBUG
+				#echo "Is $var? $(upper_case $comparison_string) == $(upper_case $user_input)" # DEBUG
 				return $(($index))
 			fi					
-			
-			index=$(($index+1))
 		done
     done
 }
