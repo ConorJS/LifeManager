@@ -501,12 +501,10 @@ function pad_string {
 		exit 0
 	fi
 	
-	echo "$((${pad_to_length}-${#string})): $index" >> z
 	chars_to_add=$((${pad_to_length}-${#string}))
 	
 	for index in $(eval echo "{1..$chars_to_add}")
 	do
-		echo "index: $index" >> z
 		string+=$pad_character
 	done
 	
