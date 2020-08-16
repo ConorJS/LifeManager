@@ -460,5 +460,56 @@ function upper_case {
 	echo $(tr '[:lower:]' '[:upper:]' <<< ${string})
 }
 
+# Converts a string to lower case.
+#
+# In BASH >=4.0, the ${string,,} syntax can be used, instead.
+#
+# 1 The string
+#
+# Returns the string, in upper case.
+function lower_case {
+	string=$1
+	
+	validate_arg_count $# ${FUNCNAME[0]} 1 1
+	
+	echo $(tr '[:upper:]' '[:lower:]' <<< ${string})
+}
+
+# Pads the right hand side of a string with a character.
+#
+# 1 The string
+# 2 The character to pad with
+# 3 The string length to pad to
+#
+# Returns the padded string, or the originl string if the length 
+# to pad to is equal/less-than the original string length.
+function pad_string {
+	string=$1
+	pad_character=$2
+	pad_to_length=$3
+	
+	validate_arg_count $# ${FUNCNAME[0]} 3 3
+	
+	if [[ ${#pad_character} -ne 1 ]]; then
+		echo "ERROR in '${FUNCNAME[0]}': \'$pad_character\' is not a single character."
+	fi
+	
+	if [[ ${#string} -ge $pad_to_length ]]; then
+		echo $string
+		exit 0
+	fi
+	
+	echo "$((${pad_to_length}-${#string})): $index" >> z
+	chars_to_add=$((${pad_to_length}-${#string}))
+	
+	for index in $(eval echo "{1..$chars_to_add}")
+	do
+		echo "index: $index" >> z
+		string+=$pad_character
+	done
+	
+	echo $string
+}
+
 
 

@@ -29,4 +29,17 @@ assert_equals 'AB' "$(upper_case 'aB')" "Handle uppercase letters"
 assert_equals 'AB' "$(upper_case 'AB')" "Uppercase already"
 assert_equals 'A B C #' "$(upper_case 'A b c #')" "Handle spaces and symbols"
 
+echo 'Testing: lower_case'
+assert_equals 'a' "$(lower_case 'A')" "Single-character lowercase conversion"
+assert_equals 'az' "$(lower_case 'AZ')" "Multi-character lowercase conversion"
+assert_equals 'ab' "$(lower_case 'Ab')" "Handle lowercase letters"
+assert_equals 'ab' "$(lower_case 'ab')" "Lowercase already"
+assert_equals 'a b c #' "$(lower_case 'a B C #')" "Handle spaces and symbols"
+
+echo 'Testing: pad_string'
+assert_equals 'ABC#' "$(pad_string 'ABC' '#' 4)" "Pad one character"
+assert_equals 'ABC###' "$(pad_string 'ABC' '#' 6)" "Pad some characters"
+assert_equals 'ABC' "$(pad_string 'ABC' '#' 3)" "Pad no characters (equal length to pad to)"
+assert_equals 'ABC' "$(pad_string 'ABC' '#' 2)" "Pad no characters (smaller length to pad to)"
+
 echo 'All tests passed.'
