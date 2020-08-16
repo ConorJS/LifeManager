@@ -1,5 +1,3 @@
-TODO:
-
+Move test scripts out of root folder, only have scratch test here (work on tests here, then move)
 Get Flyway working (dummy script)
 Get data loaded from database to display in React template
-Done!

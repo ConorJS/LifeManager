@@ -1,18 +1,22 @@
 DROP DATABASE IF EXISTS LifeManager;
+DROP ROLE IF EXISTS postgres;
 DROP ROLE IF EXISTS lmadmin;
 DROP TABLESPACE IF EXISTS environmenttablespace;
 
--- Create the LMAdmin user
+-- Create the LMAdmin user and default user
+CREATE ROLE postgres;
 CREATE ROLE lmadmin;
+ALTER ROLE postgres WITH LOGIN;
+ALTER ROLE lmadmin WITH LOGIN;
 
 -- The tablespace location only accepts absolute paths
-CREATE TABLESPACE environmenttablespace LOCATION :v1; --'c:/pg-db'; --'/LocalEnv/pg-db';
+CREATE TABLESPACE environmenttablespace LOCATION :v1;
 
 CREATE DATABASE lifemanager 
-   WITH OWNER lmadmin 
-   TEMPLATE template0 -- Not really using templating, but t1 and t0 are the same by default, so this doesn't matter
-   ENCODING 'UTF8' -- What else? 
-   TABLESPACE environmenttablespace
-   LC_COLLATE  'C' 
-   LC_CTYPE  'C' -- https://dba.stackexchange.com/questions/94887/what-is-the-impact-of-lc-ctype-on-a-postgresql-database
-   CONNECTION LIMIT  -1;
+    WITH OWNER lmadmin
+    TEMPLATE template0
+    ENCODING UTF8
+    TABLESPACE environmenttablespace
+    LC_COLLATE 'C'
+    LC_CTYPE 'C'
+    CONNECTION LIMIT -1;
