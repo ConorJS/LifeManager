@@ -267,7 +267,7 @@ function exit_if_error_code {
 	step_descriptor=$2
 	
 	if [ $error_code -ne 0 ]; then
-		echo ""
+		echo
 		echo "Step '$2' failed."
 		echo "Exiting..."
 		exit 1
@@ -411,7 +411,7 @@ function prompt_options {
 	
 	# Prompt the user for an input
 	while true; do
-		echo ""
+		echo
 		echo $prompt_message
 		
         read -p "$all_options_prompt" user_input

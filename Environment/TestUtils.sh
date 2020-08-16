@@ -19,7 +19,7 @@ function assert_equals {
 	fi
 	
 	if [[ ! "$expected" == "$actual" ]]; then 
-	    echo ""
+	    echo
 		echo "[assert_equals] Assertion failure in '$test_name':" 
 		echo "Expected: '$expected'" 
 		echo "  Actual: '$actual'"
@@ -50,7 +50,7 @@ function assert_user_input_result {
     
     status=$?
     if [[ $status -eq 127 ]]; then
-		echo ""
+		echo
         echo "ERROR in '${FUNCNAME[0]}': Function call to '$function_handler' failed."
 		echo "Args supplied: "
 		
