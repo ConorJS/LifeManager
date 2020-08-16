@@ -268,8 +268,10 @@ function exit_if_error_code {
 	
 	if [ $error_code -ne 0 ]; then
 		echo
+		echo '!!!!!'
 		echo "Step '$2' failed."
 		echo "Exiting..."
+		echo '!!!!!'
 		exit 1
 	fi
 }
@@ -509,6 +511,17 @@ function pad_string {
 	done
 	
 	echo $string
+}
+
+# Prints a marker which is easy to discern amidst other log/terminal messages.
+#
+# 1 The message to print.
+function print_marker {
+    marker_message=$1
+    
+    echo
+    echo $(pad_string "## $marker_message " '#' 80)
+    echo
 }
 
 
