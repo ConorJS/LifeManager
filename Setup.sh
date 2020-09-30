@@ -62,12 +62,16 @@ if [[ db_running -eq 0 ]]; then
     if [[ create_database -eq 1 ]]; then
         print_marker "Creating the database"
         
-        cd Environment # Changing directory to: project/Environment/
+        cd Environment/Database # Changing directory to: project/Environment/Database
         # If this fails due to a permission error on Windows, assign Edit permissions on the LocalEnv folder to 'NETWORK_SERVICE'.
         ./CreateDatabase.sh
         exit_if_error_code $? 'Setting up the LifeManager PostgreSQL database'
         
-        cd .. # Changing directory to: /project/
+        cd ../.. # Changing directory to: /project/
     fi
 fi
 
+print_marker "Running Flyway migrations"
+cd Environment/Database # Changing directory to: project/Environment/Database
+./MigrateDatabase.sh
+cd ../.. # Changing directory to: /project/
