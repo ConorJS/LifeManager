@@ -1,2 +1,6 @@
-Get data loaded from database to display in React template
+Fix database creation issue
+    Re-create by running 'lms' under non-privileged mode, then re-running under privileged mode.
+    It seems error flags arent been preserved after .createDatabash.sql is executed, try and fix this. There might have been another location as well (Flyway script?)
+Solidify user(s) list, role(s) list, etc. for Postgres, create README for setting this up, etc.
+Try to remove setting up 'Postgres' user, if possible, in createDatabase.sql
 Move test scripts out of root folder, only have scratch test here (work on tests here, then move)
