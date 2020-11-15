@@ -8,5 +8,12 @@ namespace ASP.NETCoreWebApplication {
                 Name = entity.Name
             };
         }
+
+        public DummyDataEntity ToEntity(DummyData domain) {
+            return new DummyDataEntity {
+                Id = domain.Id,
+                Name = domain.Name
+            };
+        }
     }
 }

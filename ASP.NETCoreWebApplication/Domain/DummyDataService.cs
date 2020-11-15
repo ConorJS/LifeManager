@@ -18,5 +18,9 @@ namespace ASP.NETCoreWebApplication.Domain {
 
             return new DummyDataMapper().ToDomain(entity);
         }
+
+        public void CreateDummyData(DummyData dummyData) {
+            _lifeManagerRepository.SaveDummyData(new DummyDataMapper().ToEntity(dummyData));
+        }
     }
 }

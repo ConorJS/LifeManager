@@ -18,5 +18,16 @@ namespace ASP.NETCoreWebApplication.Controllers {
         public DummyData Get() {
             return _dummyDataService.GetDummyDataById(1L);
         }
+
+        [HttpPost]
+        public Response Post(DummyData dummyData) {
+            _dummyDataService.CreateDummyData(dummyData);
+
+            return new Response {Body = "success"};
+        }
+    }
+
+    public class Response {
+        public string Body { get; set; }
     }
 }

@@ -12,6 +12,11 @@ namespace ASP.NETCoreWebApplication.Store {
             return _dbContext.dummy.Find(id);
         }
 
+        public void SaveDummyData(DummyDataEntity dummyDataEntity) {
+            _dbContext.dummy.Add(dummyDataEntity);
+            _dbContext.SaveChanges();
+        }
+
         public void Dispose() { }
     }
 }
