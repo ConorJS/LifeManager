@@ -1,13 +1,6 @@
 ﻿import React, {FunctionComponent, SyntheticEvent, useState} from 'react';
 
 interface DataViewerProps {
-    incrementCounter: () => void;
-
-    dummyData: DummyData[];
-
-    populateUiWithClientSideData: () => void;
-
-    populateUiWithDatabaseDummyData: () => void;
 }
 
 export const DataViewer: FunctionComponent<DataViewerProps> = props => {
@@ -66,8 +59,8 @@ export const DataViewer: FunctionComponent<DataViewerProps> = props => {
 
     return (
         <div>
-            <h1>Counter</h1>
-            <p>This is a simple example of a React component.</p>
+            <h1>Database test screen only</h1>
+            <p>Simple dummy data CRUD application.</p>
 
             <p aria-live="polite">
                 Current count: <strong>{currentCount}</strong>
