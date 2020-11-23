@@ -1,7 +1,7 @@
-﻿using ASP.NETCoreWebApplication.Entities;
-using ASP.NETCoreWebApplication.Store;
+﻿using LifeManager.Entities;
+using LifeManager.Store;
 
-namespace ASP.NETCoreWebApplication.Domain {
+namespace LifeManager.Domain {
     public class DummyDataService : IDummyDataService {
         private readonly ILifeManagerRepository _lifeManagerRepository;
 

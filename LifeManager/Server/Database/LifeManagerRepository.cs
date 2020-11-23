@@ -1,6 +1,6 @@
-﻿using ASP.NETCoreWebApplication.Entities;
+﻿using LifeManager.Entities;
 
-namespace ASP.NETCoreWebApplication.Store {
+namespace LifeManager.Store {
     public class LifeManagerRepository : ILifeManagerRepository {
         private readonly LifeManagerDatabaseContext _dbContext;
 

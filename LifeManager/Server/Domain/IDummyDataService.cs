@@ -1,4 +1,4 @@
-﻿namespace ASP.NETCoreWebApplication {
+﻿namespace LifeManager {
     public interface IDummyDataService {
         DummyData GetDummyDataById(long id);
 

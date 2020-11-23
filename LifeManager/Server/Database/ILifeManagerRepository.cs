@@ -1,7 +1,7 @@
 ﻿using System;
-using ASP.NETCoreWebApplication.Entities;
+using LifeManager.Entities;
 
-namespace ASP.NETCoreWebApplication.Store {
+namespace LifeManager.Store {
     public interface ILifeManagerRepository : IDisposable {
         public DummyDataEntity LoadDummyData(long id);
 

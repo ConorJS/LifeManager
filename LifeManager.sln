@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP.NETCoreWebApplication", "ASP.NETCoreWebApplication\ASP.NETCoreWebApplication.csproj", "{BFD2B960-0821-4A58-99FA-B4EC073B89CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LifeManager", "LifeManager\LifeManager.csproj", "{BFD2B960-0821-4A58-99FA-B4EC073B89CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

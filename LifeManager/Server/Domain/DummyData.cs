@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace ASP.NETCoreWebApplication {
+namespace LifeManager {
     
     // Class properties are serialized; they need to be accessible.
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace ASP.NETCoreWebApplication.Controllers {
+namespace LifeManager.Controllers {
     [ApiController]
     [Route("[controller]")]
     public class DummyDataController : ControllerBase {

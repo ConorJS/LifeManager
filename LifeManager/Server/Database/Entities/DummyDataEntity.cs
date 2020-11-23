@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ASP.NETCoreWebApplication.Entities {
+namespace LifeManager.Entities {
     [Table("dummy")]
     public class DummyDataEntity {
         

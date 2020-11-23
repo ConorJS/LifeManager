@@ -1,6 +1,6 @@
-﻿using ASP.NETCoreWebApplication.Entities;
+﻿using LifeManager.Entities;
 
-namespace ASP.NETCoreWebApplication {
+namespace LifeManager {
     public class DummyDataMapper {
         public DummyData ToDomain(DummyDataEntity entity) {
             return new DummyData {
