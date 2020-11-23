@@ -1,5 +1,5 @@
-using LifeManager.Domain;
-using LifeManager.Store;
+using LifeManager.Server.Database;
+using LifeManager.Server.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace LifeManager {
+namespace LifeManager.Server {
     public class Startup {
         public Startup(IConfiguration configuration) {
             Configuration = configuration;

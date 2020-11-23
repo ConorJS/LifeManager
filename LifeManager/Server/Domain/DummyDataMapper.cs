@@ -1,6 +1,6 @@
-﻿using LifeManager.Entities;
+﻿using LifeManager.Server.Database.Entities;
 
-namespace LifeManager {
+namespace LifeManager.Server.Domain {
     public class DummyDataMapper {
         public DummyData ToDomain(DummyDataEntity entity) {
             return new DummyData {

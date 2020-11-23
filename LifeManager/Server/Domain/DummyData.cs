@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace LifeManager {
+namespace LifeManager.Server.Domain {
     
     // Class properties are serialized; they need to be accessible.
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]

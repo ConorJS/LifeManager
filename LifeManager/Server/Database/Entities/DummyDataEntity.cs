@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LifeManager.Entities {
+namespace LifeManager.Server.Database.Entities {
     [Table("dummy")]
     public class DummyDataEntity {
         

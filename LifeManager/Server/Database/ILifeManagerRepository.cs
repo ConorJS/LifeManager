@@ -1,7 +1,7 @@
 ﻿using System;
-using LifeManager.Entities;
+using LifeManager.Server.Database.Entities;
 
-namespace LifeManager.Store {
+namespace LifeManager.Server.Database {
     public interface ILifeManagerRepository : IDisposable {
         public DummyDataEntity LoadDummyData(long id);
 

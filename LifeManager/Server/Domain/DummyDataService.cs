@@ -1,7 +1,7 @@
-﻿using LifeManager.Entities;
-using LifeManager.Store;
+﻿using LifeManager.Server.Database;
+using LifeManager.Server.Database.Entities;
 
-namespace LifeManager.Domain {
+namespace LifeManager.Server.Domain {
     public class DummyDataService : IDummyDataService {
         private readonly ILifeManagerRepository _lifeManagerRepository;
 

@@ -1,7 +1,7 @@
-﻿using LifeManager.Entities;
+﻿using LifeManager.Server.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace LifeManager.Store {
+namespace LifeManager.Server.Database {
     public class LifeManagerDatabaseContext : DbContext {
         public LifeManagerDatabaseContext(DbContextOptions<LifeManagerDatabaseContext> options) : base(options) { }
 

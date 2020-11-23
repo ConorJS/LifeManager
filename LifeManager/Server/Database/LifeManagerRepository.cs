@@ -1,6 +1,6 @@
-﻿using LifeManager.Entities;
+﻿using LifeManager.Server.Database.Entities;
 
-namespace LifeManager.Store {
+namespace LifeManager.Server.Database {
     public class LifeManagerRepository : ILifeManagerRepository {
         private readonly LifeManagerDatabaseContext _dbContext;
 
