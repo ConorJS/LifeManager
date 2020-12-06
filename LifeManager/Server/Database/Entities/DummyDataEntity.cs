@@ -2,14 +2,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LifeManager.Server.Database.Entities {
-    [Table("dummy")]
+    [Table("Dummy")]
     public class DummyDataEntity {
         
         [Key]
-        [Column("id")]
         public long Id { get; set; }
         
-        [Column("name")]
         public string Name { get; set; }
     }
 }
