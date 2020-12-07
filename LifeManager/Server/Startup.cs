@@ -1,5 +1,6 @@
 using LifeManager.Server.Database;
 using LifeManager.Server.Domain;
+using LifeManager.Server.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -28,6 +29,12 @@ namespace LifeManager.Server {
             
             services.AddScoped<ILifeManagerRepository, LifeManagerRepository>();
             services.AddScoped<IDummyDataService, DummyDataService>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IChoreService, ChoreService>();
+            services.AddScoped<ILeisureActivityService, LeisureActivityService>();
+            services.AddScoped<IPrincipleService, PrincipleService>();
+            services.AddScoped<IRecurringTaskService, RecurringTaskService>();
+            services.AddScoped<IToDoTaskService, ToDoTaskService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

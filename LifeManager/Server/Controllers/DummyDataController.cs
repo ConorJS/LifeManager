@@ -27,8 +27,4 @@ namespace LifeManager.Server.Controllers {
             return new Response {Body = "success"};
         }
     }
-
-    public class Response {
-        public string Body { get; set; }
-    }
 }
