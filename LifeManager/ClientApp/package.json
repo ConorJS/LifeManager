@@ -1,5 +1,5 @@
 {
-  "name": "LifeManager",
+  "name": "lifemanager",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -14,7 +14,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.1",
     "reactstrap": "^8.4.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "node-sass": "4.14.1"
   },
   "devDependencies": {
     "ajv": "^6.9.1",
@@ -35,7 +36,8 @@
     "build": "react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint ./src/"
+    "lint": "eslint ./src/",
+    "compile:sass": "node-sass scss/style.scss css/style.css"
   },
   "browserslist": {
     "production": [
