@@ -1,4 +1,5 @@
-﻿using LifeManager.Server.Database.Entities;
+﻿using System;
+using LifeManager.Server.Database.Entities;
 
 namespace LifeManager.Server.Domain.Mapper {
     public class ItemMapper {
@@ -12,8 +13,10 @@ namespace LifeManager.Server.Domain.Mapper {
         public void ToEntity(IItem domain, IItemEntity entity) {
             entity.Id = domain.Id;
             entity.Name = domain.Name;
-            entity.DateTimeCreated = domain.DateTimeCreated;
-            entity.DateTimeLastModified = domain.DateTimeLastModified;
+            
+            // When mapping down to the entity model for the first time, populate these values.
+            entity.DateTimeCreated = domain.DateTimeCreated ?? DateTime.Now;
+            entity.DateTimeLastModified = domain.DateTimeLastModified ?? DateTime.Now;
         }
     }
 }

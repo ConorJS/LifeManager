@@ -6,9 +6,9 @@ namespace LifeManager.Server.Domain {
 
         public string Name { get; set; }
         
-        public DateTime DateTimeCreated { get; set; }
+        public DateTime? DateTimeCreated { get; set; }
         
-        public DateTime DateTimeLastModified { get; set; }
+        public DateTime? DateTimeLastModified { get; set; }
         
         public int RelativeSize { get; set; }
     }
