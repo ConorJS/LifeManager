@@ -290,11 +290,11 @@ function exit_if_error_code() {
         index=0
         for arg_supplied in "${@:4}"; do
           index=$((index + 1))
-          echo "          $index: $arg_supplied"
+          print_wrapped_with_padding "$index: $arg_supplied" ' ' 10
         done
         
       else
-        echo '          Hint: '"$4"
+        print_wrapped_with_padding 'Hint: '"$4" ' ' 10
       fi
     fi
     
@@ -541,22 +541,40 @@ function pad_string() {
   echo "$string"
 }
 
-# Prints a marker which is easy to discern amidst other log/terminal messages.
+# Wraps a message (on newlines - where possible) with left and right hand padding, 
+# which looks better than default terminal wrapping.
 #
 # 1 The message to print.
-function print_marker() {
+# 2 The padding character to use.
+# 3 How much horizontal padding to apply (from both the left and the right; these will be symmetrical).
+#   Defaults to '2'.
+function print_wrapped_with_padding() {
   marker_message=$1
-
+  padding_character=$2
+  horizontal_padding=$3
+  
+  validate_arg_count $# "${FUNCNAME[0]}" 2 3
+  
+  # Fail if the padding argument isn't a single character. 
+  if ((${#padding_character} != 1)); then
+    echo "print_wrapped_with_padding: Padding character '${padding_character}' is not 1 character (instead ${#padding_character})"
+    exit 1
+  fi
+  
+  # Set the horizontal padding to 2 by default.
+  if [[ -z $horizontal_padding ]]; then
+    horizontal_padding=2
+  fi
+  
   # The minimum padding we use for each line of a string (that needs to wrap over multiple lines).
-  minimum_right_hand_padding=3
-
-  # Leading newline to show message better
-  echo
+  minimum_right_hand_padding=$((horizontal_padding + 1))
 
   cols=$(tput cols)
-  wrap_limit=$((cols - minimum_right_hand_padding - 4))
+  
+  # Minus 1 here because we add one space to the right padding, to be symmetrical with left padding.
+  wrap_limit=$((cols - minimum_right_hand_padding - horizontal_padding - 1))
   if ((wrap_limit < 1)); then
-    echo 'Terminal width is too small to display messages. Width is: '"$cols"
+    echo 'print_wrapped_with_padding: Terminal width is too small to display messages. Width is: '"$cols"
     exit
   fi
 
@@ -583,7 +601,7 @@ function print_marker() {
 
       # Note the extra space on the end and the three extra characters at the start.
       # These are balanced by reducing ${wrap_limit} by 4 earlier.
-      pad_string '## '"${marker_message:${processed_up_to}:${wrap_at_index}} " '#' cols
+      pad_string "$(pad_string '' "$padding_character" $horizontal_padding) ${marker_message:processed_up_to:${wrap_at_index}} " "$padding_character" cols
 
       # Remembering ${wrap_at_index} is with respect to ${processed_up_to}
       processed_up_to=$((processed_up_to + wrap_at_index))
@@ -591,8 +609,27 @@ function print_marker() {
   fi
 
   # Print the remaining string without needing to continue wrapping.
-  pad_string '## '"${marker_message:processed_up_to}"' ' '#' cols
+  pad_string "$(pad_string '' "$padding_character" $horizontal_padding) ${marker_message:processed_up_to} " "$padding_character" cols
+}
 
+# Prints a marker which is easy to discern amidst other log/terminal messages.
+#
+# 1 The message to print.
+function print_marker() {
+  marker_message=$1
+  
+  validate_arg_count $# "${FUNCNAME[0]}" 1 1
+  
+  cols=$(tput cols)
+  
+
+  # Leading newline to show message better
+  echo
+  
+  pad_string '' "-" "$cols"
+  print_wrapped_with_padding "$marker_message" '#' 2
+  pad_string '' "-" "$cols"
+  
   # Trailing newline to show message better
   echo
 }
@@ -606,6 +643,8 @@ function print_marker() {
 function contains() {
   expanded_array=$1
   value=$2
+  
+  validate_arg_count $# "${FUNCNAME[0]}" 2 2
 
   if [[ " $expanded_array " == *" ${value} "* ]]; then
     return 1

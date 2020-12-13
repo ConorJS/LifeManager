@@ -11,4 +11,4 @@
 
 # == Scratch tests ====================================================================================================
 
-exit_if_error_code 1 'test' '' 1 2
+exit_if_error_code 1 'test' '' "Check task manager. A PostgreSQL instance may already be running, potentially owned by another user."
