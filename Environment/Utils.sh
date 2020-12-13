@@ -506,7 +506,6 @@ function pad_string() {
 }
 
 # Prints a marker which is easy to discern amidst other log/terminal messages.
-# # TODO: This should handle the string preamble as well
 #
 # 1 The message to print.
 function print_marker() {
@@ -528,20 +527,17 @@ function print_marker() {
   # The index of ${marker_message} we have already processed the string for optimal printing up to (so 0 initially)
   processed_up_to=0
   if ((${#marker_message} - processed_up_to > wrap_limit)); then
-    while ((processed_up_to < ${#marker_message})); do
+    while ((processed_up_to + wrap_limit < ${#marker_message})); do
       # Split string at the last whitespace before the wrap limit.
       # Do this by counting the number of whitespace until ${wrap_limit} chars have been iterated over.
       # Keep doing this for (at most) terminal column width sections of the string to display.
-
-      # TODO: Test how this handles multiple spaces between words
-      # TODO: Should these only be counted as one space? how do these split, does this create empty strings?
 
       # ${wrap_at_index} is with respect to ${processed_up_to}
       wrap_at_index=0
       for ((i = 0; i < wrap_limit; i++)); do
         if [[ "${marker_message:$((processed_up_to + i)):1}" == ' ' ]]; then
           # Wrap at one higher than the index, as the newline this will insert can serve to replace the whitespace.
-          wrap_at_index=$i+1
+          wrap_at_index=$((i+1))
         fi
       done
       # If there is no whitespace to wrap on, then compromise by wrapping as late as possible (this will split a word, though).
@@ -556,11 +552,10 @@ function print_marker() {
       # Remembering ${wrap_at_index} is with respect to ${processed_up_to}
       processed_up_to=$((processed_up_to + wrap_at_index))
     done
-
-  else
-    # Print the remaining string without needing to continue wrapping.
-    pad_string '## '"${marker_message:processed_up_to}"' ' '#' cols
   fi
+
+  # Print the remaining string without needing to continue wrapping.
+  pad_string '## '"${marker_message:processed_up_to}"' ' '#' cols
 
   # Trailing newline to show message better
   echo
