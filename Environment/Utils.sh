@@ -281,10 +281,10 @@ function exit_if_error_code() {
     pad_string '        ' '!' $((cols - 10))
     echo
     echo "          Step '$name_of_step' failed."
-    
+
     if [[ -n "$4" ]]; then
       echo
-      
+
       if [[ -n "$5" ]]; then
         echo '          Hints: '
         index=0
@@ -292,12 +292,12 @@ function exit_if_error_code() {
           index=$((index + 1))
           print_wrapped_with_padding "$index: $arg_supplied" ' ' 10
         done
-        
+
       else
         print_wrapped_with_padding 'Hint: '"$4" ' ' 10
       fi
     fi
-    
+
     echo
     echo "          Exiting..."
     echo
@@ -541,7 +541,7 @@ function pad_string() {
   echo "$string"
 }
 
-# Wraps a message (on newlines - where possible) with left and right hand padding, 
+# Wraps a message (on newlines - where possible) with left and right hand padding,
 # which looks better than default terminal wrapping.
 #
 # 1 The message to print.
@@ -552,25 +552,25 @@ function print_wrapped_with_padding() {
   marker_message=$1
   padding_character=$2
   horizontal_padding=$3
-  
+
   validate_arg_count $# "${FUNCNAME[0]}" 2 3
-  
-  # Fail if the padding argument isn't a single character. 
+
+  # Fail if the padding argument isn't a single character.
   if ((${#padding_character} != 1)); then
     echo "print_wrapped_with_padding: Padding character '${padding_character}' is not 1 character (instead ${#padding_character})"
     exit 1
   fi
-  
+
   # Set the horizontal padding to 2 by default.
   if [[ -z $horizontal_padding ]]; then
     horizontal_padding=2
   fi
-  
+
   # The minimum padding we use for each line of a string (that needs to wrap over multiple lines).
   minimum_right_hand_padding=$((horizontal_padding + 1))
 
   cols=$(tput cols)
-  
+
   # Minus 1 here because we add one space to the right padding, to be symmetrical with left padding.
   wrap_limit=$((cols - minimum_right_hand_padding - horizontal_padding - 1))
   if ((wrap_limit < 1)); then
@@ -617,19 +617,18 @@ function print_wrapped_with_padding() {
 # 1 The message to print.
 function print_marker() {
   marker_message=$1
-  
+
   validate_arg_count $# "${FUNCNAME[0]}" 1 1
-  
+
   cols=$(tput cols)
-  
 
   # Leading newline to show message better
   echo
-  
+
   pad_string '' "-" "$cols"
   print_wrapped_with_padding "$marker_message" '#' 2
   pad_string '' "-" "$cols"
-  
+
   # Trailing newline to show message better
   echo
 }
@@ -643,7 +642,7 @@ function print_marker() {
 function contains() {
   expanded_array=$1
   value=$2
-  
+
   validate_arg_count $# "${FUNCNAME[0]}" 2 2
 
   if [[ " $expanded_array " == *" ${value} "* ]]; then
