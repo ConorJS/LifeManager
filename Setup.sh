@@ -73,3 +73,5 @@ print_marker "Running Flyway migrations"
 cd Environment/Database || exit # Changing directory to: project/Environment/Database
 ./MigrateDatabase.sh
 cd ../.. # Changing directory to: /project/
+
+print_marker "Setup complete"
