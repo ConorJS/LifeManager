@@ -4,5 +4,5 @@
 . Environment/Utils.sh
 
 # ===== Variables =====================================================================================================
-db_directory="`pwd`/LocalEnv/postgres"
+db_directory="$(pwd)/LocalEnv/postgres"
 pg_ctl stop "-D$db_directory"

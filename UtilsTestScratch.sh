@@ -4,12 +4,9 @@
 # Scratch space for testing bash scripts
 #
 
-# ===== Imports
+# == Imports ==========================================================================================================
+
 . Environment/Utils.sh
 . Environment/TestUtils.sh
 
-# ===== Tests
-
-hash_folder_contents src
-
-folder_size src
+# == Scratch tests ====================================================================================================

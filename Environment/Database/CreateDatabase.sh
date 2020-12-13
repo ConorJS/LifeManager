@@ -7,9 +7,9 @@
 fail_if_not_command psql "PostgreSQL must be installed create/run the LifeManager database."
 
 cd ../.. # Changing directory to: project
-windows_path=$(convert_mingw_path_to_windows "`pwd`/LocalEnv/postgres/data")
+windows_path=$(convert_mingw_path_to_windows "$(pwd)/LocalEnv/postgres/data")
 echo "Path to database: $windows_path"
-cd Environment/Database # Changing directory to: project/Environment/Database
+cd Environment/Database || exit # Changing directory to: project/Environment/Database
 
 # Create the database if it doesn't exist
 PGPASSWORD=lfemgr

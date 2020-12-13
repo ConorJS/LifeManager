@@ -1,14 +1,15 @@
 #!/bin/bash
 
 #
-# Automatic bash script tests 
+# Automatic bash script tests
 #
 
-# ===== Imports
+# == Imports ==========================================================================================================
+
 . Environment/Utils.sh
 . Environment/TestUtils.sh
 
-# ===== Tests
+# == Tests ============================================================================================================
 
 # Example of what happens when too many arguments are provided to function handler
 #assert_user_input_result 1 'y' 'prompt_yes_no' 'Handle bad number of arguments to function handler' "Testing prompt_yes_no..." "abc"
