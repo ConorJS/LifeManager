@@ -258,23 +258,57 @@ function convert_mingw_path_to_windows() {
 
 # Exits if an error code is set, with an accompanying message.
 #
-# 1 The name of the step in the script which
+# 1     The error code argument. Should always be called with \$?\
+# 2     The name of the step in the script which.
+# 3     The path to the file (typical use case: a log file) to open before closing.
+#       Optional; no file will open if none provided. As this needs to be provided if also providing hints
+#       (as they are varargs), just provide a blank string if you are not using this.
+# 4..n	Hints to give the user if the failure happens.
 function exit_if_error_code() {
   error_code=$1
+  name_of_step=$2
+  path_to_file_to_open=$3
+  # 4..n	All of the hints to give the user if the failure happens.
+
+  validate_arg_count $# "${FUNCNAME[0]}" 2 254
 
   if [ "$error_code" -ne 0 ]; then
     cols=$(tput cols)
+
+    echo
+    echo
+    pad_string '        ' '!' $((cols - 10))
+    pad_string '        ' '!' $((cols - 10))
+    echo
+    echo "          Step '$name_of_step' failed."
+    
+    if [[ -n "$4" ]]; then
+      echo
+      
+      if [[ -n "$5" ]]; then
+        echo '          Hints: '
+        index=0
+        for arg_supplied in "${@:4}"; do
+          index=$((index + 1))
+          echo "          $index: $arg_supplied"
+        done
+        
+      else
+        echo '          Hint: '"$4"
+      fi
+    fi
     
     echo
-    pad_string '        ' '!' $((cols - 10))
-    pad_string '        ' '!' $((cols - 10))
-    echo
-    echo "          Step '$2' failed."
     echo "          Exiting..."
     echo
     pad_string '        ' '!' $((cols - 10))
     pad_string '        ' '!' $((cols - 10))
     echo
+    echo
+
+    if [[ -n $path_to_file_to_open ]]; then
+      start "$path_to_file_to_open"
+    fi
 
     exit 1
   fi
@@ -512,7 +546,7 @@ function pad_string() {
 # 1 The message to print.
 function print_marker() {
   marker_message=$1
-  
+
   # The minimum padding we use for each line of a string (that needs to wrap over multiple lines).
   minimum_right_hand_padding=3
 
@@ -539,16 +573,16 @@ function print_marker() {
       for ((i = 0; i < wrap_limit; i++)); do
         if [[ "${marker_message:$((processed_up_to + i)):1}" == ' ' ]]; then
           # Wrap at one higher than the index, as the newline this will insert can serve to replace the whitespace.
-          wrap_at_index=$((i+1))
+          wrap_at_index=$((i + 1))
         fi
       done
       # If there is no whitespace to wrap on, then compromise by wrapping as late as possible (this will split a word, though).
       if ((wrap_at_index == 0)); then
         wrap_at_index=$wrap_limit
       fi
-      
-      # Note the extra space on the end and the three extra characters at the start. 
-      # These are balanced by reducing ${wrap_limit} by 4 earlier. 
+
+      # Note the extra space on the end and the three extra characters at the start.
+      # These are balanced by reducing ${wrap_limit} by 4 earlier.
       pad_string '## '"${marker_message:${processed_up_to}:${wrap_at_index}} " '#' cols
 
       # Remembering ${wrap_at_index} is with respect to ${processed_up_to}
