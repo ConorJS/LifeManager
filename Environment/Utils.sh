@@ -272,8 +272,24 @@ function exit_if_error_code() {
 
   validate_arg_count $# "${FUNCNAME[0]}" 2 254
 
-  if [ "$error_code" -ne 0 ]; then
-    cols=$(tput cols)
+  if [ "$error_code" -ne 10 ]; then
+    exit_with_message "$name_of_step" "$path_to_file_to_open" "${@:4}"
+  fi
+}
+
+# Exits the program, with an error message, and optional hints as to how this could be avoided (if appropriate).
+#
+# 1     The name of the step in the script which.
+# 2     The path to the file (typical use case: a log file) to open before closing.
+#       Optional; no file will open if none provided. As this needs to be provided if also providing hints
+#       (as they are varargs), just provide a blank string if you are not using this.
+# 3..n	Hints to give the user if the failure happens.
+function exit_with_message() {
+  name_of_step=$1
+  path_to_file_to_open=$2
+  # 3..n	All of the hints to give the user if the failure happens.
+  
+  cols=$(tput cols)
 
     echo
     echo
@@ -282,19 +298,19 @@ function exit_if_error_code() {
     echo
     echo "          Step '$name_of_step' failed."
 
-    if [[ -n "$4" ]]; then
+    if [[ -n "$3" ]]; then
       echo
 
-      if [[ -n "$5" ]]; then
+      if [[ -n "$4" ]]; then
         echo '          Hints: '
-        index=0
-        for arg_supplied in "${@:4}"; do
-          index=$((index + 1))
-          print_wrapped_with_padding "$index: $arg_supplied" ' ' 10
+        hints_index=0
+        for arg_supplied in "${@:3}"; do
+          hints_index=$((hints_index + 1))
+          print_wrapped_with_padding "$hints_index: $arg_supplied" ' ' 10
         done
 
       else
-        print_wrapped_with_padding 'Hint: '"$4" ' ' 10
+        print_wrapped_with_padding 'Hint: '"$3" ' ' 10
       fi
     fi
 
@@ -311,7 +327,6 @@ function exit_if_error_code() {
     fi
 
     exit 1
-  fi
 }
 
 # Prompts the user for either 'Yes' or 'No', with a message.
@@ -650,4 +665,15 @@ function contains() {
   fi
 
   return 0
+}
+
+# Determines if (on a Windows platform) the current session is running with Administrator privileges.
+function elevated_privileges_check_windows() {
+  if ! net session >/dev/null 2>&1; then
+    # Is not an Administrator.
+    return 1;
+  else
+    # Is an Administrator.
+    return 0;
+  fi
 }
