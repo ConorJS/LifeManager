@@ -1,10 +1,16 @@
 # Project ignores
 LocalEnv/
+Scratch.txt
 
 # Default .NET Core ignores
 bin/
 obj/
 /packages/
-riderModule.iml
 /_ReSharper.Caches/
 /node_modules/
+
+# Rider ignores
+riderModule.iml
+
+# package-lock (keep this ignored while this is a solo project)
+/package-lock.json
