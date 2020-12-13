@@ -263,15 +263,17 @@ function exit_if_error_code() {
   error_code=$1
 
   if [ "$error_code" -ne 0 ]; then
+    cols=$(tput cols)
+    
     echo
+    pad_string '        ' '!' $((cols - 10))
+    pad_string '        ' '!' $((cols - 10))
     echo
-    echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-    echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-    echo "  Step '$2' failed."
-    echo "  Exiting..."
-    echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-    echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    echo "          Step '$2' failed."
+    echo "          Exiting..."
     echo
+    pad_string '        ' '!' $((cols - 10))
+    pad_string '        ' '!' $((cols - 10))
     echo
 
     exit 1
