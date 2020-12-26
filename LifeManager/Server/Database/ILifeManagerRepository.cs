@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LifeManager.Server.Database.Entities;
 
 namespace LifeManager.Server.Database {
@@ -26,6 +27,8 @@ namespace LifeManager.Server.Database {
         public RecurringTaskEntity LoadRecurringTask(long id);
 
         public void SaveRecurringTask(RecurringTaskEntity recurringTaskEntity);
+
+        public List<ToDoTaskEntity> LoadToDoTasks();
 
         public ToDoTaskEntity LoadToDoTask(long id);
 

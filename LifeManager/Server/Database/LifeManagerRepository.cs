@@ -1,9 +1,12 @@
-﻿using LifeManager.Server.Database.Entities;
+﻿using System.Collections.Generic;
+using System.Linq;
+using LifeManager.Server.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LifeManager.Server.Database {
     public class LifeManagerRepository : ILifeManagerRepository {
-        //== configuration ==========================================================================================================================
-        
+        //== general ================================================================================================================================
+
         private readonly LifeManagerDatabaseContext _dbContext;
 
         public LifeManagerRepository(LifeManagerDatabaseContext lifeManagerDatabaseContext) {
@@ -11,9 +14,13 @@ namespace LifeManager.Server.Database {
         }
 
         public void Dispose() { }
-        
-        //== saves/loads ============================================================================================================================
-        
+
+        private void Detach<T>(T entity) where T : class, IItemEntity {
+            _dbContext.Entry(entity).State = EntityState.Detached;
+        }
+
+        //== dummy ==================================================================================================================================
+
         public DummyDataEntity LoadDummyData(long id) {
             return _dbContext.Dummy.Find(id);
         }
@@ -23,6 +30,8 @@ namespace LifeManager.Server.Database {
             _dbContext.SaveChanges();
         }
         
+        //== appointment ============================================================================================================================
+
         public AppointmentEntity LoadAppointment(long id) {
             return _dbContext.Appointment.Find(id);
         }
@@ -32,6 +41,8 @@ namespace LifeManager.Server.Database {
             _dbContext.SaveChanges();
         }
         
+        //== chore ==================================================================================================================================
+
         public ChoreEntity LoadChore(long id) {
             return _dbContext.Chore.Find(id);
         }
@@ -40,6 +51,8 @@ namespace LifeManager.Server.Database {
             _dbContext.Chore.Add(choreEntity);
             _dbContext.SaveChanges();
         }
+        
+        //== leisure activity========================================================================================================================
 
         public LeisureActivityEntity LoadLeisureActivity(long id) {
             return _dbContext.LeisureActivity.Find(id);
@@ -50,6 +63,8 @@ namespace LifeManager.Server.Database {
             _dbContext.SaveChanges();
         }
         
+        //== principle ==============================================================================================================================
+
         public PrincipleEntity LoadPrinciple(long id) {
             return _dbContext.Principle.Find(id);
         }
@@ -59,6 +74,8 @@ namespace LifeManager.Server.Database {
             _dbContext.SaveChanges();
         }
         
+        //== recurring task =========================================================================================================================
+
         public RecurringTaskEntity LoadRecurringTask(long id) {
             return _dbContext.RecurringTask.Find(id);
         }
@@ -68,12 +85,25 @@ namespace LifeManager.Server.Database {
             _dbContext.SaveChanges();
         }
         
+        //== to do task =============================================================================================================================
+
+        // TODO: Should only retrieve for a certain user
+        public List<ToDoTaskEntity> LoadToDoTasks() {
+            List<ToDoTaskEntity> entities = _dbContext.ToDoTask.ToList();
+            entities.ForEach(Detach);
+
+            return entities;
+        }
+
         public ToDoTaskEntity LoadToDoTask(long id) {
-            return _dbContext.ToDoTask.Find(id);
+            ToDoTaskEntity entity = _dbContext.ToDoTask.Find(id);
+            Detach(entity);
+            
+            return entity;
         }
 
         public void SaveToDoTask(ToDoTaskEntity toDoTaskEntity) {
-            _dbContext.ToDoTask.Add(toDoTaskEntity);
+            _dbContext.ToDoTask.Update(toDoTaskEntity);
             _dbContext.SaveChanges();
         }
     }

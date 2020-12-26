@@ -23,20 +23,6 @@ export const DataViewer: FunctionComponent<DataViewerProps> = props => {
 
         addDummyData(new DummyData(data.id, data.name));
     }
-
-    const createToDoTask = async () => {
-        const toDoTask = new ToDoTask(555, inputName, 1);
-
-        const requestOptions = {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(toDoTask)
-        };
-
-        fetch('recurringTask', requestOptions)
-            .then(response => response.json())
-            .then(data => console.log(data));
-    }
     
     const saveDummyDataToDatabase = async () => {
         if (!inputId || !inputName) {
@@ -90,11 +76,6 @@ export const DataViewer: FunctionComponent<DataViewerProps> = props => {
                 Populate UI dummy data from database
             </button>
 
-            <button className="btn btn-primary"
-                    onClick={createToDoTask}>
-                Create To Do Task
-            </button>
-
             <div>
                 <button className="btn btn-primary"
                         onClick={saveDummyDataToDatabase}>
@@ -124,19 +105,5 @@ export class DummyData {
     constructor(id: number, name: string) {
         this.id = id;
         this.name = name;
-    }
-}
-
-export class ToDoTask {
-    id: number;
-
-    name: string;
-    
-    relativeSize: number;
-
-    constructor(id: number, name: string, relativeSize: number) {
-        this.id = id;
-        this.name = name;
-        this.relativeSize = relativeSize;
     }
 }

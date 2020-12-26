@@ -1,11 +1,12 @@
-﻿using LifeManager.Server.Domain;
+﻿using System.Collections.Generic;
+using LifeManager.Server.Domain;
 using LifeManager.Server.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace LifeManager.Server.Controllers {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ToDoTaskController : ControllerBase {
         private readonly ILogger<ToDoTaskController> _logger;
 
@@ -16,14 +17,27 @@ namespace LifeManager.Server.Controllers {
             _toDoTaskService = toDoTaskService;
         }
 
-        [HttpGet]
-        public ToDoTask Get() {
-            return _toDoTaskService.GetById(1L);
+        // TODO: Should only select all tasks for a given user
+        [HttpGet("GetAll")]
+        public IEnumerable<ToDoTask> GetAll() {
+            return _toDoTaskService.GetAll();
         }
 
-        [HttpPost]
+        [Route("GetOne/{id}")]
+        public ToDoTask GetOne(long id) {
+            return _toDoTaskService.GetById(id);
+        }
+        
+        [HttpPost("Create")]
         public Response Post(ToDoTask toDoTask) {
             _toDoTaskService.Create(toDoTask);
+
+            return new Response {Body = "success"};
+        }
+        
+        [HttpPost("Update")]
+        public Response Update(ToDoTask toDoTask) {
+            _toDoTaskService.Update(toDoTask);
 
             return new Response {Body = "success"};
         }

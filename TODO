@@ -8,6 +8,10 @@ Package structure:
 			Mapper
 		Service
 
+Allow removing tasks/Add 'Active' status to Item interface.
+
+Use form validation for creating/editing items
+
 --- Lower priority
 Utils.sh#print_marker should wrap headings, and be aware of the size of the terminal
 Unit tests for download_and_extract_to (including missing ext. case)
