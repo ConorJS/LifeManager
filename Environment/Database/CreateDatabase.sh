@@ -15,9 +15,8 @@ cd Environment/Database || exit # Changing directory to: project/Environment/Dat
 PGPASSWORD=lfemgr
 PGUSER=conor
 mkdir "$windows_path"
-psql -d postgres -f ../Database/createDatabase.sql -v "ON_ERROR_STOP=1" -v v1="'$windows_path'"
+psql -d postgres -f ../Database/createDatabase.sql -v "ON_ERROR_STOP=1" -v v1="'$windows_path'" || exit_if_error_code $? 'Running the the LifeManager Postgres database creation SQL script' 
 PGPASSWORD=
-exit_if_error_code $? 'Running the the LifeManager Postgres database creation SQL script'
 
 echo
 echo "Successfully created LifeManager Postgres database."

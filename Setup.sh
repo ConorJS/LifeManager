@@ -71,8 +71,7 @@ if [[ db_running -eq 0 ]]; then
 
     cd Environment/Database || exit # Changing directory to: project/Environment/Database
     # If this fails due to a permission error on Windows, assign Edit permissions on the LocalEnv folder to 'NETWORK_SERVICE'.
-    ./CreateDatabase.sh
-    exit_if_error_code $? 'Setting up the LifeManager PostgreSQL database'
+    ./CreateDatabase.sh || exit_if_error_code $? 'Setting up the LifeManager PostgreSQL database'
 
     cd ../.. # Changing directory to: /project/
   fi
