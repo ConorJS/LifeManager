@@ -41,5 +41,12 @@ namespace LifeManager.Server.Controllers {
 
             return new Response {Body = "success"};
         }
+        
+        [HttpGet("Remove/{id}")]
+        public Response Remove(long id) {
+            _toDoTaskService.Remove(id);
+
+            return new Response {Body = "success"};
+        }
     }
 }

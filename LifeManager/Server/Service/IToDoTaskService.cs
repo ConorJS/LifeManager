@@ -10,5 +10,7 @@ namespace LifeManager.Server.Service {
         public void Create(ToDoTask domain);
         
         public void Update(ToDoTask domain);
+        
+        public void Remove(long id);
     }
 }

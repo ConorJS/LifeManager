@@ -33,5 +33,7 @@ namespace LifeManager.Server.Database {
         public ToDoTaskEntity LoadToDoTask(long id);
 
         public void SaveToDoTask(ToDoTaskEntity toDoTaskEntity);
+        
+        public void RemoveToDoTask(ToDoTaskEntity toDoTaskEntity);
     }
 }

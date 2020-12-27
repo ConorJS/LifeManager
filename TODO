@@ -13,7 +13,8 @@ Package structure:
 Comments in Tasks
 
 Solidify user(s) list, role(s) list, etc. for Postgres, create README for setting this up, etc.
-
+    Protect update/remove endpoints; they should not execute when not executed from within a session owned by the same user which owns the item (will require something comparable to session-scoping)
+    
 Generalise HTTP requests
 	This should make it easier to diagnose: "localhost/:1 Uncaught (in promise) SyntaxError: Unexpected token < in JSON at position 0"
 
@@ -24,6 +25,7 @@ Allow removing tasks/Add 'Active' status to Item interface.
 Use form validation for creating/editing items
 
 --- Lower priority
+Return error responses from controllers if things go wrong
 Service classes should each have only a singleton mapper, instead of re-initialising mappers per call
 Create, Edit, Delete, etc. for all object types could be generalised?
 Try to remove setting up 'Postgres' user, if possible, in createDatabase.sql

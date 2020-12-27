@@ -7,12 +7,13 @@ export const ToDoTaskViewer: FunctionComponent = () => {
     const [toDoTasks, setToDoTasks] = useState<ToDoTask[]>([]);
 
     const [creatingItem, setCreatingItem] = useState<boolean>(false);
-    const [creatingItemName, setCreatingItemName] = useState<string>();
-    const [creatingItemRelativeSize, setCreatingItemRelativeSize] = useState<number>();
+    const [creatingItemName, setCreatingItemName] = useState<string>('');
+    const [creatingItemRelativeSize, setCreatingItemRelativeSize] = useState<number>(1);
 
     const [editingItem, setEditingItem] = useState<ToDoTask>();
-    const [editingItemName, setEditingItemName] = useState<string>();
-    const [editingItemRelativeSize, setEditingItemRelativeSize] = useState<number>();
+    const [editingItemName, setEditingItemName] = useState<string>('');
+    const [editingItemRelativeSize, setEditingItemRelativeSize] = 
+        useState<number>(() => !editingItem || !editingItem.relativeSize ? 1 : editingItem.relativeSize);
 
     //== methods ======================================================================================================
 
@@ -23,25 +24,28 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
     const displayCreateToDoTaskUi = (): void => {
         setCreatingItem(true);
+        
+        closeEditToDoTaskUi();
     }
 
     const displayEditToDoTaskUi = (toDoTask: ToDoTask): void => {
         setEditingItem(toDoTask);
         setEditingItemName(toDoTask.name);
         setEditingItemRelativeSize(toDoTask.relativeSize);
-        
-        cancelCreateToDoTaskUi();
+
+        closeCreateToDoTaskUi();
     }
 
-    const cancelCreateToDoTaskUi = (): void => {
+    const closeCreateToDoTaskUi = (): void => {
         setCreatingItem(false);
     }
 
-    const cancelEditToDoTaskUi = (): void => {
+    const closeEditToDoTaskUi = (): void => {
         setEditingItem(undefined);
+        setEditingItemName('');
+        setEditingItemRelativeSize(1);
     }
 
-    // TODO: Remove handler/editing pattern, and just pass values into onClick
     function creatingItemNameChangeHandler(changeEvent: SyntheticEvent): void {
         const target = changeEvent.target as HTMLInputElement;
         setCreatingItemName(target.value);
@@ -81,6 +85,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
+                closeCreateToDoTaskUi();
                 refresh();
             });
     }
@@ -110,6 +115,17 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             });
     }
 
+    const removeToDoTask = (toDoTask: ToDoTask): void => {
+        fetch(`api/ToDoTask/Remove/${toDoTask.id}`).then(() => {
+            // Close the edit window if the item being edited was just removed.
+            if (toDoTask === editingItem) {
+                closeEditToDoTaskUi();
+            }
+            
+            refresh();
+        });
+    }
+
     const refresh = (): void => {
         loadAllTasks().then(data => {
             setToDoTasks(data);
@@ -132,6 +148,10 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             <div key={'toDoTask' + index}
                  onClick={() => displayEditToDoTaskUi(toDoTask)}>
                 {toDoTask.name} ({toDoTask.relativeSize} at {toDoTask.dateTimeCreated})
+
+                <button onClick={() => removeToDoTask(toDoTask)}>
+                    R
+                </button>
             </div>
         );
     });
@@ -174,7 +194,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                     </button>
 
                     <button className="btn btn-primary"
-                            onClick={cancelCreateToDoTaskUi}>
+                            onClick={closeCreateToDoTaskUi}>
                         Cancel
                     </button>
                 </div>
@@ -206,7 +226,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                     </button>
 
                     <button className="btn btn-primary"
-                            onClick={cancelEditToDoTaskUi}>
+                            onClick={closeEditToDoTaskUi}>
                         Cancel
                     </button>
                 </div>

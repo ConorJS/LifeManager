@@ -40,10 +40,22 @@ namespace LifeManager.Server.Service {
         public void Update(ToDoTask domain) {
             if (_lifeManagerRepository.LoadToDoTask(domain.Id) == null) {
                 throw new InvalidOperationException(
-                    "Tried to update a ToDoTaskEntity, but the task doesn't exist. This could indicate a misuse of save resources/service endpoints.");
+                    $"Tried to update a ToDoTaskEntity (id = {domain.Id}), but the task doesn't exist. " +
+                    $"This could indicate a misuse of save resources/service endpoints.");
             }
 
             _lifeManagerRepository.SaveToDoTask(new ToDoTaskMapper().ToEntity(domain));
+        }
+
+        public void Remove(long id) {
+            ToDoTaskEntity toDoTaskEntity = _lifeManagerRepository.LoadToDoTask(id);
+            if (toDoTaskEntity == null) {
+                throw new InvalidOperationException(
+                    $"Tried to remove a ToDoTaskEntity (id = {id}), but the task doesn't exist. " +
+                    $"This could indicate a misuse of save resources/service endpoints.");
+            }
+
+            _lifeManagerRepository.RemoveToDoTask(toDoTaskEntity);
         }
     }
 }

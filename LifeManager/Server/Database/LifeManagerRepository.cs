@@ -97,13 +97,21 @@ namespace LifeManager.Server.Database {
 
         public ToDoTaskEntity LoadToDoTask(long id) {
             ToDoTaskEntity entity = _dbContext.ToDoTask.Find(id);
-            Detach(entity);
+            if (entity == null) {
+                return null;
+            }
             
+            Detach(entity);
             return entity;
         }
 
         public void SaveToDoTask(ToDoTaskEntity toDoTaskEntity) {
             _dbContext.ToDoTask.Update(toDoTaskEntity);
+            _dbContext.SaveChanges();
+        }
+
+        public void RemoveToDoTask(ToDoTaskEntity toDoTaskEntity) {
+            _dbContext.ToDoTask.Remove(toDoTaskEntity);
             _dbContext.SaveChanges();
         }
     }
