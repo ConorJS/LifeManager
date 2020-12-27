@@ -1,0 +1,22 @@
+Scenarios described here should eventually become automated tests (not while the affected system components are still 
+
+Note: If a scenario does not describes any preamble/set-up, it is implied there is none; that the scenario should be run against a freshly loaded screen.
+
+## To Do tasks UI:
+	Suite requires data: Two existing tasks.
+	
+	Create a task
+	Create a task, while a task is being edited
+	Create a task, while a task is being created (i.e. just click the 'New' button - should just clear inputs)
+	
+	Edit a task
+	Edit a task, while a task is being created
+	Edit the same task, while a task is being edited (i.e. just click the same task - nothing should change)
+	Edit a different task, while a task is being edited.
+
+	Remove a task
+	Remove a task, while a task is being created
+	Remove a task, while a different task is being edited
+	Remove a task, while that same task is being edited (the edit screen should close)
+
+	
