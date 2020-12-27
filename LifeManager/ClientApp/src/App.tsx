@@ -4,7 +4,14 @@ import {DataViewer} from './components/data-viewer';
 import './App.scss'
 import {ToDoTaskViewer} from "./components/to-do-task-viewer";
 
-export const App: FunctionComponent = () => {
+enum MenuItem {
+    HOME,
+    // Temporary
+    DATA_VIEWER,
+    TODO_TASKS
+}
+
+export const App: FunctionComponent = () => {    
     //== state ========================================================================================================
 
     const [selectedNavigationItem, setSelectedNavigationItem] = useState(MenuItem.HOME);
@@ -23,21 +30,21 @@ export const App: FunctionComponent = () => {
                 <button>
                     <img className="navigation-button"
                          src="/resources/navigationimages/home.png"
-                         alt="my image"
+                         alt="Home button (LifeManager logo)"
                          onClick={() => setSelectedNavigationItem(MenuItem.HOME)}/>
                 </button>
 
                 <button>
                     <img className="navigation-button"
                          src="/resources/navigationimages/view-icon.jpg"
-                         alt="my image"
+                         alt="Summary button (Eye; abstract/stencil)"
                          onClick={() => setSelectedNavigationItem(MenuItem.DATA_VIEWER)}/>
                 </button>
 
                 <button>
                     <img className="navigation-button"
                          src="/resources/navigationimages/task.png"
-                         alt="my image"
+                         alt="Task list (Notepad; abstract/stencil)"
                          onClick={() => setSelectedNavigationItem(MenuItem.TODO_TASKS)}/>
                 </button>
             </div>
@@ -55,13 +62,4 @@ export const App: FunctionComponent = () => {
             </div>
         </React.Fragment>
     );
-}
-
-//== types ============================================================================================================
-
-enum MenuItem {
-    HOME,
-    // Temporary
-    DATA_VIEWER,
-    TODO_TASKS
 }
