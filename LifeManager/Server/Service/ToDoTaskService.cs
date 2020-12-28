@@ -34,6 +34,9 @@ namespace LifeManager.Server.Service {
         }
 
         public void Create(ToDoTask domain) {
+            domain.DateTimeCreated = DateTime.Now;
+            domain.DateTimeLastModified = DateTime.Now;
+
             _lifeManagerRepository.SaveToDoTask(new ToDoTaskMapper().ToEntity(domain));
         }
 
@@ -44,6 +47,7 @@ namespace LifeManager.Server.Service {
                     $"This could indicate a misuse of save resources/service endpoints.");
             }
 
+            domain.DateTimeLastModified = DateTime.Now;
             _lifeManagerRepository.SaveToDoTask(new ToDoTaskMapper().ToEntity(domain));
         }
 

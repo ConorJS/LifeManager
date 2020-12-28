@@ -1,4 +1,5 @@
-﻿using LifeManager.Server.Database;
+﻿using System;
+using LifeManager.Server.Database;
 using LifeManager.Server.Database.Entities;
 using LifeManager.Server.Domain;
 using LifeManager.Server.Domain.Mapper;
@@ -22,6 +23,9 @@ namespace LifeManager.Server.Service {
         }
 
         public void Create(Principle domain) {
+            domain.DateTimeCreated = DateTime.Now;
+            domain.DateTimeLastModified = DateTime.Now;
+            
             _lifeManagerRepository.SavePrinciple(new PrincipleMapper().ToEntity(domain));
         }
     }
