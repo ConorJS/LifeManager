@@ -1,4 +1,5 @@
-﻿using LifeManager.Server.Domain;
+﻿using System.Collections.Generic;
+using LifeManager.Server.Domain;
 using LifeManager.Server.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,14 +17,34 @@ namespace LifeManager.Server.Controllers {
             _leisureActivityService = leisureActivityService;
         }
 
-        [HttpGet]
-        public LeisureActivity Get() {
-            return _leisureActivityService.GetById(1L);
+        // TODO: Should only select all tasks for a given user
+        [HttpGet("GetAll")]
+        public IEnumerable<LeisureActivity> GetAll() {
+            return _leisureActivityService.GetAll();
         }
 
-        [HttpPost]
+        [Route("GetOne/{id}")]
+        public LeisureActivity GetOne(long id) {
+            return _leisureActivityService.GetById(id);
+        }
+        
+        [HttpPost("Create")]
         public Response Post(LeisureActivity leisureActivity) {
             _leisureActivityService.Create(leisureActivity);
+
+            return new Response {Body = "success"};
+        }
+        
+        [HttpPost("Update")]
+        public Response Update(LeisureActivity leisureActivity) {
+            _leisureActivityService.Update(leisureActivity);
+
+            return new Response {Body = "success"};
+        }
+        
+        [HttpGet("Remove/{id}")]
+        public Response Remove(long id) {
+            _leisureActivityService.Remove(id);
 
             return new Response {Body = "success"};
         }

@@ -26,62 +26,157 @@ namespace LifeManager.Server.Database {
         }
 
         public void SaveDummyData(DummyDataEntity dummyDataEntity) {
-            _dbContext.Dummy.Add(dummyDataEntity);
+            _dbContext.Dummy.Update(dummyDataEntity);
             _dbContext.SaveChanges();
         }
         
         //== appointment ============================================================================================================================
 
-        public AppointmentEntity LoadAppointment(long id) {
-            return _dbContext.Appointment.Find(id);
+        // TODO: Should only retrieve for a certain user
+        public List<AppointmentEntity> LoadAppointments() {
+            List<AppointmentEntity> entities = _dbContext.Appointment.ToList();
+            entities.ForEach(Detach);
+
+            return entities;
         }
 
-        public void SaveAppointment(AppointmentEntity appointmentEntity) {
-            _dbContext.Appointment.Add(appointmentEntity);
+        public AppointmentEntity LoadAppointment(long id) {
+            AppointmentEntity entity = _dbContext.Appointment.Find(id);
+            if (entity == null) {
+                return null;
+            }
+            
+            Detach(entity);
+            return entity;
+        }
+
+        public void SaveAppointment(AppointmentEntity entity) {
+            _dbContext.Appointment.Update(entity);
+            _dbContext.SaveChanges();
+        }
+
+        public void RemoveAppointment(AppointmentEntity entity) {
+            _dbContext.Appointment.Remove(entity);
             _dbContext.SaveChanges();
         }
         
         //== chore ==================================================================================================================================
 
-        public ChoreEntity LoadChore(long id) {
-            return _dbContext.Chore.Find(id);
+        // TODO: Should only retrieve for a certain user
+        public List<ChoreEntity> LoadChores() {
+            List<ChoreEntity> entities = _dbContext.Chore.ToList();
+            entities.ForEach(Detach);
+
+            return entities;
         }
 
-        public void SaveChore(ChoreEntity choreEntity) {
-            _dbContext.Chore.Add(choreEntity);
+        public ChoreEntity LoadChore(long id) {
+            ChoreEntity entity = _dbContext.Chore.Find(id);
+            if (entity == null) {
+                return null;
+            }
+            
+            Detach(entity);
+            return entity;
+        }
+
+        public void SaveChore(ChoreEntity entity) {
+            _dbContext.Chore.Update(entity);
+            _dbContext.SaveChanges();
+        }
+
+        public void RemoveChore(ChoreEntity entity) {
+            _dbContext.Chore.Remove(entity);
             _dbContext.SaveChanges();
         }
         
         //== leisure activity========================================================================================================================
 
-        public LeisureActivityEntity LoadLeisureActivity(long id) {
-            return _dbContext.LeisureActivity.Find(id);
+        // TODO: Should only retrieve for a certain user
+        public List<LeisureActivityEntity> LoadLeisureActivities() {
+            List<LeisureActivityEntity> entities = _dbContext.LeisureActivity.ToList();
+            entities.ForEach(Detach);
+
+            return entities;
         }
 
-        public void SaveLeisureActivity(LeisureActivityEntity leisureActivityEntity) {
-            _dbContext.LeisureActivity.Add(leisureActivityEntity);
+        public LeisureActivityEntity LoadLeisureActivity(long id) {
+            LeisureActivityEntity entity = _dbContext.LeisureActivity.Find(id);
+            if (entity == null) {
+                return null;
+            }
+            
+            Detach(entity);
+            return entity;
+        }
+
+        public void SaveLeisureActivity(LeisureActivityEntity entity) {
+            _dbContext.LeisureActivity.Update(entity);
+            _dbContext.SaveChanges();
+        }
+
+        public void RemoveLeisureActivity(LeisureActivityEntity entity) {
+            _dbContext.LeisureActivity.Remove(entity);
             _dbContext.SaveChanges();
         }
         
         //== principle ==============================================================================================================================
 
-        public PrincipleEntity LoadPrinciple(long id) {
-            return _dbContext.Principle.Find(id);
+        // TODO: Should only retrieve for a certain user
+        public List<PrincipleEntity> LoadPrinciples() {
+            List<PrincipleEntity> entities = _dbContext.Principle.ToList();
+            entities.ForEach(Detach);
+
+            return entities;
         }
 
-        public void SavePrinciple(PrincipleEntity principleEntity) {
-            _dbContext.Principle.Add(principleEntity);
+        public PrincipleEntity LoadPrinciple(long id) {
+            PrincipleEntity entity = _dbContext.Principle.Find(id);
+            if (entity == null) {
+                return null;
+            }
+            
+            Detach(entity);
+            return entity;
+        }
+
+        public void SavePrinciple(PrincipleEntity toDoTaskEntity) {
+            _dbContext.Principle.Update(toDoTaskEntity);
+            _dbContext.SaveChanges();
+        }
+
+        public void RemovePrinciple(PrincipleEntity toDoTaskEntity) {
+            _dbContext.Principle.Remove(toDoTaskEntity);
             _dbContext.SaveChanges();
         }
         
         //== recurring task =========================================================================================================================
 
-        public RecurringTaskEntity LoadRecurringTask(long id) {
-            return _dbContext.RecurringTask.Find(id);
+        // TODO: Should only retrieve for a certain user
+        public List<RecurringTaskEntity> LoadRecurringTasks() {
+            List<RecurringTaskEntity> entities = _dbContext.RecurringTask.ToList();
+            entities.ForEach(Detach);
+
+            return entities;
         }
 
-        public void SaveRecurringTask(RecurringTaskEntity recurringTaskEntity) {
-            _dbContext.RecurringTask.Add(recurringTaskEntity);
+        public RecurringTaskEntity LoadRecurringTask(long id) {
+            RecurringTaskEntity entity = _dbContext.RecurringTask.Find(id);
+            if (entity == null) {
+                return null;
+            }
+            
+            Detach(entity);
+            return entity;
+        }
+
+        public void SaveRecurringTask(RecurringTaskEntity toDoTaskEntity) {
+            _dbContext.RecurringTask.Update(toDoTaskEntity);
+            _dbContext.SaveChanges();
+        }
+
+        public void RemoveRecurringTask(RecurringTaskEntity toDoTaskEntity) {
+            _dbContext.RecurringTask.Remove(toDoTaskEntity);
             _dbContext.SaveChanges();
         }
         

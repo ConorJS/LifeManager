@@ -5,7 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace LifeManager.Server.Database.Entities {
     [Table("LeisureActivity")]
     public class LeisureActivityEntity : IItemEntity {
-        [Key] public long Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long Id { get; set; }
 
         public string Name { get; set; }
 

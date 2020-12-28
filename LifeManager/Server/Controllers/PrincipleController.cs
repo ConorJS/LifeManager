@@ -1,4 +1,5 @@
-﻿using LifeManager.Server.Domain;
+﻿using System.Collections.Generic;
+using LifeManager.Server.Domain;
 using LifeManager.Server.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,14 +17,34 @@ namespace LifeManager.Server.Controllers {
             _principleService = principleService;
         }
 
-        [HttpGet]
-        public Principle Get() {
-            return _principleService.GetById(1L);
+        // TODO: Should only select all tasks for a given user
+        [HttpGet("GetAll")]
+        public IEnumerable<Principle> GetAll() {
+            return _principleService.GetAll();
         }
 
-        [HttpPost]
+        [Route("GetOne/{id}")]
+        public Principle GetOne(long id) {
+            return _principleService.GetById(id);
+        }
+        
+        [HttpPost("Create")]
         public Response Post(Principle principle) {
             _principleService.Create(principle);
+
+            return new Response {Body = "success"};
+        }
+        
+        [HttpPost("Update")]
+        public Response Update(Principle principle) {
+            _principleService.Update(principle);
+
+            return new Response {Body = "success"};
+        }
+        
+        [HttpGet("Remove/{id}")]
+        public Response Remove(long id) {
+            _principleService.Remove(id);
 
             return new Response {Body = "success"};
         }

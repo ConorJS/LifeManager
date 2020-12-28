@@ -1,4 +1,5 @@
-﻿using LifeManager.Server.Domain;
+﻿using System.Collections.Generic;
+using LifeManager.Server.Domain;
 using LifeManager.Server.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,14 +17,34 @@ namespace LifeManager.Server.Controllers {
             _choreService = choreService;
         }
 
-        [HttpGet]
-        public Chore Get() {
-            return _choreService.GetById(1L);
+        // TODO: Should only select all tasks for a given user
+        [HttpGet("GetAll")]
+        public IEnumerable<Chore> GetAll() {
+            return _choreService.GetAll();
         }
 
-        [HttpPost]
-        public Response Post(Chore Chore) {
-            _choreService.Create(Chore);
+        [Route("GetOne/{id}")]
+        public Chore GetOne(long id) {
+            return _choreService.GetById(id);
+        }
+        
+        [HttpPost("Create")]
+        public Response Post(Chore chore) {
+            _choreService.Create(chore);
+
+            return new Response {Body = "success"};
+        }
+        
+        [HttpPost("Update")]
+        public Response Update(Chore chore) {
+            _choreService.Update(chore);
+
+            return new Response {Body = "success"};
+        }
+        
+        [HttpGet("Remove/{id}")]
+        public Response Remove(long id) {
+            _choreService.Remove(id);
 
             return new Response {Body = "success"};
         }

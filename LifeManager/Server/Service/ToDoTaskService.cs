@@ -18,9 +18,9 @@ namespace LifeManager.Server.Service {
 
         // TODO: Should be GetAllForUser(userId)
         public IEnumerable<ToDoTask> GetAll() {
-            List<ToDoTaskEntity> taskEntities = _lifeManagerRepository.LoadToDoTasks();
+            List<ToDoTaskEntity> entities = _lifeManagerRepository.LoadToDoTasks();
 
-            return taskEntities.Select(taskEntity => _toDoTaskMapper.ToDomain(taskEntity));
+            return entities.Select(entity => _toDoTaskMapper.ToDomain(entity));
         }
 
         public ToDoTask GetById(long id) {
