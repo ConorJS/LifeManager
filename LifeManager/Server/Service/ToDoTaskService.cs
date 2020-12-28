@@ -37,7 +37,7 @@ namespace LifeManager.Server.Service {
             domain.DateTimeCreated = DateTime.Now;
             domain.DateTimeLastModified = DateTime.Now;
 
-            _lifeManagerRepository.SaveToDoTask(new ToDoTaskMapper().ToEntity(domain));
+            _lifeManagerRepository.SaveToDoTask(_toDoTaskMapper.ToEntity(domain));
         }
 
         public void Update(ToDoTask domain) {
@@ -48,7 +48,7 @@ namespace LifeManager.Server.Service {
             }
 
             domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SaveToDoTask(new ToDoTaskMapper().ToEntity(domain));
+            _lifeManagerRepository.SaveToDoTask(_toDoTaskMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {

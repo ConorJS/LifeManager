@@ -37,7 +37,7 @@ namespace LifeManager.Server.Service {
             domain.DateTimeCreated = DateTime.Now;
             domain.DateTimeLastModified = DateTime.Now;
 
-            _lifeManagerRepository.SaveRecurringTask(new RecurringTaskMapper().ToEntity(domain));
+            _lifeManagerRepository.SaveRecurringTask(_recurringTaskMapper.ToEntity(domain));
         }
 
         public void Update(RecurringTask domain) {
@@ -48,7 +48,7 @@ namespace LifeManager.Server.Service {
             }
 
             domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SaveRecurringTask(new RecurringTaskMapper().ToEntity(domain));
+            _lifeManagerRepository.SaveRecurringTask(_recurringTaskMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {

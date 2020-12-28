@@ -37,7 +37,7 @@ namespace LifeManager.Server.Service {
             domain.DateTimeCreated = DateTime.Now;
             domain.DateTimeLastModified = DateTime.Now;
 
-            _lifeManagerRepository.SaveLeisureActivity(new LeisureActivityMapper().ToEntity(domain));
+            _lifeManagerRepository.SaveLeisureActivity(_leisureActivityMapper.ToEntity(domain));
         }
 
         public void Update(LeisureActivity domain) {
@@ -48,7 +48,7 @@ namespace LifeManager.Server.Service {
             }
 
             domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SaveLeisureActivity(new LeisureActivityMapper().ToEntity(domain));
+            _lifeManagerRepository.SaveLeisureActivity(_leisureActivityMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {

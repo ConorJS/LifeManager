@@ -37,7 +37,7 @@ namespace LifeManager.Server.Service {
             domain.DateTimeCreated = DateTime.Now;
             domain.DateTimeLastModified = DateTime.Now;
 
-            _lifeManagerRepository.SaveChore(new ChoreMapper().ToEntity(domain));
+            _lifeManagerRepository.SaveChore(_choreMapper.ToEntity(domain));
         }
 
         public void Update(Chore domain) {
@@ -48,7 +48,7 @@ namespace LifeManager.Server.Service {
             }
 
             domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SaveChore(new ChoreMapper().ToEntity(domain));
+            _lifeManagerRepository.SaveChore(_choreMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {

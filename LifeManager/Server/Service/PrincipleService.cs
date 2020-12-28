@@ -37,7 +37,7 @@ namespace LifeManager.Server.Service {
             domain.DateTimeCreated = DateTime.Now;
             domain.DateTimeLastModified = DateTime.Now;
 
-            _lifeManagerRepository.SavePrinciple(new PrincipleMapper().ToEntity(domain));
+            _lifeManagerRepository.SavePrinciple(_principleMapper.ToEntity(domain));
         }
 
         public void Update(Principle domain) {
@@ -48,7 +48,7 @@ namespace LifeManager.Server.Service {
             }
 
             domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SavePrinciple(new PrincipleMapper().ToEntity(domain));
+            _lifeManagerRepository.SavePrinciple(_principleMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {

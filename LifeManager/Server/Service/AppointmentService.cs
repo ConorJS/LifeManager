@@ -37,7 +37,7 @@ namespace LifeManager.Server.Service {
             domain.DateTimeCreated = DateTime.Now;
             domain.DateTimeLastModified = DateTime.Now;
 
-            _lifeManagerRepository.SaveAppointment(new AppointmentMapper().ToEntity(domain));
+            _lifeManagerRepository.SaveAppointment(_appointmentMapper.ToEntity(domain));
         }
 
         public void Update(Appointment domain) {
@@ -48,7 +48,7 @@ namespace LifeManager.Server.Service {
             }
 
             domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SaveAppointment(new AppointmentMapper().ToEntity(domain));
+            _lifeManagerRepository.SaveAppointment(_appointmentMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {
