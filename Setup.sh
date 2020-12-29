@@ -79,7 +79,9 @@ fi
 
 print_marker "Running Flyway migrations"
 cd Environment/Database || exit # Changing directory to: project/Environment/Database
-./MigrateDatabase.sh
+run_flyway_hint_1="Check for checksum mismatches above. Will require re-creating the database to correct."
+run_flyway_hint_2="Check for PSQLExceptions caused by incorrect scripts: Will require fixing the responsible script."
+./MigrateDatabase.sh || exit_if_error_code $? 'Running Flyway migration scripts' "" "$run_flyway_hint_1" "$run_flyway_hint_2"
 cd ../.. # Changing directory to: /project/
 
 print_marker "Setup complete"
