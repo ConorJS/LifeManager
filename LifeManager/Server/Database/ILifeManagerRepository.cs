@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using LifeManager.Server.Database.Entities;
+using LifeManager.Server.Model.Entity;
 
 namespace LifeManager.Server.Database {
     public interface ILifeManagerRepository : IDisposable {

@@ -1,4 +1,5 @@
-﻿using LifeManager.Server.Domain;
+﻿using LifeManager.Server.Model.Domain;
+using LifeManager.Server.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

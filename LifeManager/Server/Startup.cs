@@ -1,6 +1,8 @@
 using LifeManager.Server.Database;
-using LifeManager.Server.Domain;
+using LifeManager.Server.Database.Implementation;
+using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Service;
+using LifeManager.Server.Service.Implementation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using LifeManager.Server.Domain;
+using LifeManager.Server.Model.Domain;
 
 namespace LifeManager.Server.Service {
     public interface IAppointmentService {

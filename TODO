@@ -1,13 +1,3 @@
-Package structure:
-	Server
-		Controller
-		Model
-			<Interfaces at base level>
-			Domain
-			Entity (not Entities)
-			Mapper
-		Service
-		
 'Processing' overlay when waiting on important async events 
 
 Comments in Tasks
