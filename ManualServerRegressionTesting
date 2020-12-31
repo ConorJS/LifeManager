@@ -1,0 +1,11 @@
+Scenarios described here should eventually become unit/integration tests (not while the affected system components are still in a draft state)
+
+Note: If a scenario does not describes any preamble/set-up, it is implied there is none; that the scenario should be run against a freshly loaded screen.
+
+## To Do tasks UI:
+	Suite requires no data.
+	
+	Create a task
+	Edit a task
+	Remove a task
+	
