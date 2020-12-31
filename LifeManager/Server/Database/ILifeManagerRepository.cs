@@ -23,7 +23,5 @@ namespace LifeManager.Server.Database {
         public T LoadEntity<T>(long id) where T : class, IItemEntity;
 
         public void SaveEntity<T>(T entity) where T : class, IItemEntity;
-
-        public void RemoveEntity<T>(T entity) where T : class, IItemEntity;
     }
 }

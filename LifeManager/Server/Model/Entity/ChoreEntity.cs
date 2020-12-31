@@ -10,6 +10,8 @@ namespace LifeManager.Server.Model.Entity {
         public long Id { get; set; }
 
         public long OwnedByUserId { get; set; }
+        
+        public bool Active { get; set; }
 
         public string Name { get; set; }
 

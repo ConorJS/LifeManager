@@ -5,6 +5,8 @@ namespace LifeManager.Server.Model.Domain {
         public long Id { get; set; }
 
         public long OwnedByUserId { get; set; }
+        
+        public bool Active { get; set; }
 
         public string Name { get; set; }
 

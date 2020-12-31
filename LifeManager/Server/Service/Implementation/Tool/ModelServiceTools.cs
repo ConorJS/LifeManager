@@ -30,6 +30,8 @@ namespace LifeManager.Server.Service.Implementation.Tool {
             domain.DateTimeLastModified = DateTime.Now;
 
             domain.OwnedByUserId = _userService.GetLoggedInUser().Id;
+
+            domain.Active = true;
         }
 
         public void UpdateProcessing<T>(IItem domain) where T : class, IItemEntity {
@@ -42,16 +44,19 @@ namespace LifeManager.Server.Service.Implementation.Tool {
 
         public void RemoveEntity<T>(long id) where T : class, IItemEntity {
             T entity = _lifeManagerRepository.LoadEntity<T>(id);
+            
             if (entity == null) {
                 FailReferencingVerb("remove", id, typeof(T));
+                
+            } else {
+                entity.Active = false;
+                _lifeManagerRepository.SaveEntity(entity);
             }
-
-            _lifeManagerRepository.RemoveEntity(entity);
         }
 
         //== helpers ================================================================================================================================
 
-        private static void FailReferencingVerb(String verb, long entityId, Type entityType) {
+        private static void FailReferencingVerb(string verb, long entityId, Type entityType) {
             throw new InvalidOperationException(
                 $"Tried to ${verb} a ${entityType} (id = {entityId}), but the item doesn't exist. " +
                 $"This could indicate a misuse of save resource/service methods, or a malformed query to a REST endpoint.");

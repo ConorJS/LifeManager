@@ -5,6 +5,7 @@ namespace LifeManager.Server.Model.Mapper {
         public void ToDomain(IItemEntity entity, IItem domain) {
             domain.Id = entity.Id;
             domain.OwnedByUserId = entity.OwnedByUserId;
+            domain.Active = entity.Active;
             domain.Name = entity.Name;
             domain.DateTimeCreated = entity.DateTimeCreated;
             domain.DateTimeLastModified = entity.DateTimeLastModified;
@@ -13,6 +14,7 @@ namespace LifeManager.Server.Model.Mapper {
         public void ToEntity(IItem domain, IItemEntity entity) {
             entity.Id = domain.Id;
             entity.OwnedByUserId = domain.OwnedByUserId;
+            entity.Active = domain.Active;
             entity.Name = domain.Name;
 
             // When mapping down to the entity model for the first time, populate these values.

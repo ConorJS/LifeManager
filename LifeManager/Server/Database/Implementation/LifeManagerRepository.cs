@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LifeManager.Server.Model;
 using LifeManager.Server.Model.Entity;
@@ -43,6 +44,7 @@ namespace LifeManager.Server.Database.Implementation {
         public List<T> LoadEntities<T>(long ownedByUserId) where T : class, IItemEntity {
             List<T> entities = _dbContext.Set<T>()
                 .Where(t => t.OwnedByUserId == ownedByUserId)
+                .Where(t => t.Active)
                 .ToList();
             entities.ForEach(Detach);
 
@@ -50,16 +52,17 @@ namespace LifeManager.Server.Database.Implementation {
         }
         
         public T LoadEntity<T>(long id) where T : class, IItemEntity {
-            return DetachedEntityOrNull(_dbContext.Set<T>().Find(id));
+            var entity = DetachedEntityOrNull(_dbContext.Set<T>().Find(id));
+
+            if (!entity.Active) {
+                throw new InvalidOperationException($"Tried to load a ${typeof(T)} entity (id = ${id}), but it has already been removed.");
+            }
+
+            return entity;
         }
 
         public void SaveEntity<T>(T entity) where T : class, IItemEntity {
             _dbContext.Set<T>().Update(entity);
-            _dbContext.SaveChanges();
-        }
-
-        public void RemoveEntity<T>(T entity) where T : class, IItemEntity {
-            _dbContext.Set<T>().Remove(entity);
             _dbContext.SaveChanges();
         }
 
