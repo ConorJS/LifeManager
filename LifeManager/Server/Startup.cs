@@ -1,8 +1,9 @@
 using LifeManager.Server.Database;
 using LifeManager.Server.Database.Implementation;
-using LifeManager.Server.Model.Domain;
+using LifeManager.Server.Security;
 using LifeManager.Server.Service;
 using LifeManager.Server.Service.Implementation;
+using LifeManager.Server.Service.Implementation.Tool;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -30,6 +31,9 @@ namespace LifeManager.Server {
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
             
             services.AddScoped<ILifeManagerRepository, LifeManagerRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IModelServiceTools, ModelServiceTools>();
+            
             services.AddScoped<IDummyDataService, DummyDataService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IChoreService, ChoreService>();

@@ -1,73 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using LifeManager.Server.Model;
 using LifeManager.Server.Model.Entity;
+using LifeManager.Server.Security;
 
 namespace LifeManager.Server.Database {
     public interface ILifeManagerRepository : IDisposable {
+        //== user ===================================================================================================================================
+        
+        public UserEntity LoadUser(long id);
+        
         //== dummy ==================================================================================================================================
         
         public DummyDataEntity LoadDummyData(long id);
 
         public void SaveDummyData(DummyDataEntity dummyDataEntity);
         
-        //== appointment ============================================================================================================================
+        //== queries ================================================================================================================================
 
-        public List<AppointmentEntity> LoadAppointments();
-        
-        public AppointmentEntity LoadAppointment(long id);
+        public List<T> LoadEntities<T>(long ownedByUserId) where T : class, IItemEntity;
 
-        public void SaveAppointment(AppointmentEntity appointmentEntity);
-        
-        public void RemoveAppointment(AppointmentEntity appointmentEntity);
-        
-        //== chore ==================================================================================================================================
+        public T LoadEntity<T>(long id) where T : class, IItemEntity;
 
-        public List<ChoreEntity> LoadChores();
-        
-        public ChoreEntity LoadChore(long id);
-        
-        public void SaveChore(ChoreEntity choreEntity);
-        
-        public void RemoveChore(ChoreEntity choreEntity);
-        
-        //== leisure activity =======================================================================================================================
+        public void SaveEntity<T>(T entity) where T : class, IItemEntity;
 
-        public List<LeisureActivityEntity> LoadLeisureActivities();
-        
-        public LeisureActivityEntity LoadLeisureActivity(long id);
-
-        public void SaveLeisureActivity(LeisureActivityEntity leisureActivityEntity);
-        
-        public void RemoveLeisureActivity(LeisureActivityEntity leisureActivityEntity);
-
-        //== principle ==============================================================================================================================
-        
-        public List<PrincipleEntity> LoadPrinciples();
-        
-        public PrincipleEntity LoadPrinciple(long id);
-
-        public void SavePrinciple(PrincipleEntity principleEntity);
-        
-        public void RemovePrinciple(PrincipleEntity principleEntity);
-        
-        //== recurring tasks ========================================================================================================================
-
-        public List<RecurringTaskEntity> LoadRecurringTasks();
-        
-        public RecurringTaskEntity LoadRecurringTask(long id);
-
-        public void SaveRecurringTask(RecurringTaskEntity recurringTaskEntity);
-        
-        public void RemoveRecurringTask(RecurringTaskEntity recurringTaskEntity);
-        
-        //== to do tasks ============================================================================================================================
-
-        public List<ToDoTaskEntity> LoadToDoTasks();
-
-        public ToDoTaskEntity LoadToDoTask(long id);
-
-        public void SaveToDoTask(ToDoTaskEntity toDoTaskEntity);
-
-        public void RemoveToDoTask(ToDoTaskEntity toDoTaskEntity);
+        public void RemoveEntity<T>(T entity) where T : class, IItemEntity;
     }
 }

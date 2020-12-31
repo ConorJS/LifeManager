@@ -1,4 +1,5 @@
 ﻿using LifeManager.Server.Model.Entity;
+using LifeManager.Server.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace LifeManager.Server.Database.Implementation {
@@ -14,6 +15,8 @@ namespace LifeManager.Server.Database.Implementation {
         //== entity definitions =====================================================================================================================
 
         public DbSet<DummyDataEntity> Dummy { get; set; }
+
+        public DbSet<UserEntity> User { get; set; }
 
         public DbSet<AppointmentEntity> Appointment { get; set; }
 

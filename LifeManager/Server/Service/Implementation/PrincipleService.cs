@@ -5,26 +5,34 @@ using LifeManager.Server.Database;
 using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 using LifeManager.Server.Model.Mapper;
+using LifeManager.Server.Security;
+using LifeManager.Server.Service.Implementation.Tool;
 
 namespace LifeManager.Server.Service.Implementation {
     public class PrincipleService : IPrincipleService {
+        //== attributes =============================================================================================================================
+        
         private readonly ILifeManagerRepository _lifeManagerRepository;
+
+        private readonly IModelServiceTools _modelServiceTools;
         
         private readonly PrincipleMapper _principleMapper = new PrincipleMapper();
         
-        public PrincipleService(ILifeManagerRepository lifeManagerRepository) {
+        //== init ===================================================================================================================================
+        
+        public PrincipleService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools) {
             _lifeManagerRepository = lifeManagerRepository;
+            _modelServiceTools = modelServiceTools;
         }
+        
+        //== methods ================================================================================================================================
 
-        // TODO: Should be GetAllForUser(userId)
         public IEnumerable<Principle> GetAll() {
-            List<PrincipleEntity> entities = _lifeManagerRepository.LoadPrinciples();
-
-            return entities.Select(entity => _principleMapper.ToDomain(entity));
+            return _modelServiceTools.AllEntitiesForLoggedInUser<PrincipleEntity>().Select(entity => _principleMapper.ToDomain(entity));
         }
 
         public Principle GetById(long id) {
-            PrincipleEntity entity = _lifeManagerRepository.LoadPrinciple(id);
+            PrincipleEntity entity = _lifeManagerRepository.LoadEntity<PrincipleEntity>(id);
 
             if (entity == null) {
                 return null;
@@ -34,32 +42,19 @@ namespace LifeManager.Server.Service.Implementation {
         }
 
         public void Create(Principle domain) {
-            domain.DateTimeCreated = DateTime.Now;
-            domain.DateTimeLastModified = DateTime.Now;
+            _modelServiceTools.InitialiseNewItem(domain);
 
-            _lifeManagerRepository.SavePrinciple(_principleMapper.ToEntity(domain));
+            _lifeManagerRepository.SaveEntity(_principleMapper.ToEntity(domain));
         }
 
         public void Update(Principle domain) {
-            if (_lifeManagerRepository.LoadPrinciple(domain.Id) == null) {
-                throw new InvalidOperationException(
-                    $"Tried to update a PrincipleEntity (id = {domain.Id}), but the task doesn't exist. " +
-                    $"This could indicate a misuse of save resources/service endpoints.");
-            }
-
-            domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SavePrinciple(_principleMapper.ToEntity(domain));
+            _modelServiceTools.UpdateProcessing<PrincipleEntity>(domain);
+            
+            _lifeManagerRepository.SaveEntity(_principleMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {
-            PrincipleEntity principleEntity = _lifeManagerRepository.LoadPrinciple(id);
-            if (principleEntity == null) {
-                throw new InvalidOperationException(
-                    $"Tried to remove a PrincipleEntity (id = {id}), but the task doesn't exist. " +
-                    $"This could indicate a misuse of save resources/service endpoints.");
-            }
-
-            _lifeManagerRepository.RemovePrinciple(principleEntity);
+            _modelServiceTools.RemoveEntity<PrincipleEntity>(id);
         }
     }
 }

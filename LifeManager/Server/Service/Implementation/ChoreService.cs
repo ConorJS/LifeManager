@@ -5,26 +5,34 @@ using LifeManager.Server.Database;
 using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 using LifeManager.Server.Model.Mapper;
+using LifeManager.Server.Security;
+using LifeManager.Server.Service.Implementation.Tool;
 
 namespace LifeManager.Server.Service.Implementation {
     public class ChoreService : IChoreService {
+        //== attributes =============================================================================================================================
+        
         private readonly ILifeManagerRepository _lifeManagerRepository;
+
+        private readonly IModelServiceTools _modelServiceTools;
         
         private readonly ChoreMapper _choreMapper = new ChoreMapper();
         
-        public ChoreService(ILifeManagerRepository lifeManagerRepository) {
+        //== init ===================================================================================================================================
+        
+        public ChoreService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools) {
             _lifeManagerRepository = lifeManagerRepository;
+            _modelServiceTools = modelServiceTools;
         }
+        
+        //== methods ================================================================================================================================
 
-        // TODO: Should be GetAllForUser(userId)
         public IEnumerable<Chore> GetAll() {
-            List<ChoreEntity> entities = _lifeManagerRepository.LoadChores();
-
-            return entities.Select(entity => _choreMapper.ToDomain(entity));
+            return _modelServiceTools.AllEntitiesForLoggedInUser<ChoreEntity>().Select(entity => _choreMapper.ToDomain(entity));
         }
 
         public Chore GetById(long id) {
-            ChoreEntity entity = _lifeManagerRepository.LoadChore(id);
+            ChoreEntity entity = _lifeManagerRepository.LoadEntity<ChoreEntity>(id);
 
             if (entity == null) {
                 return null;
@@ -34,32 +42,19 @@ namespace LifeManager.Server.Service.Implementation {
         }
 
         public void Create(Chore domain) {
-            domain.DateTimeCreated = DateTime.Now;
-            domain.DateTimeLastModified = DateTime.Now;
+            _modelServiceTools.InitialiseNewItem(domain);
 
-            _lifeManagerRepository.SaveChore(_choreMapper.ToEntity(domain));
+            _lifeManagerRepository.SaveEntity(_choreMapper.ToEntity(domain));
         }
 
         public void Update(Chore domain) {
-            if (_lifeManagerRepository.LoadChore(domain.Id) == null) {
-                throw new InvalidOperationException(
-                    $"Tried to update a ChoreEntity (id = {domain.Id}), but the task doesn't exist. " +
-                    $"This could indicate a misuse of save resources/service endpoints.");
-            }
-
-            domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SaveChore(_choreMapper.ToEntity(domain));
+            _modelServiceTools.UpdateProcessing<ChoreEntity>(domain);
+            
+            _lifeManagerRepository.SaveEntity(_choreMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {
-            ChoreEntity choreEntity = _lifeManagerRepository.LoadChore(id);
-            if (choreEntity == null) {
-                throw new InvalidOperationException(
-                    $"Tried to remove a ChoreEntity (id = {id}), but the task doesn't exist. " +
-                    $"This could indicate a misuse of save resources/service endpoints.");
-            }
-
-            _lifeManagerRepository.RemoveChore(choreEntity);
+            _modelServiceTools.RemoveEntity<ChoreEntity>(id);
         }
     }
 }

@@ -5,26 +5,34 @@ using LifeManager.Server.Database;
 using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 using LifeManager.Server.Model.Mapper;
+using LifeManager.Server.Security;
+using LifeManager.Server.Service.Implementation.Tool;
 
 namespace LifeManager.Server.Service.Implementation {
     public class RecurringTaskService : IRecurringTaskService {
+        //== attributes =============================================================================================================================
+        
         private readonly ILifeManagerRepository _lifeManagerRepository;
+
+        private readonly IModelServiceTools _modelServiceTools;
         
         private readonly RecurringTaskMapper _recurringTaskMapper = new RecurringTaskMapper();
         
-        public RecurringTaskService(ILifeManagerRepository lifeManagerRepository) {
+        //== init ===================================================================================================================================
+        
+        public RecurringTaskService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools) {
             _lifeManagerRepository = lifeManagerRepository;
+            _modelServiceTools = modelServiceTools;
         }
+        
+        //== methods ================================================================================================================================
 
-        // TODO: Should be GetAllForUser(userId)
         public IEnumerable<RecurringTask> GetAll() {
-            List<RecurringTaskEntity> entities = _lifeManagerRepository.LoadRecurringTasks();
-
-            return entities.Select(entity => _recurringTaskMapper.ToDomain(entity));
+            return _modelServiceTools.AllEntitiesForLoggedInUser<RecurringTaskEntity>().Select(entity => _recurringTaskMapper.ToDomain(entity));
         }
 
         public RecurringTask GetById(long id) {
-            RecurringTaskEntity entity = _lifeManagerRepository.LoadRecurringTask(id);
+            RecurringTaskEntity entity = _lifeManagerRepository.LoadEntity<RecurringTaskEntity>(id);
 
             if (entity == null) {
                 return null;
@@ -34,32 +42,19 @@ namespace LifeManager.Server.Service.Implementation {
         }
 
         public void Create(RecurringTask domain) {
-            domain.DateTimeCreated = DateTime.Now;
-            domain.DateTimeLastModified = DateTime.Now;
+            _modelServiceTools.InitialiseNewItem(domain);
 
-            _lifeManagerRepository.SaveRecurringTask(_recurringTaskMapper.ToEntity(domain));
+            _lifeManagerRepository.SaveEntity(_recurringTaskMapper.ToEntity(domain));
         }
 
         public void Update(RecurringTask domain) {
-            if (_lifeManagerRepository.LoadRecurringTask(domain.Id) == null) {
-                throw new InvalidOperationException(
-                    $"Tried to update a RecurringTaskEntity (id = {domain.Id}), but the task doesn't exist. " +
-                    $"This could indicate a misuse of save resources/service endpoints.");
-            }
-
-            domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SaveRecurringTask(_recurringTaskMapper.ToEntity(domain));
+            _modelServiceTools.UpdateProcessing<RecurringTaskEntity>(domain);
+            
+            _lifeManagerRepository.SaveEntity(_recurringTaskMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {
-            RecurringTaskEntity recurringTaskEntity = _lifeManagerRepository.LoadRecurringTask(id);
-            if (recurringTaskEntity == null) {
-                throw new InvalidOperationException(
-                    $"Tried to remove a RecurringTaskEntity (id = {id}), but the task doesn't exist. " +
-                    $"This could indicate a misuse of save resources/service endpoints.");
-            }
-
-            _lifeManagerRepository.RemoveRecurringTask(recurringTaskEntity);
+            _modelServiceTools.RemoveEntity<RecurringTaskEntity>(id);
         }
     }
 }

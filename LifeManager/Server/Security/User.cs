@@ -1,12 +1,10 @@
 ﻿using System;
 
-namespace LifeManager.Server.Model.Domain {
-    public class LeisureActivity : IItem {
+namespace LifeManager.Server.Security {
+    public class User {
         public long Id { get; set; }
 
-        public long OwnedByUserId { get; set; }
-
-        public string Name { get; set; }
+        public string DisplayName { get; set; }
 
         public DateTime? DateTimeCreated { get; set; }
 

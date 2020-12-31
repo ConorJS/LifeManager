@@ -16,7 +16,7 @@ Note: If a scenario does not describes any preamble/set-up, it is implied there 
 
 	Remove a task
 	Remove a task, while a task is being created
-	Remove a task, while a different task is being edited
+	Remove a task, while a different task is being edited, and complete the edit.
 	Remove a task, while that same task is being edited (the edit screen should close)
 
 	

@@ -5,26 +5,34 @@ using LifeManager.Server.Database;
 using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 using LifeManager.Server.Model.Mapper;
+using LifeManager.Server.Security;
+using LifeManager.Server.Service.Implementation.Tool;
 
 namespace LifeManager.Server.Service.Implementation {
     public class LeisureActivityService : ILeisureActivityService {
+        //== attributes =============================================================================================================================
+        
         private readonly ILifeManagerRepository _lifeManagerRepository;
+
+        private readonly IModelServiceTools _modelServiceTools;
         
         private readonly LeisureActivityMapper _leisureActivityMapper = new LeisureActivityMapper();
         
-        public LeisureActivityService(ILifeManagerRepository lifeManagerRepository) {
+        //== init ===================================================================================================================================
+        
+        public LeisureActivityService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools) {
             _lifeManagerRepository = lifeManagerRepository;
+            _modelServiceTools = modelServiceTools;
         }
+        
+        //== methods ================================================================================================================================
 
-        // TODO: Should be GetAllForUser(userId)
         public IEnumerable<LeisureActivity> GetAll() {
-            List<LeisureActivityEntity> entities = _lifeManagerRepository.LoadLeisureActivities();
-
-            return entities.Select(entity => _leisureActivityMapper.ToDomain(entity));
+            return _modelServiceTools.AllEntitiesForLoggedInUser<LeisureActivityEntity>().Select(entity => _leisureActivityMapper.ToDomain(entity));
         }
 
         public LeisureActivity GetById(long id) {
-            LeisureActivityEntity entity = _lifeManagerRepository.LoadLeisureActivity(id);
+            LeisureActivityEntity entity = _lifeManagerRepository.LoadEntity<LeisureActivityEntity>(id);
 
             if (entity == null) {
                 return null;
@@ -34,32 +42,19 @@ namespace LifeManager.Server.Service.Implementation {
         }
 
         public void Create(LeisureActivity domain) {
-            domain.DateTimeCreated = DateTime.Now;
-            domain.DateTimeLastModified = DateTime.Now;
+            _modelServiceTools.InitialiseNewItem(domain);
 
-            _lifeManagerRepository.SaveLeisureActivity(_leisureActivityMapper.ToEntity(domain));
+            _lifeManagerRepository.SaveEntity(_leisureActivityMapper.ToEntity(domain));
         }
 
         public void Update(LeisureActivity domain) {
-            if (_lifeManagerRepository.LoadLeisureActivity(domain.Id) == null) {
-                throw new InvalidOperationException(
-                    $"Tried to update a LeisureActivityEntity (id = {domain.Id}), but the task doesn't exist. " +
-                    $"This could indicate a misuse of save resources/service endpoints.");
-            }
-
-            domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SaveLeisureActivity(_leisureActivityMapper.ToEntity(domain));
+            _modelServiceTools.UpdateProcessing<LeisureActivityEntity>(domain);
+            
+            _lifeManagerRepository.SaveEntity(_leisureActivityMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {
-            LeisureActivityEntity leisureActivityEntity = _lifeManagerRepository.LoadLeisureActivity(id);
-            if (leisureActivityEntity == null) {
-                throw new InvalidOperationException(
-                    $"Tried to remove a LeisureActivityEntity (id = {id}), but the task doesn't exist. " +
-                    $"This could indicate a misuse of save resources/service endpoints.");
-            }
-
-            _lifeManagerRepository.RemoveLeisureActivity(leisureActivityEntity);
+            _modelServiceTools.RemoveEntity<LeisureActivityEntity>(id);
         }
     }
 }

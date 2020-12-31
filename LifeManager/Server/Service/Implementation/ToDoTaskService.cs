@@ -1,30 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using LifeManager.Server.Database;
 using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 using LifeManager.Server.Model.Mapper;
+using LifeManager.Server.Service.Implementation.Tool;
 
 namespace LifeManager.Server.Service.Implementation {
     public class ToDoTaskService : IToDoTaskService {
+        //== attributes =============================================================================================================================
+        
         private readonly ILifeManagerRepository _lifeManagerRepository;
 
+        private readonly IModelServiceTools _modelServiceTools;
+
         private readonly ToDoTaskMapper _toDoTaskMapper = new ToDoTaskMapper();
+        
+        //== init ===================================================================================================================================
 
-        public ToDoTaskService(ILifeManagerRepository lifeManagerRepository) {
+        public ToDoTaskService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools) {
             _lifeManagerRepository = lifeManagerRepository;
+            _modelServiceTools = modelServiceTools;
         }
+        
+        //== methods ================================================================================================================================
 
-        // TODO: Should be GetAllForUser(userId)
         public IEnumerable<ToDoTask> GetAll() {
-            List<ToDoTaskEntity> entities = _lifeManagerRepository.LoadToDoTasks();
-
-            return entities.Select(entity => _toDoTaskMapper.ToDomain(entity));
+            return _modelServiceTools.AllEntitiesForLoggedInUser<ToDoTaskEntity>().Select(entity => _toDoTaskMapper.ToDomain(entity));
         }
 
         public ToDoTask GetById(long id) {
-            ToDoTaskEntity entity = _lifeManagerRepository.LoadToDoTask(id);
+            ToDoTaskEntity entity = _lifeManagerRepository.LoadEntity<ToDoTaskEntity>(id);
 
             if (entity == null) {
                 return null;
@@ -34,32 +40,19 @@ namespace LifeManager.Server.Service.Implementation {
         }
 
         public void Create(ToDoTask domain) {
-            domain.DateTimeCreated = DateTime.Now;
-            domain.DateTimeLastModified = DateTime.Now;
+            _modelServiceTools.InitialiseNewItem(domain);
 
-            _lifeManagerRepository.SaveToDoTask(_toDoTaskMapper.ToEntity(domain));
+            _lifeManagerRepository.SaveEntity(_toDoTaskMapper.ToEntity(domain));
         }
 
         public void Update(ToDoTask domain) {
-            if (_lifeManagerRepository.LoadToDoTask(domain.Id) == null) {
-                throw new InvalidOperationException(
-                    $"Tried to update a ToDoTaskEntity (id = {domain.Id}), but the task doesn't exist. " +
-                    $"This could indicate a misuse of save resources/service endpoints.");
-            }
-
-            domain.DateTimeLastModified = DateTime.Now;
-            _lifeManagerRepository.SaveToDoTask(_toDoTaskMapper.ToEntity(domain));
+            _modelServiceTools.UpdateProcessing<ToDoTaskEntity>(domain);
+            
+            _lifeManagerRepository.SaveEntity(_toDoTaskMapper.ToEntity(domain));
         }
 
         public void Remove(long id) {
-            ToDoTaskEntity toDoTaskEntity = _lifeManagerRepository.LoadToDoTask(id);
-            if (toDoTaskEntity == null) {
-                throw new InvalidOperationException(
-                    $"Tried to remove a ToDoTaskEntity (id = {id}), but the task doesn't exist. " +
-                    $"This could indicate a misuse of save resources/service endpoints.");
-            }
-
-            _lifeManagerRepository.RemoveToDoTask(toDoTaskEntity);
+            _modelServiceTools.RemoveEntity<ToDoTaskEntity>(id);
         }
     }
 }
