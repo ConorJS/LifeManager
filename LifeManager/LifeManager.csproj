@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <TypeScriptCompile Include="ClientApp\src\components\modal-impl.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\lm-modal.tsx" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

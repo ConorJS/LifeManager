@@ -1,14 +1,14 @@
 ﻿import Modal from "../modal";
 import React from "react";
-import './modal-impl.scss';
+import './lm-modal.scss';
 
-interface ModalImplProps {
+interface LmModalProps {
     children: any;
     handleClose: Function;
 }
 
-export class ModalImpl extends React.Component<ModalImplProps, any> {
-    constructor(props: ModalImplProps){
+export class LmModal extends React.Component<LmModalProps, any> {
+    constructor(props: LmModalProps){
         super(props);
         this.escFunction = this.escFunction.bind(this);
     }

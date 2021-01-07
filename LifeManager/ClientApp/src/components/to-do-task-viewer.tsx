@@ -1,4 +1,5 @@
 ﻿import React, {CSSProperties, FunctionComponent, SyntheticEvent, useState} from "react";
+import {LmModal} from "./lm-modal";
 
 export const ToDoTaskViewer: FunctionComponent = () => {
     //== attributes ===================================================================================================
@@ -17,25 +18,26 @@ export const ToDoTaskViewer: FunctionComponent = () => {
     }
 
     const changeAction = (activeItemType: Action): void => {
-        setActiveItemDetails({...activeItemDetails,
+        setActiveItemDetails({
+            ...activeItemDetails,
             newName: '',
             newRelativeSize: 1
         });
-        
+
         setActiveAction(activeItemType);
     }
-    
+
     const stopAction = (): void => {
         changeAction(Action.NONE);
         setItemBeingEdited(undefined);
     }
-    
-    function creating(): boolean { 
-        return Action.CREATE === activeAction; 
+
+    function creating(): boolean {
+        return Action.CREATE === activeAction;
     }
-    
-    function editing(): boolean { 
-        return Action.EDIT === activeAction; 
+
+    function editing(): boolean {
+        return Action.EDIT === activeAction;
     }
 
     function activeItemAttributeChangeHandler(changeEvent: SyntheticEvent, itemAttribute: ItemAttribute): void {
@@ -59,14 +61,15 @@ export const ToDoTaskViewer: FunctionComponent = () => {
     }
 
     const editItem = (toDoTask: ToDoTask) => {
-        changeAction(Action.EDIT); 
-        setActiveItemDetails({...activeItemDetails,
+        changeAction(Action.EDIT);
+        setActiveItemDetails({
+            ...activeItemDetails,
             newName: toDoTask.name,
             newRelativeSize: toDoTask.relativeSize
         })
         setItemBeingEdited(toDoTask)
     }
-    
+
     const createToDoTask = () => {
         if (!creating()) {
             // TODO: This problem should be addressed with form validation, and appropriate error messages.
@@ -101,7 +104,8 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({...itemBeingEdited,
+            body: JSON.stringify({
+                ...itemBeingEdited,
                 name: activeItemDetails.newName,
                 relativeSize: activeItemDetails.newRelativeSize
             })
@@ -122,7 +126,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             if (itemBeingEdited === toDoTask) {
                 stopAction();
             }
-            
+
             refresh();
         });
     }
@@ -158,6 +162,44 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         );
     });
 
+    let modalElement;
+    if (creating() || editing()) {
+        modalElement =
+            <LmModal handleClose={() => setActiveAction(Action.NONE)}>
+                <div className="modal-container">
+                    <div>{editing() ? "Edit" : "Creat"}ing a To Do task...</div>
+
+                    <div>
+                        <label htmlFor="active-todo-task-name">Name</label>
+                        <input id="active-todo-task-name"
+                               type="string"
+                               value={activeItemDetails.newName}
+                               onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.NAME)}/>
+                    </div>
+
+                    <div>
+                        <label htmlFor="editing-todo-task-relative-size">Relative Size</label>
+                        <input id="editing-todo-task-relative-size"
+                               type="number"
+                               value={activeItemDetails.newRelativeSize}
+                               onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.RELATIVE_SIZE)}/>
+                    </div>
+
+                    <div>
+                        <button className="btn btn-primary"
+                                onClick={editing() ? saveToDoTask : createToDoTask}>
+                            Save
+                        </button>
+
+                        <button className="btn btn-primary"
+                                onClick={stopAction}>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </LmModal>
+    }
+
     return (
         <div>
             <div>To Do Tasks:</div>
@@ -168,46 +210,16 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                 New
             </button>
 
-            <div style={editing() || creating() ? {} : displayNone}>
-                <div>{editing() ? "Edit" : "Creat"}ing a To Do task...</div>
-
-                <div>
-                    <label htmlFor="active-todo-task-name">Name</label>
-                    <input id="active-todo-task-name"
-                           type="string"
-                           value={activeItemDetails.newName}
-                           onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.NAME)}/>
-                </div>
-
-                <div>
-                    <label htmlFor="editing-todo-task-relative-size">Relative Size</label>
-                    <input id="editing-todo-task-relative-size"
-                           type="number"
-                           value={activeItemDetails.newRelativeSize}
-                           onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.RELATIVE_SIZE)}/>
-                </div>
-
-                <div>
-                    <button className="btn btn-primary"
-                            onClick={editing() ? saveToDoTask : createToDoTask}>
-                        Save
-                    </button>
-
-                    <button className="btn btn-primary"
-                            onClick={stopAction}>
-                        Cancel
-                    </button>
-                </div>
-            </div>
+            {modalElement}
         </div>
     )
 }
 
 //== types ============================================================================================================
 
-export class ActiveItemDetails {    
+export class ActiveItemDetails {
     newName: string = '';
-    
+
     newRelativeSize: number = 1;
 }
 
