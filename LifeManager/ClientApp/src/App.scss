@@ -1,4 +1,14 @@
+@import 'AppConstants.scss';
+
 .navigation-button {
     width: 200px;
     height: 200px;
+}
+
+.modal-container {
+    width: 500px;
+    height: 500px;
+    background-color: white;
+    border-radius: 12.5px;
+    border: 2px solid $lm-green;
 }

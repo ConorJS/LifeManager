@@ -3,6 +3,7 @@ import {DataViewer} from './components/data-viewer';
 
 import './App.scss'
 import {ToDoTaskViewer} from "./components/to-do-task-viewer";
+import {ModalImpl} from "./components/modal-impl";
 
 enum MenuItem {
     HOME,
@@ -11,10 +12,11 @@ enum MenuItem {
     TODO_TASKS
 }
 
-export const App: FunctionComponent = () => {    
+export const App: FunctionComponent = () => {
     //== state ========================================================================================================
 
     const [selectedNavigationItem, setSelectedNavigationItem] = useState(MenuItem.HOME);
+    const [displayModal, setDisplayModal] = useState(false);
 
     //== methods ======================================================================================================
 
@@ -50,7 +52,19 @@ export const App: FunctionComponent = () => {
             </div>
 
             <div style={displayToggleStyleFor(MenuItem.HOME)}>
-                home
+                {displayModal &&
+                <div>
+                    <ModalImpl handleClose={() => setDisplayModal(false)}>
+                        <div className="modal-container">
+                            test modal contents
+                        </div>
+                    </ModalImpl>
+                </div>
+                }
+
+                <button onClick={() => setDisplayModal(true)}>
+                    T
+                </button>
             </div>
 
             <div style={displayToggleStyleFor(MenuItem.DATA_VIEWER)}>
