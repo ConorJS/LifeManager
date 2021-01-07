@@ -1,6 +1,7 @@
 --- Required for app functionality
-Comments in Tasks
 
+Comments in Tasks
+Make room for more icons (and related styling)
 
 --- Medium priority
 'Processing' overlay when waiting on important async events
@@ -9,9 +10,11 @@ Generalise HTTP requests
 
 
 --- Lower priority
+Don't use display: none to perform a switch/render for navigation items
 Use form validation for creating/editing items
 Return error responses from controllers if things go wrong
 Service classes should each have only a singleton mapper, instead of re-initialising mappers per call
 Create, Edit, Delete, etc. for all object types could be generalised?
 Try to remove setting up 'Postgres' user, if possible, in createDatabase.sql
 Move test scripts out of root of Environment folder, only have scratch test here (work on tests here, then move)
+Standardise casing in UI file names
