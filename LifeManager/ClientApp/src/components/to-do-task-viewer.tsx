@@ -1,5 +1,6 @@
 ﻿import React, {CSSProperties, FunctionComponent, SyntheticEvent, useState} from "react";
 import {LmModal} from "./lm-modal";
+import './to-do-task-viewer.scss';
 
 export const ToDoTaskViewer: FunctionComponent = () => {
     //== attributes ===================================================================================================
@@ -21,7 +22,8 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         setActiveItemDetails({
             ...activeItemDetails,
             newName: '',
-            newRelativeSize: 1
+            newRelativeSize: 1,
+            newComments: ''
         });
 
         setActiveAction(activeItemType);
@@ -56,6 +58,10 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
             case ItemAttribute.RELATIVE_SIZE:
                 setActiveItemDetails({...activeItemDetails, newRelativeSize: Number.parseInt(value)});
+                break;
+
+            case ItemAttribute.COMMENTS:
+                setActiveItemDetails({...activeItemDetails, newComments: value as string});
                 break;
         }
     }
@@ -147,7 +153,6 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
     //== render =======================================================================================================
 
-    const displayNone: CSSProperties = {display: "none"};
     const items: JSX.Element[] = [];
     toDoTasks.forEach((toDoTask, index) => {
         items.push(
@@ -169,7 +174,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                 <div className="modal-container">
                     <div>{editing() ? "Edit" : "Creat"}ing a To Do task...</div>
 
-                    <div>
+                    <div className="modal-field">
                         <label htmlFor="active-todo-task-name">Name</label>
                         <input id="active-todo-task-name"
                                type="string"
@@ -177,21 +182,30 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                                onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.NAME)}/>
                     </div>
 
-                    <div>
-                        <label htmlFor="editing-todo-task-relative-size">Relative Size</label>
+                    <div className="modal-field">
+                        <label htmlFor="editing-todo-task-relative-size">Size</label>
                         <input id="editing-todo-task-relative-size"
                                type="number"
                                value={activeItemDetails.newRelativeSize}
                                onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.RELATIVE_SIZE)}/>
                     </div>
 
-                    <div>
-                        <button className="btn btn-primary"
+                    <div className="modal-field">
+                        <label htmlFor="editing-todo-task-comments">Comments (not yet persisted!)</label>
+                        <textarea id="editing-todo-task-comments"
+                                  rows={4}
+                                  typeof="string"
+                                  value={activeItemDetails.newComments}
+                                  onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.COMMENTS)}/>
+                    </div>
+
+                    <div className="modal-buttons-container">
+                        <button className="btn btn-primary modal-button"
                                 onClick={editing() ? saveToDoTask : createToDoTask}>
                             Save
                         </button>
 
-                        <button className="btn btn-primary"
+                        <button className="btn btn-primary modal-button"
                                 onClick={stopAction}>
                             Cancel
                         </button>
@@ -221,6 +235,8 @@ export class ActiveItemDetails {
     newName: string = '';
 
     newRelativeSize: number = 1;
+
+    newComments: string = '';
 }
 
 export class ToDoTask {
@@ -248,5 +264,6 @@ export enum Action {
 
 export enum ItemAttribute {
     NAME,
-    RELATIVE_SIZE
+    RELATIVE_SIZE,
+    COMMENTS
 }

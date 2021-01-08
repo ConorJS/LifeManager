@@ -1,3 +1,20 @@
-﻿div.todo-task-row {
-  
+﻿div.modal-field {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin: 25px;
+}
+
+div.modal-buttons-container {
+  bottom: 15px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: inherit;
+}
+
+button.modal-button {
+  width: 100px;
+  margin-left: 25px;
+  margin-right: 25px;
 }
