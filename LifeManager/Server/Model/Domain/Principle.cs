@@ -10,6 +10,8 @@ namespace LifeManager.Server.Model.Domain {
 
         public string Name { get; set; }
 
+        public string Comments { get; set; }
+
         public DateTime? DateTimeCreated { get; set; }
 
         public DateTime? DateTimeLastModified { get; set; }

@@ -71,6 +71,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         setActiveItemDetails({
             ...activeItemDetails,
             newName: toDoTask.name,
+            newComments: toDoTask.comments,
             newRelativeSize: toDoTask.relativeSize
         })
         setItemBeingEdited(toDoTask)
@@ -83,7 +84,8 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             return;
         }
 
-        const toDoTask = new ToDoTask(activeItemDetails.newName, activeItemDetails.newRelativeSize);
+        const toDoTask = new ToDoTask(
+            activeItemDetails.newName, activeItemDetails.newComments, activeItemDetails.newRelativeSize);
 
         const requestOptions = {
             method: 'POST',
@@ -113,6 +115,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             body: JSON.stringify({
                 ...itemBeingEdited,
                 name: activeItemDetails.newName,
+                comments: activeItemDetails.newComments,
                 relativeSize: activeItemDetails.newRelativeSize
             })
         };
@@ -243,6 +246,8 @@ export class ToDoTask {
     id?: Number;
 
     name: string;
+    
+    comments: string;
 
     dateTimeCreated?: Date;
 
@@ -250,8 +255,9 @@ export class ToDoTask {
 
     relativeSize: number;
 
-    constructor(name: string, relativeSize: number) {
+    constructor(name: string, comments: string, relativeSize: number) {
         this.name = name;
+        this.comments = comments;
         this.relativeSize = relativeSize;
     }
 }

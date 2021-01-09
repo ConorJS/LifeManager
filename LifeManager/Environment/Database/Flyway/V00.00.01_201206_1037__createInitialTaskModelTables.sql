@@ -3,8 +3,9 @@
 CREATE TABLE "Appointment"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
-    "Name"                 VARCHAR(255) NOT NULL,
     "Active"               BOOL         NOT NULL,
+    "Name"                 VARCHAR(255) NOT NULL,
+    "Comments"             VARCHAR(255),
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "RelativeSize"         INT          NOT NULL
@@ -13,8 +14,9 @@ CREATE TABLE "Appointment"
 CREATE TABLE "Chore"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
-    "Name"                 VARCHAR(255) NOT NULL,
     "Active"               BOOL         NOT NULL,
+    "Name"                 VARCHAR(255) NOT NULL,
+    "Comments"             VARCHAR(255),
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "RelativeSize"         INT          NOT NULL
@@ -23,8 +25,9 @@ CREATE TABLE "Chore"
 CREATE TABLE "LeisureActivity"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
-    "Name"                 VARCHAR(255) NOT NULL,
     "Active"               BOOL         NOT NULL,
+    "Name"                 VARCHAR(255) NOT NULL,
+    "Comments"             VARCHAR(255),
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE
 );
@@ -32,8 +35,9 @@ CREATE TABLE "LeisureActivity"
 CREATE TABLE "Principle"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
-    "Name"                 VARCHAR(255) NOT NULL,
     "Active"               BOOL         NOT NULL,
+    "Name"                 VARCHAR(255) NOT NULL,
+    "Comments"             VARCHAR(255),
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE
 );
@@ -41,8 +45,9 @@ CREATE TABLE "Principle"
 CREATE TABLE "RecurringTask"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
-    "Name"                 VARCHAR(255) NOT NULL,
     "Active"               BOOL         NOT NULL,
+    "Name"                 VARCHAR(255) NOT NULL,
+    "Comments"             VARCHAR(255),
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "RelativeSize"         INT          NOT NULL
@@ -51,8 +56,9 @@ CREATE TABLE "RecurringTask"
 CREATE TABLE "ToDoTask"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
-    "Name"                 VARCHAR(255) NOT NULL,
     "Active"               BOOL         NOT NULL,
+    "Name"                 VARCHAR(255) NOT NULL,
+    "Comments"             VARCHAR(255),
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "RelativeSize"         INT          NOT NULL

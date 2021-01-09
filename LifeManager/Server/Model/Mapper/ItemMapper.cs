@@ -7,6 +7,7 @@ namespace LifeManager.Server.Model.Mapper {
             domain.OwnedByUserId = entity.OwnedByUserId;
             domain.Active = entity.Active;
             domain.Name = entity.Name;
+            domain.Comments = entity.Comments;
             domain.DateTimeCreated = entity.DateTimeCreated;
             domain.DateTimeLastModified = entity.DateTimeLastModified;
         }
@@ -16,6 +17,7 @@ namespace LifeManager.Server.Model.Mapper {
             entity.OwnedByUserId = domain.OwnedByUserId;
             entity.Active = domain.Active;
             entity.Name = domain.Name;
+            entity.Comments = domain.Comments;
 
             // When mapping down to the entity model for the first time, populate these values.
             // These could get overridden during the save; this is mostly to fulfil the non-null constraint on the entity.
