@@ -2,6 +2,48 @@
 import {LmModal} from '../../../components/modal/lm-modal';
 import './to-do-task-viewer.scss';
 
+//== types ============================================================================================================
+
+export class ActiveItemDetails {
+    newName: string = '';
+
+    newRelativeSize: number = 1;
+
+    newComments: string = '';
+}
+
+export class ToDoTask {
+    id?: Number;
+
+    name: string;
+
+    comments: string;
+
+    dateTimeCreated?: Date;
+
+    dateTimeLastModified?: Date;
+
+    relativeSize: number;
+
+    constructor(name: string, comments: string, relativeSize: number) {
+        this.name = name;
+        this.comments = comments;
+        this.relativeSize = relativeSize;
+    }
+}
+
+export enum Action {
+    NONE,
+    CREATE,
+    EDIT
+}
+
+export enum ItemAttribute {
+    NAME,
+    RELATIVE_SIZE,
+    COMMENTS
+}
+
 export const ToDoTaskViewer: FunctionComponent = () => {
     //== attributes ===================================================================================================
 
@@ -230,46 +272,4 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             {modalElement}
         </div>
     )
-}
-
-//== types ============================================================================================================
-
-export class ActiveItemDetails {
-    newName: string = '';
-
-    newRelativeSize: number = 1;
-
-    newComments: string = '';
-}
-
-export class ToDoTask {
-    id?: Number;
-
-    name: string;
-
-    comments: string;
-
-    dateTimeCreated?: Date;
-
-    dateTimeLastModified?: Date;
-
-    relativeSize: number;
-
-    constructor(name: string, comments: string, relativeSize: number) {
-        this.name = name;
-        this.comments = comments;
-        this.relativeSize = relativeSize;
-    }
-}
-
-export enum Action {
-    NONE,
-    CREATE,
-    EDIT
-}
-
-export enum ItemAttribute {
-    NAME,
-    RELATIVE_SIZE,
-    COMMENTS
 }
