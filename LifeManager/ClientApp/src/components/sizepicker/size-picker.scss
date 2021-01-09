@@ -1,4 +1,6 @@
-﻿$size-picker-edge-dimension: 60px;
+﻿@import './../../app-constants';
+
+$size-picker-edge-dimension: 60px;
 $inter-button-distance: 2px;
 $font-size: 18px;
 
@@ -11,13 +13,17 @@ div.size-picker-container {
 
 div.size-picker-button {
   position: relative;
-  background-color: gray;
+  background-color: white;
   width: $size-picker-edge-dimension - $inter-button-distance;
   height: $size-picker-edge-dimension - $inter-button-distance;
   margin: $inter-button-distance / 2;
 
+  border-radius: 10px;
+  border: 2px solid $lm-green;
+
   &.active {
-    background-color: red;
+    color: white;
+    background-color: $lm-green;
   }  
 }
 
