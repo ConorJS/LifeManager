@@ -28,7 +28,7 @@ export const Root: FunctionComponent = () => {
 
     return (
         <React.Fragment>
-            <div>
+            <div className="navigation-container">
                 <button>
                     <img className="navigation-button"
                          src="/resources/navigationimages/home.png"
@@ -58,19 +58,19 @@ export const Root: FunctionComponent = () => {
                 </button>
             </div>
 
-            <div style={displayToggleStyleFor(MenuItem.HOME)}>
+            <div className="screen-container" style={displayToggleStyleFor(MenuItem.HOME)}>
                 Home
             </div>
 
-            <div style={displayToggleStyleFor(MenuItem.DATA_VIEWER)}>
+            <div className="screen-container" style={displayToggleStyleFor(MenuItem.DATA_VIEWER)}>
                 <DataViewer/>
             </div>
 
-            <div style={displayToggleStyleFor(MenuItem.TODO_TASKS)}>
+            <div className="screen-container" style={displayToggleStyleFor(MenuItem.TODO_TASKS)}>
                 <ToDoTaskViewer/>
             </div>
 
-            <div style={displayToggleStyleFor(MenuItem.TEST)}>
+            <div className="screen-container" style={displayToggleStyleFor(MenuItem.TEST)}>
                 <Tester/>
             </div>
         </React.Fragment>
