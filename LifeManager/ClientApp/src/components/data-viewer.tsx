@@ -23,7 +23,7 @@ export const DataViewer: FunctionComponent<DataViewerProps> = props => {
 
         addDummyData(new DummyData(data.id, data.name));
     }
-    
+
     const saveDummyDataToDatabase = async () => {
         if (!inputId || !inputName) {
             return;

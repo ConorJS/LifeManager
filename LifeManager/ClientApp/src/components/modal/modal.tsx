@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import * as ReactDOM from "react-dom";
-import {ObjectTools} from "./object-tools";
+import {ObjectTools} from '../../tools/object-tools'
 import * as PropTypes from "prop-types";
 
 export default class Modal extends React.PureComponent {

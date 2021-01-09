@@ -1,5 +1,5 @@
-﻿import React, {CSSProperties, FunctionComponent, SyntheticEvent, useState} from "react";
-import {LmModal} from "./lm-modal";
+﻿import React, {FunctionComponent, SyntheticEvent, useState} from "react";
+import {LmModal} from '../../../components/modal/lm-modal';
 import './to-do-task-viewer.scss';
 
 export const ToDoTaskViewer: FunctionComponent = () => {
@@ -246,7 +246,7 @@ export class ToDoTask {
     id?: Number;
 
     name: string;
-    
+
     comments: string;
 
     dateTimeCreated?: Date;

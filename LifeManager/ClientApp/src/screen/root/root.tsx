@@ -1,8 +1,8 @@
 import React, {CSSProperties, FunctionComponent, useState} from 'react';
-import {DataViewer} from './components/data-viewer';
+import {DataViewer} from "../../components/data-viewer";
 
-import './App.scss'
-import {ToDoTaskViewer} from "./components/to-do-task-viewer";
+import './root.scss'
+import {ToDoTaskViewer} from "../item/todotask/to-do-task-viewer";
 
 enum MenuItem {
     HOME,
@@ -11,7 +11,7 @@ enum MenuItem {
     TODO_TASKS
 }
 
-export const App: FunctionComponent = () => {
+export const Root: FunctionComponent = () => {
     //== state ========================================================================================================
 
     const [selectedNavigationItem, setSelectedNavigationItem] = useState(MenuItem.HOME);

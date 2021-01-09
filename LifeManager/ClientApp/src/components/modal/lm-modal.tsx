@@ -1,4 +1,4 @@
-﻿import Modal from "../modal";
+﻿import Modal from "./modal";
 import React from "react";
 import './lm-modal.scss';
 
@@ -8,22 +8,22 @@ interface LmModalProps {
 }
 
 export class LmModal extends React.Component<LmModalProps, any> {
-    constructor(props: LmModalProps){
+    constructor(props: LmModalProps) {
         super(props);
         this.escFunction = this.escFunction.bind(this);
     }
-    
+
     escFunction(event: KeyboardEvent) {
         if (event.code === 'Escape') {
             this.props.handleClose();
         }
     }
-    
-    componentDidMount(){
+
+    componentDidMount() {
         document.addEventListener("keydown", this.escFunction, false);
     }
-    
-    componentWillUnmount(){
+
+    componentWillUnmount() {
         document.removeEventListener("keydown", this.escFunction, false);
     }
 

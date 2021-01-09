@@ -24,10 +24,11 @@
 
     <ItemGroup>
       <Folder Include="ClientApp\public\resources\navigationimages" />
+      <Folder Include="ClientApp\src\screen" />
     </ItemGroup>
 
     <ItemGroup>
-      <TypeScriptCompile Include="ClientApp\src\components\lm-modal.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\modal\lm-modal.tsx" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
