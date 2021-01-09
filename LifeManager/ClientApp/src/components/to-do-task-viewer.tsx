@@ -194,7 +194,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                     </div>
 
                     <div className="modal-field">
-                        <label htmlFor="editing-todo-task-comments">Comments (not yet persisted!)</label>
+                        <label htmlFor="editing-todo-task-comments">Comments</label>
                         <textarea id="editing-todo-task-comments"
                                   rows={4}
                                   typeof="string"
