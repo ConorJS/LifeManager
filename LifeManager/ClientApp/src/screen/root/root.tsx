@@ -3,12 +3,14 @@ import {DataViewer} from "../../components/data-viewer";
 
 import './root.scss'
 import {ToDoTaskViewer} from "../item/todotask/to-do-task-viewer";
+import {Tester} from "../test/tester";
 
 enum MenuItem {
     HOME,
     // Temporary
     DATA_VIEWER,
-    TODO_TASKS
+    TODO_TASKS,
+    TEST
 }
 
 export const Root: FunctionComponent = () => {
@@ -47,6 +49,13 @@ export const Root: FunctionComponent = () => {
                          alt="Task list (Notepad; abstract/stencil)"
                          onClick={() => setSelectedNavigationItem(MenuItem.TODO_TASKS)}/>
                 </button>
+
+                <button>
+                    <img className="navigation-button"
+                         src="/resources/navigationimages/test.png"
+                         alt="Test (Question mark in a box, ornamented with a check mark)"
+                         onClick={() => setSelectedNavigationItem(MenuItem.TEST)}/>
+                </button>
             </div>
 
             <div style={displayToggleStyleFor(MenuItem.HOME)}>
@@ -59,6 +68,10 @@ export const Root: FunctionComponent = () => {
 
             <div style={displayToggleStyleFor(MenuItem.TODO_TASKS)}>
                 <ToDoTaskViewer/>
+            </div>
+
+            <div style={displayToggleStyleFor(MenuItem.TEST)}>
+                <Tester/>
             </div>
         </React.Fragment>
     );
