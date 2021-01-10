@@ -1,0 +1,23 @@
+﻿@import './app-constants';
+
+.lm-button-primary {
+  color: white;
+  background-color: $lm-green;
+  border-color: $lm-green-weak;
+  
+  &:hover {
+    color: white;
+    background-color: $lm-green-weak;
+  }
+}
+
+.lm-button-negative {
+  color: white;
+  background-color: $lm-red;
+  border-color: $lm-red-weak;
+
+  &:hover {
+    color: white;
+    background-color: $lm-red-weak;
+  }
+}

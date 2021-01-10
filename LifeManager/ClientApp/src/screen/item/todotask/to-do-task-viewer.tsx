@@ -248,12 +248,12 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                     </div>
 
                     <div className="modal-buttons-container">
-                        <button className="btn btn-primary modal-button"
+                        <button className="btn lm-button-primary modal-button"
                                 onClick={editing() ? saveToDoTask : createToDoTask}>
                             Save
                         </button>
 
-                        <button className="btn btn-primary modal-button"
+                        <button className="btn lm-button-negative modal-button"
                                 onClick={stopAction}>
                             Cancel
                         </button>
@@ -267,7 +267,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             <div>To Do Tasks:</div>
             <div>{items}</div>
 
-            <button className="btn btn-primary"
+            <button className="btn lm-button-primary"
                     onClick={() => changeAction(Action.CREATE)}>
                 New
             </button>

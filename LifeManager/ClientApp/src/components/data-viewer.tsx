@@ -66,18 +66,18 @@ export const DataViewer: FunctionComponent<DataViewerProps> = props => {
                 Current count: <strong>{currentCount}</strong>
             </p>
 
-            <button className="btn btn-primary"
+            <button className="btn lm-button-primary"
                     onClick={incrementCounter}>
                 Increment
             </button>
 
-            <button className="btn btn-primary"
+            <button className="btn lm-button-primary"
                     onClick={populateUiWithDatabaseDummyData}>
                 Populate UI dummy data from database
             </button>
 
             <div>
-                <button className="btn btn-primary"
+                <button className="btn lm-button-primary"
                         onClick={saveDummyDataToDatabase}>
                     Save dummy data in fields to database
                 </button>
