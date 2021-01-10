@@ -1,23 +1,28 @@
 ﻿@import './app-constants';
 
-.lm-button-primary {
+.lm-button {
   color: white;
-  background-color: $lm-green;
-  border-color: $lm-green-weak;
   
   &:hover {
+    /* Overrides Bootstrap's 'btn' */
     color: white;
-    background-color: $lm-green-weak;
   }
-}
+  
+  &.positive {
+    background-color: $lm-green;
+    border-color: $lm-green-weak;
 
-.lm-button-negative {
-  color: white;
-  background-color: $lm-red;
-  border-color: $lm-red-weak;
+    &:hover {
+      background-color: $lm-green-weak;
+    }
+  }
+  
+  &.negative {
+    background-color: $lm-red;
+    border-color: $lm-red-weak;
 
-  &:hover {
-    color: white;
-    background-color: $lm-red-weak;
+    &:hover {
+      background-color: $lm-red-weak;
+    }
   }
 }

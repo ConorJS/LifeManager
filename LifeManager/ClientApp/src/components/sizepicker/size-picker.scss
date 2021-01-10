@@ -1,8 +1,8 @@
 ﻿@import './../../app-constants';
 
 $size-picker-edge-dimension: 45px;
-$inter-button-distance: 2px;
-$font-size: 16px;
+$inter-button-distance: 2.25px;
+$font-size: 16x;
 
 div.size-picker-container {
   display: flex;
@@ -24,7 +24,13 @@ div.size-picker-button {
   &.active {
     color: white;
     background-color: $lm-green;
-  }  
+  }
+  
+  &:hover {
+    color: white;
+    background-color: $lm-green-weak;
+    border-color: $lm-green-weak;
+  }
 }
 
 p.button-text {
