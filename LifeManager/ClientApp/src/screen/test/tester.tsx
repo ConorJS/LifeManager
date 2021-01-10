@@ -1,16 +1,16 @@
 ﻿import React, {FunctionComponent, useState} from "react";
-import {SizePicker} from "../../components/sizepicker/size-picker";
+import {SizePicker, SizePickerTools} from "../../components/sizepicker/size-picker";
 
 export const Tester: FunctionComponent = () => {
     const [selectedSize, setSelectedSize] = useState('N/A');
 
-    function sizeChosen(size: string) {
-        setSelectedSize(size);
+    function sizeChosenHandler(size: number): void {
+        setSelectedSize(SizePickerTools.sizeStringFromNumber(size));
     }
 
     return (
         <React.Fragment>
-            <SizePicker sizeSelected={sizeChosen}/>
+            <SizePicker initialSize={1} sizeSelected={sizeChosenHandler}/>
 
             <div>
                 {selectedSize}

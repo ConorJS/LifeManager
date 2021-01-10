@@ -1,6 +1,7 @@
 ﻿import React, {FunctionComponent, SyntheticEvent, useState} from "react";
 import {LmModal} from '../../../components/modal/lm-modal';
 import './to-do-task-viewer.scss';
+import {SizePicker} from "../../../components/sizepicker/size-picker";
 
 //== types ============================================================================================================
 
@@ -93,6 +94,10 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         const target: HTMLInputElement = changeEvent.target as HTMLInputElement;
         const value: any = target.value;
 
+        setAttributeValue(value, itemAttribute);
+    }
+
+    function setAttributeValue(value: any, itemAttribute: ItemAttribute): void {
         switch (itemAttribute) {
             case ItemAttribute.NAME:
                 setActiveItemDetails({...activeItemDetails, newName: value as string});
@@ -229,10 +234,8 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
                     <div className="modal-field">
                         <label htmlFor="editing-todo-task-relative-size">Size</label>
-                        <input id="editing-todo-task-relative-size"
-                               type="number"
-                               value={activeItemDetails.newRelativeSize}
-                               onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.RELATIVE_SIZE)}/>
+                        <SizePicker initialSize={activeItemDetails.newRelativeSize}
+                                    sizeSelected={(size) => setAttributeValue(size, ItemAttribute.RELATIVE_SIZE)}/>
                     </div>
 
                     <div className="modal-field">
