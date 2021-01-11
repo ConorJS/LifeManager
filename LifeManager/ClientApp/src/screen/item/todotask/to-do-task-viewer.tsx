@@ -2,6 +2,7 @@
 import {LmModal} from '../../../components/modal/lm-modal';
 import './to-do-task-viewer.scss';
 import {SizePicker} from "../../../components/sizepicker/size-picker";
+import {ToDoTaskTable} from "./to-do-task-table";
 
 //== types ============================================================================================================
 
@@ -189,6 +190,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
     const refresh = (): void => {
         loadAllTasks().then(data => {
+            console.log("Calling setToDoTasks...");
             setToDoTasks(data);
         });
     }
@@ -266,6 +268,9 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         <div>
             <div>To Do Tasks:</div>
             <div>{items}</div>
+            
+            <div>To Do Tasks table:</div>
+            <div><ToDoTaskTable toDoTasks={toDoTasks}/></div>
 
             <button className="btn lm-button positive"
                     onClick={() => changeAction(Action.CREATE)}>
