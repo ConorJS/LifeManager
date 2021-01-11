@@ -1,6 +1,7 @@
 ﻿import React, {FunctionComponent} from "react";
 import {Column, useTable} from 'react-table'
 import {ToDoTask} from "./to-do-task-viewer";
+import {SizePickerTools} from "../../../components/sizepicker/size-picker";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
@@ -10,12 +11,14 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     const columns: Column<ToDoTask>[] = React.useMemo(
         () => [
             {
+                id: 'name',
                 Header: 'Name',
                 accessor: "name"
             },
             {
+                id: 'size',
                 Header: "Size",
-                accessor: "relativeSize"
+                accessor: row => SizePickerTools.sizeStringFromNumber(row.relativeSize)
             }
         ], []);
 
