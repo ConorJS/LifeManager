@@ -7,16 +7,18 @@ interface ToDoTaskTableProps {
 }
 
 export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDoTaskTableProps) => {
-    const columns = React.useMemo(
+    const columns: Column<ToDoTask>[] = React.useMemo(
         () => [
             {
                 Header: 'Name',
-                accessor: (tasks: ToDoTask[], index: number): string => {
-                    return tasks[index]?.name;
-                }
+                accessor: "name"
+            },
+            {
+                Header: "Size",
+                accessor: "relativeSize"
             }
         ], []);
-        
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -26,14 +28,13 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     } = useTable(
         {
             columns: columns,
-            data: [props.toDoTasks]
+            data: props.toDoTasks
         }
     )
 
     return (
         <table {...getTableProps()}>
             <thead>
-
             {headerGroups.map(headerGroup => (
                 <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map(column => (
@@ -42,6 +43,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 </tr>
             ))}
             </thead>
+
             <tbody {...getTableBodyProps()}>
             {rows.map((row, i) => {
                 prepareRow(row)
