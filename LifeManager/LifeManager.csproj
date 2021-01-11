@@ -29,6 +29,7 @@
     <ItemGroup>
       <TypeScriptCompile Include="ClientApp\src\components\modal\lm-modal.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\sizepicker\size-picker.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\screen\item\todotask\to-do-task-table.tsx" />
       <TypeScriptCompile Include="ClientApp\src\screen\test\tester.tsx" />
     </ItemGroup>
 
