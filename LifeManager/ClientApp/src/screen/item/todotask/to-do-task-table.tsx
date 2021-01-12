@@ -11,6 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
+    taskSelected: (task: ToDoTask) => void
 }
 
 export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDoTaskTableProps) => {
@@ -57,7 +58,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             {rows.map((row, i) => {
                 prepareRow(row)
                 return (
-                    <TableRow {...row.getRowProps()}>
+                    <TableRow {...row.getRowProps()} onClick={(event: any) => props.taskSelected(row.original)}>
                         {row.cells.map(cell => {
                             return <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
                         })}
