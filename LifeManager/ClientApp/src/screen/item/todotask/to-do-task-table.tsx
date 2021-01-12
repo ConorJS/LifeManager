@@ -61,7 +61,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                     prepareRow(row)
                     return (
                         <TableRow {...row.getRowProps()}
-                                  className="row-alternating-colors"
+                                  className="row-alternating-colors row-highlight-on-hover"
                                   onClick={(event: any) => props.taskSelected(row.original)}>
                             {row.cells.map(cell => {
                                 return <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>

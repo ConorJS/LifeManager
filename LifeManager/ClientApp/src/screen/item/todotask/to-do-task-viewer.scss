@@ -22,12 +22,18 @@ button.modal-button {
 }
 
 thead.table-header {
-  background-color: $lm-green;
+  background-color: $lm-green-strong;
 }
 
 th.table-header-cell {
+  color: white;
   font-weight: bold;
-  background-color: $lm-green;
+}
+
+tr.row-highlight-on-hover {
+  &:hover {
+    background-color: $lm-green;
+  }
 }
 
 .row-alternating-colors:nth-of-type(even){
