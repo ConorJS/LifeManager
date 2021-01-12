@@ -3,8 +3,15 @@ import {Column, useTable} from 'react-table'
 import {ToDoTask} from "./to-do-task-viewer";
 import {SizePickerTools} from "../../../components/sizepicker/size-picker";
 
+import MaUTable from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
+    taskSelected: (task: ToDoTask) => void
 }
 
 export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDoTaskTableProps) => {
@@ -36,29 +43,29 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     )
 
     return (
-        <table {...getTableProps()}>
-            <thead>
-            {headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map(column => (
-                        <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                    ))}
-                </tr>
-            ))}
-            </thead>
+        <MaUTable {...getTableProps()}>
+            <TableHead>
+                {headerGroups.map(headerGroup => (
+                    <TableRow {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map(column => (
+                            <TableCell {...column.getHeaderProps()}>{column.render('Header')}</TableCell>
+                        ))}
+                    </TableRow>
+                ))}
+            </TableHead>
 
-            <tbody {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-                prepareRow(row)
-                return (
-                    <tr {...row.getRowProps()}>
-                        {row.cells.map(cell => {
-                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                        })}
-                    </tr>
-                )
-            })}
-            </tbody>
-        </table>
+            <TableBody {...getTableBodyProps()}>
+                {rows.map((row, i) => {
+                    prepareRow(row)
+                    return (
+                        <TableRow {...row.getRowProps()} onClick={(event: any) => props.taskSelected(row.original)}>
+                            {row.cells.map(cell => {
+                                return <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
+                            })}
+                        </TableRow>
+                    )
+                })}
+            </TableBody>
+        </MaUTable>
     );
 } 
