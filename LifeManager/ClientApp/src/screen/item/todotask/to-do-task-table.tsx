@@ -44,11 +44,13 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
 
     return (
         <MaUTable {...getTableProps()}>
-            <TableHead>
+            <TableHead className="table-header">
                 {headerGroups.map(headerGroup => (
-                    <TableRow {...headerGroup.getHeaderGroupProps()}>
+                    <TableRow {...headerGroup.getHeaderGroupProps()}>                        
                         {headerGroup.headers.map(column => (
-                            <TableCell {...column.getHeaderProps()}>{column.render('Header')}</TableCell>
+                            <TableCell {...column.getHeaderProps()} className="table-header-cell">
+                                {column.render('Header')}
+                            </TableCell>
                         ))}
                     </TableRow>
                 ))}
@@ -58,7 +60,9 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 {rows.map((row, i) => {
                     prepareRow(row)
                     return (
-                        <TableRow {...row.getRowProps()} onClick={(event: any) => props.taskSelected(row.original)}>
+                        <TableRow {...row.getRowProps()}
+                                  className="row-alternating-colors"
+                                  onClick={(event: any) => props.taskSelected(row.original)}>
                             {row.cells.map(cell => {
                                 return <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
                             })}

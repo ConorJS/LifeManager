@@ -1,4 +1,6 @@
-﻿div.modal-field {
+﻿@import '../../../app-constants.scss';
+
+div.modal-field {
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -17,4 +19,17 @@ button.modal-button {
   width: 100px;
   margin-left: 25px;
   margin-right: 25px;
+}
+
+thead.table-header {
+  background-color: $lm-green;
+}
+
+th.table-header-cell {
+  font-weight: bold;
+  background-color: $lm-green;
+}
+
+.row-alternating-colors:nth-of-type(even){
+  background-color: $lm-green-weak;
 }

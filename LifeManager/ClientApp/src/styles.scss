@@ -9,11 +9,11 @@
   }
   
   &.positive {
-    background-color: $lm-green;
-    border-color: $lm-green-weak;
+    background-color: $lm-green-strong;
+    border-color: $lm-green;
 
     &:hover {
-      background-color: $lm-green-weak;
+      background-color: $lm-green;
     }
   }
   

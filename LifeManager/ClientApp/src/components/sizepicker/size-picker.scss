@@ -19,17 +19,17 @@ div.size-picker-button {
   margin: $inter-button-distance / 2;
 
   border-radius: 10px;
-  border: 2px solid $lm-green;
+  border: 2px solid $lm-green-strong;
 
   &.active {
     color: white;
-    background-color: $lm-green;
+    background-color: $lm-green-strong;
   }
   
   &:hover {
     color: white;
-    background-color: $lm-green-weak;
-    border-color: $lm-green-weak;
+    background-color: $lm-green;
+    border-color: $lm-green;
   }
 }
 
