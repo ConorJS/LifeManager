@@ -270,7 +270,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             <div>{items}</div>
             
             <div>To Do Tasks table:</div>
-            <div><ToDoTaskTable toDoTasks={toDoTasks} taskSelected={editItem}/></div>
+            <div><ToDoTaskTable toDoTasks={toDoTasks} taskSelected={editItem} taskDeleted={removeToDoTask}/></div>
 
             <button className="btn lm-button positive"
                     onClick={() => changeAction(Action.CREATE)}>
