@@ -205,20 +205,6 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
     //== render =======================================================================================================
 
-    const items: JSX.Element[] = [];
-    toDoTasks.forEach((toDoTask, index) => {
-        items.push(
-            <div key={'toDoTask' + index}>
-                <div onClick={() => editItem(toDoTask)}>
-                    {toDoTask.name} ({toDoTask.relativeSize} at {toDoTask.dateTimeCreated})
-                </div>
-                <button onClick={() => removeToDoTask(toDoTask)}>
-                    R
-                </button>
-            </div>
-        );
-    });
-
     let modalElement;
     if (creating() || editing()) {
         modalElement =
@@ -266,10 +252,6 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
     return (
         <div>
-            <div>To Do Tasks:</div>
-            <div>{items}</div>
-            
-            <div>To Do Tasks table:</div>
             <div><ToDoTaskTable toDoTasks={toDoTasks} taskSelected={editItem} taskDeleted={removeToDoTask}/></div>
 
             <button className="btn lm-button positive"
