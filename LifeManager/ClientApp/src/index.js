@@ -5,7 +5,7 @@ import './app-constants.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
-import {Root} from './screen/root/root'
+import {Root} from './screen/root'
 
 import registerServiceWorker from './registerServiceWorker';
 

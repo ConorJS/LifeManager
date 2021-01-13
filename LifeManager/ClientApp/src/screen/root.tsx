@@ -1,9 +1,9 @@
 import React, {CSSProperties, FunctionComponent, useState} from 'react';
-import {DataViewer} from "../../components/data-viewer";
+import {DataViewer} from "../components/data-viewer";
 
 import './root.scss'
-import {ToDoTaskViewer} from "../item/todotask/to-do-task-viewer";
-import {Tester} from "../test/tester";
+import {ToDoTaskViewer} from "./item/todotask/to-do-task-viewer";
+import {Tester} from "./test/tester";
 
 enum MenuItem {
     HOME,
