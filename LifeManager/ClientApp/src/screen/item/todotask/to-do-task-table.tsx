@@ -74,7 +74,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                     <TableRow {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map(column => (
                             <TableCell {...column.getHeaderProps()}
-                                       className="table-header-cell"
+                                       className="table-header-cell column-with-dividers"
                                        onClick={blockEventPropagation}>
 
                                 {column.render('Header')}
@@ -98,6 +98,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                             {row.cells.map(cell => {
                                 return (
                                     <TableCell {...cell.getCellProps()}
+                                               className="column-with-dividers" 
                                                onClick={(event: React.MouseEvent) => stopPropagationForActionCell(event, cell)}>
 
                                         {cell.render('Cell')}
