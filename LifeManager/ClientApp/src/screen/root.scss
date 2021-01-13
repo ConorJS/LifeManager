@@ -1,12 +1,14 @@
 @import '../app-constants.scss';
 
+$navigation-square-button-dimension: 140px;
+
 .navigation-container {
     text-align: center;
 }
 
 .navigation-button {
-    width: 200px;
-    height: 200px;
+    width: $navigation-square-button-dimension;
+    height: $navigation-square-button-dimension;
 }
 
 .modal-container {
