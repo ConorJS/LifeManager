@@ -1,4 +1,4 @@
-import React, {CSSProperties, FunctionComponent, useState} from 'react';
+import React, {FunctionComponent, useState} from 'react';
 import {DataViewer} from "../components/data-viewer";
 
 import './root.scss'
@@ -18,13 +18,29 @@ export const Root: FunctionComponent = () => {
 
     const [selectedNavigationItem, setSelectedNavigationItem] = useState(MenuItem.HOME);
 
-    //== methods ======================================================================================================
-
-    function displayToggleStyleFor(menuItem: MenuItem): CSSProperties {
-        return menuItem === selectedNavigationItem ? {} : {display: "none"}
-    }
-
     //== render =======================================================================================================
+
+    let activeComponent;
+    switch (selectedNavigationItem) {
+        case MenuItem.HOME:
+            activeComponent =
+                <React.Fragment>
+                    Home
+                </React.Fragment>
+            break;
+
+        case MenuItem.DATA_VIEWER:
+            activeComponent = <DataViewer/>
+            break;
+
+        case MenuItem.TODO_TASKS:
+            activeComponent = <ToDoTaskViewer/>
+            break;
+
+        case MenuItem.TEST:
+            activeComponent = <Tester/>
+            break;
+    }
 
     return (
         <React.Fragment>
@@ -58,20 +74,8 @@ export const Root: FunctionComponent = () => {
                 </button>
             </div>
 
-            <div className="screen-container" style={displayToggleStyleFor(MenuItem.HOME)}>
-                Home
-            </div>
-
-            <div className="screen-container" style={displayToggleStyleFor(MenuItem.DATA_VIEWER)}>
-                <DataViewer/>
-            </div>
-
-            <div className="screen-container" style={displayToggleStyleFor(MenuItem.TODO_TASKS)}>
-                <ToDoTaskViewer/>
-            </div>
-
-            <div className="screen-container" style={displayToggleStyleFor(MenuItem.TEST)}>
-                <Tester/>
+            <div className="screen-container">
+                {activeComponent}
             </div>
         </React.Fragment>
     );
