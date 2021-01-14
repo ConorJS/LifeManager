@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LifeManager.Server.Database;
+using LifeManager.Server.Model;
 using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 using LifeManager.Server.Model.Mapper;
@@ -41,6 +42,8 @@ namespace LifeManager.Server.Service.Implementation {
 
         public void Create(ToDoTask domain) {
             _modelServiceTools.InitialiseNewItem(domain);
+            
+            domain.Status = ToDoTaskStatus.Ready;
 
             _lifeManagerRepository.SaveEntity(_toDoTaskMapper.ToEntity(domain));
         }

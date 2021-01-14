@@ -9,6 +9,10 @@ namespace LifeManager.Server.Model.Entity {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
+        public DateTime DateTimeCreated { get; set; }
+
+        public DateTime DateTimeLastModified { get; set; }
+
         public long OwnedByUserId { get; set; }
         
         public bool Active { get; set; }
@@ -16,9 +20,5 @@ namespace LifeManager.Server.Model.Entity {
         public string Name { get; set; }
         
         public string Comments { get; set; }
-
-        public DateTime DateTimeCreated { get; set; }
-
-        public DateTime DateTimeLastModified { get; set; }
     }
 }

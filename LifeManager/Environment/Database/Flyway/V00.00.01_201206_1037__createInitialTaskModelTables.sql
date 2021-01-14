@@ -3,63 +3,64 @@
 CREATE TABLE "Appointment"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
+    "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
     "Comments"             VARCHAR(255),
-    "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
-    "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "RelativeSize"         INT          NOT NULL
 );
 
 CREATE TABLE "Chore"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
+    "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
     "Comments"             VARCHAR(255),
-    "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
-    "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "RelativeSize"         INT          NOT NULL
 );
 
 CREATE TABLE "LeisureActivity"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
+    "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
-    "Comments"             VARCHAR(255),
-    "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
-    "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE
+    "Comments"             VARCHAR(255)
 );
 
 CREATE TABLE "Principle"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
+    "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
-    "Comments"             VARCHAR(255),
-    "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
-    "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE
+    "Comments"             VARCHAR(255)
 );
 
 CREATE TABLE "RecurringTask"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
+    "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
     "Comments"             VARCHAR(255),
-    "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
-    "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "RelativeSize"         INT          NOT NULL
 );
 
 CREATE TABLE "ToDoTask"
 (
     "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
-    "Active"               BOOL         NOT NULL,
-    "Name"                 VARCHAR(255) NOT NULL,
-    "Comments"             VARCHAR(255),
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
+    "Active"               BOOL         NOT NULL,
+    "Name"                 VARCHAR(255) NOT NULL,
+    "Status"               VARCHAR(255) NOT NULL,
+    "Comments"             VARCHAR(255),
     "RelativeSize"         INT          NOT NULL
 );

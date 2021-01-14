@@ -17,13 +17,13 @@ export class ActiveItemDetails {
 export class ToDoTask {
     id?: Number;
 
-    name: string;
-
-    comments: string;
-
     dateTimeCreated?: Date;
 
     dateTimeLastModified?: Date;
+
+    name: string;
+
+    comments: string;
 
     relativeSize: number;
 

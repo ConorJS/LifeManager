@@ -4,17 +4,19 @@ namespace LifeManager.Server.Model.Domain {
     public class ToDoTask : ITask {
         public long Id { get; set; }
 
+        public DateTime? DateTimeCreated { get; set; }
+
+        public DateTime? DateTimeLastModified { get; set; }
+
         public long OwnedByUserId { get; set; }
         
         public bool Active { get; set; }
 
         public string Name { get; set; }
         
+        public ToDoTaskStatus Status { get; set; }
+        
         public string Comments { get; set; }
-
-        public DateTime? DateTimeCreated { get; set; }
-
-        public DateTime? DateTimeLastModified { get; set; }
 
         public int RelativeSize { get; set; }
     }

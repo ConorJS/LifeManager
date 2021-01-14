@@ -10,6 +10,11 @@ namespace LifeManager.Server.Database.Implementation {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.HasDefaultSchema("lifemanager");
+
+            modelBuilder
+                .Entity<ToDoTaskEntity>()
+                .Property(e => e.Status)
+                .HasConversion<string>();
         }
 
         //== entity definitions =====================================================================================================================
