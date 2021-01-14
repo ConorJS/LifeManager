@@ -10,6 +10,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
+import './to-do-task-table.scss'
+
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
     taskSelected: (task: ToDoTask) => void
@@ -32,24 +34,30 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             {
                 id: 'name',
                 Header: 'Name',
-                accessor: "name"
+                accessor: "name",
+                width: 250
             },
             {
                 id: 'size',
                 Header: "Size",
-                accessor: row => SizePickerTools.sizeStringFromNumber(row.relativeSize)
+                accessor: row => SizePickerTools.sizeStringFromNumber(row.relativeSize),
+                width: 75
             },
             {
                 id: 'actions',
                 Header: "",
                 accessor: row => (
-                    <DeleteForeverIcon
-                        onClick={(event: any) => {
-                            props.taskDeleted(row);
-                            blockEventPropagation(event);
-                        }}>DeleteForever
-                    </DeleteForeverIcon>
-                )
+                    <div>
+                        <DeleteForeverIcon
+                            className="action-item"
+                            onClick={(event: any) => {
+                                props.taskDeleted(row);
+                                blockEventPropagation(event);
+                            }}>DeleteForever
+                        </DeleteForeverIcon>
+                    </div>
+                ),
+                width: 75
             }
         ], []);
 
@@ -67,13 +75,14 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     )
 
     return (
-        <MaUTable {...getTableProps()}>
+        <MaUTable {...getTableProps()} className="to-do-task-table">
             <TableHead className="table-header">
 
                 {headerGroups.map(headerGroup => (
                     <TableRow {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map(column => (
                             <TableCell {...column.getHeaderProps()}
+                                       width={column.width} 
                                        className="table-header-cell column-with-dividers"
                                        onClick={blockEventPropagation}>
 
@@ -98,7 +107,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                             {row.cells.map(cell => {
                                 return (
                                     <TableCell {...cell.getCellProps()}
-                                               className="column-with-dividers" 
+                                               className="column-with-dividers"
                                                onClick={(event: React.MouseEvent) => stopPropagationForActionCell(event, cell)}>
 
                                         {cell.render('Cell')}

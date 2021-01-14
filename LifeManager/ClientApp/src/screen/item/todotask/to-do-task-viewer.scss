@@ -1,8 +1,4 @@
-﻿@import '../../../app-constants.scss';
-
-$column-divider-grey: #e0e0e0;
-
-div.modal-field {
+﻿div.modal-field {
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -21,28 +17,4 @@ button.modal-button {
   width: 100px;
   margin-left: 25px;
   margin-right: 25px;
-}
-
-thead.table-header {
-  background-color: $lm-green-strong;
-}
-
-th.table-header-cell {
-  color: white;
-  font-weight: bold;
-}
-
-tr.row-highlight-on-hover {
-  &:hover {
-    background-color: $lm-green;
-  }
-}
-
-.row-alternating-colors:nth-of-type(even){
-  background-color: $lm-green-weak;
-}
-
-.column-with-dividers {
-  border-left: 1px solid $column-divider-grey;
-  border-right: 1px solid $column-divider-grey;
 }
