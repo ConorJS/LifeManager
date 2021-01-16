@@ -1,20 +1,19 @@
 ﻿import React, {FunctionComponent, useState} from "react";
-import {SizePicker, SizePickerTools} from "../../components/sizepicker/size-picker";
+import {SwitchingDropdown} from "../../components/switchingdropdown/switching-dropdown";
 
 export const Tester: FunctionComponent = () => {
-    const [selectedSize, setSelectedSize] = useState('N/A');
-
-    function sizeChosenHandler(size: number): void {
-        setSelectedSize(SizePickerTools.sizeStringFromNumber(size));
-    }
+    const [selectedOption, setSelectedOption] = useState('N/A');
 
     return (
         <React.Fragment>
-            <SizePicker initialSize={1} sizeSelected={sizeChosenHandler}/>
+            <SwitchingDropdown options={['Ready', 'InProgress', 'Complete', 'Cancelled']} 
+                               initialSelection={'Ready'} 
+                               selectionUpdated={setSelectedOption}/>
 
             <div>
-                {selectedSize}
+                {selectedOption}
             </div>
+            
         </React.Fragment>
     )
 }
