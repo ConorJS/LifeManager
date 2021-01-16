@@ -9,8 +9,9 @@ obj/
 /_ReSharper.Caches/
 /node_modules/
 
-# Rider ignores
+# Rider ignores (user specific - project settings should be committed)
 riderModule.iml
+/LifeManager.sln.DotSettings.user
 
 # package-lock (keep this ignored while this is a solo project)
 /package-lock.json

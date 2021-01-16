@@ -9,9 +9,11 @@ import {ToDoTaskTable} from "./to-do-task-table";
 export class ActiveItemDetails {
     newName: string = '';
 
-    newRelativeSize: number = 1;
-
+    newStatus: string = 'Ready';
+    
     newComments: string = '';
+
+    newRelativeSize: number = 1;
 }
 
 export class ToDoTask {
@@ -22,13 +24,16 @@ export class ToDoTask {
     dateTimeLastModified?: Date;
 
     name: string;
+    
+    status: string;
 
     comments: string;
 
     relativeSize: number;
 
-    constructor(name: string, comments: string, relativeSize: number) {
+    constructor(name: string, status: string, comments: string, relativeSize: number) {
         this.name = name;
+        this.status = status;
         this.comments = comments;
         this.relativeSize = relativeSize;
     }
@@ -42,8 +47,9 @@ export enum Action {
 
 export enum ItemAttribute {
     NAME,
-    RELATIVE_SIZE,
-    COMMENTS
+    STATUS,
+    COMMENTS,
+    RELATIVE_SIZE
 }
 
 export const ToDoTaskViewer: FunctionComponent = () => {
@@ -66,8 +72,9 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         setActiveItemDetails({
             ...activeItemDetails,
             newName: '',
-            newRelativeSize: 1,
-            newComments: ''
+            newStatus: 'Ready',
+            newComments: '',
+            newRelativeSize: 1
         });
 
         setActiveAction(activeItemType);
@@ -104,12 +111,16 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                 setActiveItemDetails({...activeItemDetails, newName: value as string});
                 break;
 
-            case ItemAttribute.RELATIVE_SIZE:
-                setActiveItemDetails({...activeItemDetails, newRelativeSize: Number.parseInt(value)});
+            case ItemAttribute.STATUS:
+                setActiveItemDetails({...activeItemDetails, newStatus: value as string});
                 break;
 
             case ItemAttribute.COMMENTS:
                 setActiveItemDetails({...activeItemDetails, newComments: value as string});
+                break;
+
+            case ItemAttribute.RELATIVE_SIZE:
+                setActiveItemDetails({...activeItemDetails, newRelativeSize: Number.parseInt(value)});
                 break;
         }
     }
@@ -119,6 +130,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         setActiveItemDetails({
             ...activeItemDetails,
             newName: toDoTask.name,
+            newStatus: toDoTask.status,
             newComments: toDoTask.comments,
             newRelativeSize: toDoTask.relativeSize
         })
@@ -133,7 +145,8 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         }
 
         const toDoTask = new ToDoTask(
-            activeItemDetails.newName, activeItemDetails.newComments, activeItemDetails.newRelativeSize);
+            activeItemDetails.newName, activeItemDetails.newStatus, 
+            activeItemDetails.newComments, activeItemDetails.newRelativeSize);
 
         const requestOptions = {
             method: 'POST',

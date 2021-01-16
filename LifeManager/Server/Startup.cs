@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using LifeManager.Server.Database;
 using LifeManager.Server.Database.Implementation;
 using LifeManager.Server.Security;
@@ -25,7 +26,10 @@ namespace LifeManager.Server {
             services.AddDbContext<LifeManagerDatabaseContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("MyWebApiConnection")));
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddJsonOptions(options => {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });

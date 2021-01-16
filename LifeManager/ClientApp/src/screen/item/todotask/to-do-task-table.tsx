@@ -44,6 +44,12 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 width: 75
             },
             {
+                id: 'status',
+                Header: "Status",
+                accessor: "status",
+                width: 100
+            },
+            {
                 id: 'actions',
                 Header: "",
                 accessor: row => (
