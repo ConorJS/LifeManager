@@ -10,7 +10,7 @@ export class ActiveItemDetails {
     newName: string = '';
 
     newStatus: string = 'Ready';
-    
+
     newComments: string = '';
 
     newRelativeSize: number = 1;
@@ -24,7 +24,7 @@ export class ToDoTask {
     dateTimeLastModified?: Date;
 
     name: string;
-    
+
     status: string;
 
     comments: string;
@@ -140,12 +140,12 @@ export const ToDoTaskViewer: FunctionComponent = () => {
     const createToDoTask = () => {
         if (!creating()) {
             // TODO: This problem should be addressed with form validation, and appropriate error messages.
-            console.log("We are not in edit mode, yet saveToDoTask was called.");
+            console.log("We are not in edit mode, yet saveActiveToDoTask was called.");
             return;
         }
 
         const toDoTask = new ToDoTask(
-            activeItemDetails.newName, activeItemDetails.newStatus, 
+            activeItemDetails.newName, activeItemDetails.newStatus,
             activeItemDetails.newComments, activeItemDetails.newRelativeSize);
 
         const requestOptions = {
@@ -163,31 +163,40 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             });
     }
 
-    const saveToDoTask = (): void => {
+    const saveActiveToDoTask = (): void => {
         if (!editing() || !itemBeingEdited) {
             // TODO: This problem should be addressed with form validation, and appropriate error messages.
-            console.log(`${editing() ? "No item is being edited" : "We are not in edit mode"}, yet saveToDoTask was called.`);
+            console.log(`${editing() ? "No item is being edited" : "We are not in edit mode"}, yet saveActiveToDoTask was called.`);
             return;
         }
 
+        const updatedTask: ToDoTask = {
+            ...itemBeingEdited,
+            name: activeItemDetails.newName,
+            comments: activeItemDetails.newComments,
+            relativeSize: activeItemDetails.newRelativeSize
+        }
+
+        saveToDoTask(updatedTask).then();
+    }
+
+    const saveToDoTask = (toDoTask: ToDoTask): Promise<void> => {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                ...itemBeingEdited,
-                name: activeItemDetails.newName,
-                comments: activeItemDetails.newComments,
-                relativeSize: activeItemDetails.newRelativeSize
-            })
+            body: JSON.stringify(toDoTask)
         };
-
-        fetch('api/ToDoTask/Update', requestOptions)
+        
+        return new Promise<void>((resolve) => {
+            fetch('api/ToDoTask/Update', requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log(data);
                 stopAction();
+                resolve();
                 refresh();
             });
+        });
     }
 
     const removeToDoTask = (toDoTask: ToDoTask): void => {
@@ -250,7 +259,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
                     <div className="modal-buttons-container">
                         <button className="btn lm-button positive modal-button"
-                                onClick={editing() ? saveToDoTask : createToDoTask}>
+                                onClick={editing() ? saveActiveToDoTask : createToDoTask}>
                             Save
                         </button>
 
@@ -265,7 +274,13 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
     return (
         <div>
-            <div><ToDoTaskTable toDoTasks={toDoTasks} taskSelected={editItem} taskDeleted={removeToDoTask}/></div>
+            <div>
+                <ToDoTaskTable
+                    toDoTasks={toDoTasks}
+                    taskSelected={editItem}
+                    taskDeleted={removeToDoTask}
+                    saveToDoTask={saveToDoTask}/>
+            </div>
 
             <button className="btn lm-button positive"
                     onClick={() => changeAction(Action.CREATE)}>

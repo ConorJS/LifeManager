@@ -1,33 +1,36 @@
 ﻿import React, {FunctionComponent, useState} from "react";
 import {Dropdown} from "react-bootstrap";
+import {StringTools} from "../../tools/string-tools";
+import {ElementTools} from "../../tools/element-tools";
 
 interface SwitchingDropdownProps {
     options: string[];
-    initialSelection: string;
+    selection: string;
     selectionUpdated: (option: string) => void;
 }
 
 export const SwitchingDropdown: FunctionComponent<SwitchingDropdownProps> = (props: SwitchingDropdownProps) => {
-    const [selection, setSelection] = useState(props.initialSelection);
-
-    if (props.options.indexOf(props.initialSelection) === -1) {
-        throw Error(`initialSelection ${props.initialSelection} is not a member of options: ${props.options}`);
+    if (props.options.indexOf(props.selection) === -1) {
+        throw Error(`initialSelection ${props.selection} is not a member of supplied option list: ${props.options}`);
     }
     
     const optionClicked = (option: string) => {
-        setSelection(option);
         props.selectionUpdated(option);
     }
 
+    let containerIdHash = StringTools.generateId();
     let dropdownItems: any[] = [];
-    props.options.forEach((option) => {
-        dropdownItems.push(<Dropdown.Item onClick={() => optionClicked(option)}>{option}</Dropdown.Item>);
+    props.options.forEach((option, index) => {
+        const dropdownId = ElementTools.makeListElementId(SwitchingDropdown.name, containerIdHash, index);
+        dropdownItems.push(<Dropdown.Item id={dropdownId} key={dropdownId} onClick={() => optionClicked(option)}>{option}</Dropdown.Item>);
     });
+    
+    let formattedContainerId = ElementTools.makeContainerElementId(SwitchingDropdown.name, containerIdHash);
 
     return (
-        <Dropdown>
+        <Dropdown id={formattedContainerId} key={formattedContainerId}>
             <Dropdown.Toggle variant="success" id="dropdown-basic">
-                {selection}
+                {props.selection}
             </Dropdown.Toggle>
 
             <Dropdown.Menu>

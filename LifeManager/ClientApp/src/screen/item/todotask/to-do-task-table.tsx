@@ -1,5 +1,5 @@
 ﻿import React, {FunctionComponent} from "react";
-import {Cell, Column, useTable} from 'react-table'
+import {Cell, Column, useSortBy, useTable} from 'react-table'
 import {ToDoTask} from "./to-do-task-viewer";
 import {SizePickerTools} from "../../../components/sizepicker/size-picker";
 
@@ -11,11 +11,13 @@ import TableRow from "@material-ui/core/TableRow";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import './to-do-task-table.scss'
+import {SwitchingDropdown} from "../../../components/switchingdropdown/switching-dropdown";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
     taskSelected: (task: ToDoTask) => void
     taskDeleted: (task: ToDoTask) => void
+    saveToDoTask: (task: ToDoTask) => Promise<void>
 }
 
 export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDoTaskTableProps) => {
@@ -23,8 +25,8 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         mouseEvent.stopPropagation();
     }
 
-    function stopPropagationForActionCell(mouseEvent: React.MouseEvent, cell: Cell<ToDoTask>): void {
-        if (cell.column.id === 'actions') {
+    function stopPropagationForSomeCells(mouseEvent: React.MouseEvent, cell: Cell<ToDoTask>): void {
+        if (cell.column.id === 'actions' || cell.column.id === 'status') {
             mouseEvent.stopPropagation();
         }
     }
@@ -46,7 +48,18 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             {
                 id: 'status',
                 Header: "Status",
-                accessor: "status",
+                accessor: row => (
+                    <SwitchingDropdown
+                        options={['Ready', 'InProgress', 'Complete', 'Cancelled']}
+                        selection={row.status}
+                        selectionUpdated={(option) => {
+                            return props.saveToDoTask({
+                                ...row,
+                                status: option
+                            })
+                        }}
+                    />
+                ),
                 width: 100
             },
             {
@@ -76,8 +89,17 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     } = useTable(
         {
             columns: columns,
-            data: props.toDoTasks
-        }
+            data: props.toDoTasks,
+            initialState: {
+                sortBy: [
+                    {
+                        id: 'name',
+                        desc: false
+                    }
+                ]
+            }
+        },
+        useSortBy
     )
 
     return (
@@ -88,7 +110,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                     <TableRow {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map(column => (
                             <TableCell {...column.getHeaderProps()}
-                                       width={column.width} 
+                                       width={column.width}
                                        className="table-header-cell column-with-dividers"
                                        onClick={blockEventPropagation}>
 
@@ -114,7 +136,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                                 return (
                                     <TableCell {...cell.getCellProps()}
                                                className="column-with-dividers"
-                                               onClick={(event: React.MouseEvent) => stopPropagationForActionCell(event, cell)}>
+                                               onClick={(event: React.MouseEvent) => stopPropagationForSomeCells(event, cell)}>
 
                                         {cell.render('Cell')}
 
