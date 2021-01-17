@@ -1,4 +1,4 @@
-﻿import React, {FunctionComponent, useState} from "react";
+﻿import React, {CSSProperties, FunctionComponent} from "react";
 import Select, {OptionsType, ValueType} from "react-select";
 import chroma, {Color} from "chroma-js";
 import {ReactSelectTools} from "../../tools/react-select-tools";
@@ -6,6 +6,8 @@ import {ReactSelectTools} from "../../tools/react-select-tools";
 interface LmReactSelectProps {
     options: LmReactSelectOptions[];
     valueChanged: (value: string) => void
+    selection: string;
+    widthPixels?: number;
 }
 
 export class LmReactSelectOptions {
@@ -81,23 +83,33 @@ export const LmReactSelect: FunctionComponent<LmReactSelectProps> = (props: LmRe
         singleValue: (styles: any, {data}: any) => ({...styles, ...dot(data.color.css())}),
     };
 
-    const [selectedOption, setSelectedOption] = useState(options[0]);
+    const optionForValue = (value: string): OptionType => {
+        for (let option of options) {
+            if (option.value === value) {
+                return option;
+            }
+        }
 
-    const handleSelect = (selectedOption: ValueType<OptionType, false>) => {
+        throw Error(`${value} could not be matched to an option.`);
+    }
+
+    const handleSelect = (selectedOption: ValueType<OptionType, false>): void => {
         // ValueType<OptionType> has a union type (but should always resolve to OptionType for single-select, ReadonlyArray<OptionType> for multi).
         const option: OptionType = ReactSelectTools.resolve(selectedOption)[0];
+
         props.valueChanged(option.value);
-        setSelectedOption(option);
     }
+
+    let widthStyle: CSSProperties = !props.widthPixels ? {} : {width: props.widthPixels};
 
     return (
         <React.Fragment>
-            <Select
-                name="selectId"
-                options={options}
-                onChange={handleSelect}
-                value={selectedOption}
-                styles={colourStyles}
+            <Select style={widthStyle}
+                    name="selectId"
+                    options={options}
+                    onChange={handleSelect}
+                    value={optionForValue(props.selection)}
+                    styles={colourStyles}
             />
         </React.Fragment>
     )

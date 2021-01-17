@@ -11,7 +11,9 @@ import TableRow from "@material-ui/core/TableRow";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import './to-do-task-table.scss'
-import {SwitchingDropdown} from "../../../components/switchingdropdown/switching-dropdown";
+import {LmReactSelect, LmReactSelectOptions} from "../../../components/lmreactselect/lm-react-select";
+import chroma from "chroma-js";
+import {AppConstants} from "../../../app-constants";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
@@ -49,18 +51,23 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 id: 'status',
                 Header: "Status",
                 accessor: row => (
-                    <SwitchingDropdown
-                        options={['Ready', 'In Progress', 'Complete', 'Cancelled']}
-                        selection={row.status}
-                        selectionUpdated={(option) => {
+                    <LmReactSelect
+                        options={[
+                            new LmReactSelectOptions('Ready', chroma(AppConstants.LM_RED)),
+                            new LmReactSelectOptions('In Progress', chroma("#ecd50b")),
+                            new LmReactSelectOptions('Complete', chroma(AppConstants.LM_GREEN)),
+                            new LmReactSelectOptions('Cancelled', chroma('#888888')),
+                        ]}
+                        valueChanged={(option: string) => {
                             return props.saveToDoTask({
                                 ...row,
                                 status: option
                             })
                         }}
+                        selection={row.status}
                     />
                 ),
-                width: 100
+                width: 175
             },
             {
                 id: 'actions',

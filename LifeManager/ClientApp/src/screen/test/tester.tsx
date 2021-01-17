@@ -20,6 +20,7 @@ export const Tester: FunctionComponent = () => {
                     new LmReactSelectOptions('Cancelled', chroma('#888888')),
                 ]}
                 valueChanged={valueChanged}
+                selection={selectedOption}
             />
             
             {selectedOption}
