@@ -1,19 +1,28 @@
 ﻿import React, {FunctionComponent, useState} from "react";
-import {SwitchingDropdown} from "../../components/switchingdropdown/switching-dropdown";
+import chroma from 'chroma-js';
+import {AppConstants} from "../../app-constants";
+import {LmReactSelect, LmReactSelectOptions} from "../../components/lmreactselect/lm-react-select";
 
 export const Tester: FunctionComponent = () => {
     const [selectedOption, setSelectedOption] = useState('Ready');
-
+    
+    function valueChanged(value: string) {
+        setSelectedOption(value);
+    } 
+    
     return (
         <React.Fragment>
-            <SwitchingDropdown options={['Ready', 'In Progress', 'Complete', 'Cancelled']}
-                               selection={selectedOption}
-                               selectionUpdated={setSelectedOption}/>
-
-            <div>
-                {selectedOption}
-            </div>
-
+            <LmReactSelect
+                options={[
+                    new LmReactSelectOptions('Ready', chroma(AppConstants.LM_RED)),
+                    new LmReactSelectOptions('In Progress', chroma("#ecd50b")),
+                    new LmReactSelectOptions('Complete', chroma(AppConstants.LM_GREEN)),
+                    new LmReactSelectOptions('Cancelled', chroma('#888888')),
+                ]}
+                valueChanged={valueChanged}
+            />
+            
+            {selectedOption}
         </React.Fragment>
     )
 }
