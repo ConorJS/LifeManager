@@ -28,7 +28,7 @@ namespace LifeManager.Server {
 
             services.AddControllersWithViews()
                 .AddJsonOptions(options => {
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumMemberConverter());
                 });
 
             // In production, the React files will be served from this directory

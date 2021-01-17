@@ -6,7 +6,7 @@ export const Tester: FunctionComponent = () => {
 
     return (
         <React.Fragment>
-            <SwitchingDropdown options={['Ready', 'InProgress', 'Complete', 'Cancelled']}
+            <SwitchingDropdown options={['Ready', 'In Progress', 'Complete', 'Cancelled']}
                                selection={selectedOption}
                                selectionUpdated={setSelectedOption}/>
 

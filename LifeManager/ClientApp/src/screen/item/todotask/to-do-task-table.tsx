@@ -50,7 +50,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 Header: "Status",
                 accessor: row => (
                     <SwitchingDropdown
-                        options={['Ready', 'InProgress', 'Complete', 'Cancelled']}
+                        options={['Ready', 'In Progress', 'Complete', 'Cancelled']}
                         selection={row.status}
                         selectionUpdated={(option) => {
                             return props.saveToDoTask({
