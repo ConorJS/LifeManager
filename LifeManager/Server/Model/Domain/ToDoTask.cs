@@ -22,5 +22,7 @@ namespace LifeManager.Server.Model.Domain {
         public string Comments { get; set; }
 
         public int RelativeSize { get; set; }
+
+        public int Priority { get; set; }
     }
 }

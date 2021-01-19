@@ -25,5 +25,7 @@ namespace LifeManager.Server.Model.Entity {
         public string Comments { get; set; }
 
         public int RelativeSize { get; set; }
+
+        public int Priority { get; set; }
     }
 }

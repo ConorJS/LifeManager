@@ -14,6 +14,8 @@ export class ActiveItemDetails {
     newComments: string = '';
 
     newRelativeSize: number = 1;
+
+    newPriority: number = 1;
 }
 
 export class ToDoTask {
@@ -31,11 +33,14 @@ export class ToDoTask {
 
     relativeSize: number;
 
-    constructor(name: string, status: string, comments: string, relativeSize: number) {
+    priority: number;
+
+    constructor(name: string, status: string, comments: string, relativeSize: number, priority: number) {
         this.name = name;
         this.status = status;
         this.comments = comments;
         this.relativeSize = relativeSize;
+        this.priority = priority;
     }
 }
 
@@ -49,7 +54,8 @@ export enum ItemAttribute {
     NAME,
     STATUS,
     COMMENTS,
-    RELATIVE_SIZE
+    RELATIVE_SIZE,
+    PRIORITY
 }
 
 export const ToDoTaskViewer: FunctionComponent = () => {
@@ -74,7 +80,8 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             newName: '',
             newStatus: 'Ready',
             newComments: '',
-            newRelativeSize: 1
+            newRelativeSize: 1,
+            newPriority: 1
         });
 
         setActiveAction(activeItemType);
@@ -122,6 +129,10 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             case ItemAttribute.RELATIVE_SIZE:
                 setActiveItemDetails({...activeItemDetails, newRelativeSize: Number.parseInt(value)});
                 break;
+
+            case ItemAttribute.PRIORITY:
+                setActiveItemDetails({...activeItemDetails, newPriority: Number.parseInt(value)});
+                break;
         }
     }
 
@@ -132,7 +143,8 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             newName: toDoTask.name,
             newStatus: toDoTask.status,
             newComments: toDoTask.comments,
-            newRelativeSize: toDoTask.relativeSize
+            newRelativeSize: toDoTask.relativeSize,
+            newPriority: toDoTask.priority
         })
         setItemBeingEdited(toDoTask)
     }
@@ -146,7 +158,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
         const toDoTask = new ToDoTask(
             activeItemDetails.newName, activeItemDetails.newStatus,
-            activeItemDetails.newComments, activeItemDetails.newRelativeSize);
+            activeItemDetails.newComments, activeItemDetails.newRelativeSize, activeItemDetails.newPriority);
 
         const requestOptions = {
             method: 'POST',
@@ -174,7 +186,8 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             ...itemBeingEdited,
             name: activeItemDetails.newName,
             comments: activeItemDetails.newComments,
-            relativeSize: activeItemDetails.newRelativeSize
+            relativeSize: activeItemDetails.newRelativeSize,
+            priority: activeItemDetails.newPriority
         }
 
         saveToDoTask(updatedTask).then();
@@ -240,6 +253,12 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                                type="string"
                                value={activeItemDetails.newName}
                                onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.NAME)}/>
+                    </div>
+
+                    <div className="modal-field">
+                        <label htmlFor="editing-todo-task-relative-size">Priority</label>
+                        <SizePicker initialSize={activeItemDetails.newPriority}
+                                    sizeSelected={(size) => setAttributeValue(size, ItemAttribute.PRIORITY)}/>
                     </div>
 
                     <div className="modal-field">

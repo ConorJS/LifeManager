@@ -62,5 +62,6 @@ CREATE TABLE "ToDoTask"
     "Name"                 VARCHAR(255) NOT NULL,
     "Status"               VARCHAR(255) NOT NULL,
     "Comments"             VARCHAR(255),
-    "RelativeSize"         INT          NOT NULL
+    "RelativeSize"         INT          NOT NULL,
+    "Priority"             INT          NOT NULL
 );

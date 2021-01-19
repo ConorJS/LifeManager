@@ -5,7 +5,8 @@ namespace LifeManager.Server.Model.Mapper {
     public class ToDoTaskMapper {
         public ToDoTask ToDomain(ToDoTaskEntity entity) {
             ToDoTask domain = new ToDoTask {
-                 Status = entity.Status
+                 Status = entity.Status,
+                 Priority = entity.Priority
             };
 
             new TaskMapper().ToDomain(entity, domain);
@@ -15,7 +16,8 @@ namespace LifeManager.Server.Model.Mapper {
 
         public ToDoTaskEntity ToEntity(ToDoTask domain) {
             ToDoTaskEntity entity = new ToDoTaskEntity {
-                Status = domain.Status
+                Status = domain.Status,
+                Priority = domain.Priority
             };
 
             new TaskMapper().ToEntity(domain, entity);

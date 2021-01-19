@@ -42,6 +42,12 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 width: 250
             },
             {
+                id: 'priority',
+                Header: "Priority",
+                accessor: "priority",
+                width: 75
+            },
+            {
                 id: 'size',
                 Header: "Size",
                 accessor: row => SizePickerTools.sizeStringFromNumber(row.relativeSize),
