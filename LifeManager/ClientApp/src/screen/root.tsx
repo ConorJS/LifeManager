@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useState} from 'react';
+import React, {Fragment, FunctionComponent, useState} from 'react';
 import {DataViewer} from "../components/data-viewer";
 
 import './root.scss'
@@ -24,9 +24,9 @@ export const Root: FunctionComponent = () => {
     switch (selectedNavigationItem) {
         case MenuItem.HOME:
             activeComponent =
-                <React.Fragment>
+                <Fragment>
                     Home
-                </React.Fragment>
+                </Fragment>
             break;
 
         case MenuItem.DATA_VIEWER:
@@ -43,7 +43,7 @@ export const Root: FunctionComponent = () => {
     }
 
     return (
-        <React.Fragment>
+        <Fragment>
             <div className="navigation-container">
                 <button>
                     <img className="navigation-button"
@@ -77,6 +77,6 @@ export const Root: FunctionComponent = () => {
             <div className="screen-container">
                 {activeComponent}
             </div>
-        </React.Fragment>
+        </Fragment>
     );
 }

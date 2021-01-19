@@ -1,4 +1,4 @@
-﻿import React, {FunctionComponent, useState} from "react";
+﻿import React, {Fragment, FunctionComponent, useState} from "react";
 import chroma from 'chroma-js';
 import {AppConstants} from "../../app-constants";
 import {LmReactSelect, LmReactSelectOptions} from "../../components/lmreactselect/lm-react-select";
@@ -11,7 +11,7 @@ export const Tester: FunctionComponent = () => {
     } 
     
     return (
-        <React.Fragment>
+        <Fragment>
             <LmReactSelect
                 options={[
                     new LmReactSelectOptions('Ready', chroma(AppConstants.LM_RED)),
@@ -24,6 +24,6 @@ export const Tester: FunctionComponent = () => {
             />
             
             {selectedOption}
-        </React.Fragment>
+        </Fragment>
     )
 }

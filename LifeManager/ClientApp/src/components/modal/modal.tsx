@@ -1,11 +1,11 @@
-﻿import * as React from 'react';
-import * as ReactDOM from "react-dom";
+﻿import {PureComponent, ReactElement} from 'react';
+import {createPortal} from "react-dom";
 import {ObjectTools} from '../../tools/object-tools'
-import * as PropTypes from "prop-types";
+import { node } from "prop-types";
 
-export default class Modal extends React.PureComponent {
+export default class Modal extends PureComponent {
     static propTypes = {
-        children: PropTypes.node
+        children: node
     }
 
     private readonly container: HTMLDivElement = document.createElement('div');
@@ -27,7 +27,7 @@ export default class Modal extends React.PureComponent {
         this.modalRoot.removeChild(this.container);
     }
 
-    public render(): React.ReactElement {
-        return ReactDOM.createPortal(this.props.children, this.container);
+    public render(): ReactElement {
+        return createPortal(this.props.children, this.container);
     }
 }
