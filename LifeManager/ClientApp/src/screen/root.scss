@@ -1,5 +1,3 @@
-@import '../app-constants.scss';
-
 $navigation-square-button-dimension: 140px;
 
 .navigation-container {
@@ -9,15 +7,6 @@ $navigation-square-button-dimension: 140px;
 .navigation-button {
     width: $navigation-square-button-dimension;
     height: $navigation-square-button-dimension;
-}
-
-.modal-container {
-    position: relative;
-    width: 400px;
-    height: 500px;
-    background-color: white;
-    border-radius: 12.5px;
-    border: 2px solid $lm-green-strong;
 }
 
 .screen-container {

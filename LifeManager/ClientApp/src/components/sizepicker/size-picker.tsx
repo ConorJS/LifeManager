@@ -64,18 +64,6 @@ export class SizePickerTools {
     }
 
     public static sizeNumberFromString(findSizeString: string): number {
-        let foundSizeNumber = -1;
-
-        sizes.forEach((sizeString, sizeNumber) => {
-            if (sizeString === findSizeString) {
-                foundSizeNumber = sizeNumber;
-            }
-        });
-
-        if (foundSizeNumber === -1) {
-            throw Error(`Could not find number for size string ${findSizeString}`);
-        }
-
-        return foundSizeNumber;
+        return ObjectTools.firstKeyWithValue(findSizeString, sizes);
     }
 }

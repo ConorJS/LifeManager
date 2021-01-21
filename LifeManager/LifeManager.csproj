@@ -10,54 +10,55 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Macross.Json.Extensions" Version="1.5.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.5"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.0-rc.2.20475.6"/>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0-rc1"/>
+        <PackageReference Include="Macross.Json.Extensions" Version="1.5.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.0-rc.2.20475.6" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0-rc1" />
     </ItemGroup>
 
     <ItemGroup>
         <!-- Don't publish the SPA source files, but do show them in the project files list -->
-        <Content Remove="$(SpaRoot)**"/>
-        <None Remove="$(SpaRoot)**"/>
-        <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**"/>
+        <Content Remove="$(SpaRoot)**" />
+        <None Remove="$(SpaRoot)**" />
+        <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ClientApp\public\resources\navigationimages"/>
+        <Folder Include="ClientApp\public\resources\navigationimages" />
     </ItemGroup>
 
     <ItemGroup>
-        <TypeScriptCompile Include="ClientApp\src\app-constants.tsx"/>
-        <TypeScriptCompile Include="ClientApp\src\components\lmreactselect\lm-react-select.tsx"/>
-        <TypeScriptCompile Include="ClientApp\src\components\modal\lm-modal.tsx"/>
-        <TypeScriptCompile Include="ClientApp\src\components\sizepicker\size-picker.tsx"/>
-        <TypeScriptCompile Include="ClientApp\src\react-table.config.d.ts"/>
-        <TypeScriptCompile Include="ClientApp\src\screen\item\todotask\to-do-task-table.tsx"/>
-        <TypeScriptCompile Include="ClientApp\src\screen\test\tester.tsx"/>
-        <TypeScriptCompile Include="ClientApp\src\tools\element-tools.tsx"/>
-        <TypeScriptCompile Include="ClientApp\src\tools\react-select-tools.tsx"/>
-        <TypeScriptCompile Include="ClientApp\src\tools\string-tools.tsx"/>
+        <TypeScriptCompile Include="ClientApp\src\app-constants.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\lmreactselect\lm-react-select.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\modal\lm-modal.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\prioritypicker\priority-picker.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\sizepicker\size-picker.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\react-table.config.d.ts" />
+        <TypeScriptCompile Include="ClientApp\src\screen\item\todotask\to-do-task-table.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\screen\test\tester.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\tools\element-tools.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\tools\react-select-tools.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\tools\string-tools.tsx" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
         <!-- Ensure Node.js is installed -->
         <Exec Command="node --version" ContinueOnError="true">
-            <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
         </Exec>
-        <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE."/>
-        <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..."/>
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install"/>
+        <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+        <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
     </Target>
 
     <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
         <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install"/>
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build"/>
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
 
         <!-- Include the newly-built files in the publish output -->
         <ItemGroup>
-            <DistFiles Include="$(SpaRoot)build\**"/>
+            <DistFiles Include="$(SpaRoot)build\**" />
             <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
                 <RelativePath>%(DistFiles.Identity)</RelativePath>
                 <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

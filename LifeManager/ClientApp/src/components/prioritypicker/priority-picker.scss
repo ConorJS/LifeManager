@@ -1,0 +1,79 @@
+﻿@import './../../app-constants';
+
+$inter-button-distance: 2.25px;
+$button-width: 75px;
+$button-height: 45px;
+$font-size: 16x;
+
+div.priority-picker-container {
+  display: flex;
+  flex-direction: row;
+  width: 4 * $button-width;
+  height: $button-height;
+}
+
+div.priority-picker-button {
+  position: relative;
+  background-color: white;
+  width: $button-width;
+  height: $button-height - $inter-button-distance;
+  margin: $inter-button-distance / 2;
+
+  border-radius: 10px;
+  border: 2px solid black;
+}
+
+div.priority-one-button {
+  &:hover {
+    color: white;
+    background-color: $lm-red-strong;
+  }
+  &.active {
+    color: white;
+    background-color: $lm-red-strong;
+  }
+}
+
+div.priority-two-button {
+  &:hover {
+    color: white;
+    background-color: $lm-red;
+  }
+  &.active {
+    color: white;
+    background-color: $lm-red;
+  }
+}
+
+div.priority-three-button {
+  &:hover {
+    background-color: $lm-red-weak;
+  }
+  &.active {
+    background-color: $lm-red-weak;
+  }
+}
+
+div.priority-four-button {
+  &:hover {
+    background-color: $lm-red-off-white;
+  }
+  &.active {
+    background-color: $lm-red-off-white;
+  }
+}
+
+p.button-text {
+  font-size: $font-size;
+
+  margin: 0;
+  position: absolute;
+
+  /* Vertical centering */
+  top: 47.5%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  /* Horizontal centering */
+  left: 50%;
+}

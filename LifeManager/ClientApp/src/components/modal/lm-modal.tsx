@@ -1,10 +1,12 @@
 ﻿import Modal from "./modal";
-import React from "react";
+import React, {CSSProperties} from "react";
 import './lm-modal.scss';
 
 interface LmModalProps {
     children: any;
     handleClose: Function;
+    widthPixels?: number;
+    heightPixels?: number;
 }
 
 export class LmModal extends React.Component<LmModalProps, any> {
@@ -28,6 +30,11 @@ export class LmModal extends React.Component<LmModalProps, any> {
     }
 
     render() {
+        let dimensionsStyle: CSSProperties = {
+            width: !this.props.widthPixels ? 400 : this.props.widthPixels,
+            height: !this.props.heightPixels ? 500 : this.props.heightPixels
+        }
+
         return (
             <Modal>
                 <div className="wrapper">
@@ -36,7 +43,9 @@ export class LmModal extends React.Component<LmModalProps, any> {
                             X
                         </button>
 
-                        {this.props.children}
+                        <div className="modal-container" style={dimensionsStyle}>
+                            {this.props.children}
+                        </div>
                     </div>
                 </div>
             </Modal>
