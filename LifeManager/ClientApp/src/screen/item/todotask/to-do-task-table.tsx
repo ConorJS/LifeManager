@@ -14,6 +14,7 @@ import './to-do-task-table.scss'
 import {LmReactSelect, LmReactSelectOptions} from "../../../components/lmreactselect/lm-react-select";
 import chroma from "chroma-js";
 import {AppConstants} from "../../../app-constants";
+import {PriorityPickerTools} from "../../../components/prioritypicker/priority-picker";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
@@ -44,7 +45,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             {
                 id: 'priority',
                 Header: "Priority",
-                accessor: "priority",
+                accessor: row => PriorityPickerTools.priorityStringFromNumber(row.priority),
                 width: 75
             },
             {
