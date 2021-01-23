@@ -3,16 +3,16 @@ using LifeManager.Server.Model.Entity;
 
 namespace LifeManager.Server.Model.Mapper.Implementation {
     public class AppointmentMapper : IAppointmentMapper {
-        private readonly IItemMapper _itemMapper;
+        private readonly ITaskMapper _taskMapper;
 
-        public AppointmentMapper(IItemMapper itemMapper) {
-            _itemMapper = itemMapper;
+        public AppointmentMapper(ITaskMapper taskMapper) {
+            _taskMapper = taskMapper;
         }
 
         public Appointment ToDomain(AppointmentEntity entity) {
             Appointment domain = new Appointment { };
 
-            _itemMapper.ToDomain(entity, domain);
+            _taskMapper.ToDomain(entity, domain);
 
             return domain;
         }
@@ -20,7 +20,7 @@ namespace LifeManager.Server.Model.Mapper.Implementation {
         public AppointmentEntity ToEntity(Appointment domain) {
             AppointmentEntity entity = new AppointmentEntity { };
 
-            _itemMapper.ToEntity(domain, entity);
+            _taskMapper.ToEntity(domain, entity);
 
             return entity;
         }

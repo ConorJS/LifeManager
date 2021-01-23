@@ -3,16 +3,16 @@ using LifeManager.Server.Model.Entity;
 
 namespace LifeManager.Server.Model.Mapper.Implementation {
     public class ChoreMapper : IChoreMapper {
-        private readonly IItemMapper _itemMapper;
+        private readonly ITaskMapper _taskMapper;
 
-        public ChoreMapper(IItemMapper itemMapper) {
-            _itemMapper = itemMapper;
+        public ChoreMapper(ITaskMapper taskMapper) {
+            _taskMapper = taskMapper;
         }
 
         public Chore ToDomain(ChoreEntity entity) {
             Chore domain = new Chore { };
 
-            _itemMapper.ToDomain(entity, domain);
+            _taskMapper.ToDomain(entity, domain);
 
             return domain;
         }
@@ -20,7 +20,7 @@ namespace LifeManager.Server.Model.Mapper.Implementation {
         public ChoreEntity ToEntity(Chore domain) {
             ChoreEntity entity = new ChoreEntity { };
 
-            _itemMapper.ToEntity(domain, entity);
+            _taskMapper.ToEntity(domain, entity);
 
             return entity;
         }

@@ -3,16 +3,16 @@ using LifeManager.Server.Model.Entity;
 
 namespace LifeManager.Server.Model.Mapper.Implementation {
     public class RecurringTaskMapper : IRecurringTaskMapper {
-        private readonly IItemMapper _itemMapper;
+        private readonly ITaskMapper _taskMapper;
 
-        public RecurringTaskMapper(IItemMapper itemMapper) {
-            _itemMapper = itemMapper;
+        public RecurringTaskMapper(ITaskMapper taskMapper) {
+            _taskMapper = taskMapper;
         }
         
         public RecurringTask ToDomain(RecurringTaskEntity entity) {
             RecurringTask domain = new RecurringTask { };
 
-            _itemMapper.ToDomain(entity, domain);
+            _taskMapper.ToDomain(entity, domain);
 
             return domain;
         }
@@ -20,7 +20,7 @@ namespace LifeManager.Server.Model.Mapper.Implementation {
         public RecurringTaskEntity ToEntity(RecurringTask domain) {
             RecurringTaskEntity entity = new RecurringTaskEntity { };
 
-            _itemMapper.ToEntity(domain, entity);
+            _taskMapper.ToEntity(domain, entity);
 
             return entity;
         }

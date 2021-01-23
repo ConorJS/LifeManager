@@ -3,10 +3,10 @@ using LifeManager.Server.Model.Entity;
 
 namespace LifeManager.Server.Model.Mapper.Implementation {
     public class ToDoTaskMapper : IToDoTaskMapper {
-        private readonly IItemMapper _itemMapper;
+        private readonly ITaskMapper _taskMapper;
 
-        public ToDoTaskMapper(IItemMapper itemMapper) {
-            _itemMapper = itemMapper;
+        public ToDoTaskMapper(ITaskMapper taskMapper) {
+            _taskMapper = taskMapper;
         }
 
         public ToDoTask ToDomain(ToDoTaskEntity entity) {
@@ -15,7 +15,7 @@ namespace LifeManager.Server.Model.Mapper.Implementation {
                 Priority = entity.Priority
             };
 
-            _itemMapper.ToDomain(entity, domain);
+            _taskMapper.ToDomain(entity, domain);
 
             return domain;
         }
@@ -26,7 +26,7 @@ namespace LifeManager.Server.Model.Mapper.Implementation {
                 Priority = domain.Priority
             };
 
-            _itemMapper.ToEntity(domain, entity);
+            _taskMapper.ToEntity(domain, entity);
 
             return entity;
         }
