@@ -19,11 +19,14 @@ namespace LifeManager.Server.Model.Mapper {
             // These could get overridden during the save; this is mostly to fulfil the non-null constraint on the entity.
             entity.DateTimeCreated = domain.DateTimeCreated ?? DateTime.Now;
             entity.DateTimeLastModified = domain.DateTimeLastModified ?? DateTime.Now;
-            
+
             entity.OwnedByUserId = domain.OwnedByUserId;
             entity.Active = domain.Active;
-            entity.Name = domain.Name;
-            entity.Comments = domain.Comments;
+
+            // Guard against over-sized name/field comments (indicates problem with UI or user tampering with DOM)
+            // TODO: Log a warning here
+            entity.Name = domain.Name.Length > 255 ? domain.Name.Substring(0, 255) : domain.Name;
+            entity.Comments = domain.Comments.Length > 65_535 ? domain.Comments.Substring(0, 65_535) : domain.Comments;
         }
     }
 }

@@ -30,6 +30,7 @@
     <ItemGroup>
         <TypeScriptCompile Include="ClientApp\src\app-constants.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\lm-add-fab\lm-add-fab.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\lm-input\lm-input.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\lmreactselect\lm-react-select.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\modal\lm-modal.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\prioritypicker\priority-picker.tsx" />

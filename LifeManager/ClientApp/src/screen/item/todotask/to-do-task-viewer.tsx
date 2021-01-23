@@ -5,6 +5,7 @@ import {SizePicker} from "../../../components/sizepicker/size-picker";
 import {ToDoTaskTable} from "./to-do-task-table";
 import {PriorityPicker} from "../../../components/prioritypicker/priority-picker";
 import {LmAddFab} from "../../../components/lm-add-fab/lm-add-fab";
+import {LmInput} from "../../../components/lm-input/lm-input";
 
 //== types ============================================================================================================
 
@@ -249,12 +250,11 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                 <div>{editing() ? "Edit" : "Creat"}ing a To Do task...</div>
 
                 <div className="modal-field">
-                    <label htmlFor="active-todo-task-name">Name</label>
-                    <input id="active-todo-task-name"
-                           type="string"
-                           value={activeItemDetails.newName}
-                           maxLength={80}
-                           onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.NAME)}/>
+                    <LmInput id="active-todo-task-name"
+                             label="Name"
+                             value={activeItemDetails.newName}
+                             maxLength={80}
+                             onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.NAME)}/>
                 </div>
 
                 <div className="modal-field">
@@ -270,13 +270,12 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                 </div>
 
                 <div className="modal-field">
-                    <label htmlFor="editing-todo-task-comments">Comments</label>
-                    <textarea id="editing-todo-task-comments"
-                              rows={4}
-                              maxLength={2500}
-                              typeof="string"
-                              value={activeItemDetails.newComments}
-                              onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.COMMENTS)}/>
+                    <LmInput id="editing-todo-task-comments"
+                             label="Comments"
+                             maxLength={2500}
+                             value={activeItemDetails.newComments}
+                             useTextArea={true}
+                             onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.COMMENTS)}/>
                 </div>
 
                 <div className="modal-buttons-container">
@@ -296,11 +295,11 @@ export const ToDoTaskViewer: FunctionComponent = () => {
     return (
         <div>
             <h2 className="page-header">To-Do List</h2>
-            
+
             <div style={{float: 'right', marginBottom: -25}}>
                 <LmAddFab selected={() => changeAction(Action.CREATE)}/>
             </div>
-            
+
             <div>
                 <ToDoTaskTable
                     toDoTasks={toDoTasks}

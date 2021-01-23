@@ -1,0 +1,12 @@
+﻿@import './../../app-constants';
+
+div.label-with-warning-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+span.input-limit-warning {
+  color: $lm-red-strong;
+  font-size: 12.5px;
+}
