@@ -1,5 +1,4 @@
 import React, {Fragment, FunctionComponent, useState} from 'react';
-import {DataViewer} from "../components/data-viewer";
 
 import './root.scss'
 import {ToDoTaskViewer} from "./item/todotask/to-do-task-viewer";
@@ -30,7 +29,7 @@ export const Root: FunctionComponent = () => {
             break;
 
         case MenuItem.DATA_VIEWER:
-            activeComponent = <DataViewer/>
+            activeComponent = "Nothing here!"
             break;
 
         case MenuItem.TODO_TASKS:

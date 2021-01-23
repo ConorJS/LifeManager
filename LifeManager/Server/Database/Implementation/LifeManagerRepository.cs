@@ -27,17 +27,6 @@ namespace LifeManager.Server.Database.Implementation {
         public UserEntity LoadUser(long id) {
             return DetachedEntityOrNull(_dbContext.User.Find(id));
         }
-
-        //== dummy ==================================================================================================================================
-
-        public DummyDataEntity LoadDummyData(long id) {
-            return _dbContext.Dummy.Find(id);
-        }
-
-        public void SaveDummyData(DummyDataEntity dummyDataEntity) {
-            _dbContext.Dummy.Update(dummyDataEntity);
-            _dbContext.SaveChanges();
-        }
         
         //== queries ================================================================================================================================
 

@@ -38,7 +38,6 @@ namespace LifeManager.Server {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IModelServiceTools, ModelServiceTools>();
             
-            services.AddScoped<IDummyDataService, DummyDataService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IChoreService, ChoreService>();
             services.AddScoped<ILeisureActivityService, LeisureActivityService>();
