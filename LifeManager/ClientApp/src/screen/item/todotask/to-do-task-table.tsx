@@ -15,6 +15,7 @@ import {LmReactSelect, LmReactSelectOptions} from "../../../components/lmreactse
 import chroma from "chroma-js";
 import {AppConstants} from "../../../app-constants";
 import {PriorityPickerTools} from "../../../components/prioritypicker/priority-picker";
+import {ElementTools} from "../../../tools/element-tools";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
@@ -39,20 +40,24 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             {
                 id: 'name',
                 Header: 'Name',
-                accessor: "name",
+                accessor: row => {
+                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 190);
+                    
+                    return <span>{truncated}{cut ? '...' : ''}</span>
+                },
                 width: 250
             },
             {
                 id: 'priority',
                 Header: "Priority",
                 accessor: row => PriorityPickerTools.priorityStringFromNumber(row.priority),
-                width: 75
+                width: 60
             },
             {
                 id: 'size',
                 Header: "Size",
                 accessor: row => SizePickerTools.sizeStringFromNumber(row.relativeSize),
-                width: 75
+                width: 60
             },
             {
                 id: 'status',
@@ -90,7 +95,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                         </DeleteForeverIcon>
                     </div>
                 ),
-                width: 75
+                width: 60
             }
         ], []);
 

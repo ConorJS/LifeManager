@@ -7,7 +7,7 @@ CREATE TABLE "Appointment"
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
-    "Comments"             VARCHAR(255),
+    "Comments"             VARCHAR(65535),
     "RelativeSize"         INT          NOT NULL
 );
 
@@ -18,7 +18,7 @@ CREATE TABLE "Chore"
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
-    "Comments"             VARCHAR(255),
+    "Comments"             VARCHAR(65535),
     "RelativeSize"         INT          NOT NULL
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE "LeisureActivity"
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
-    "Comments"             VARCHAR(255)
+    "Comments"             VARCHAR(65535)
 );
 
 CREATE TABLE "Principle"
@@ -39,7 +39,7 @@ CREATE TABLE "Principle"
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
-    "Comments"             VARCHAR(255)
+    "Comments"             VARCHAR(65535)
 );
 
 CREATE TABLE "RecurringTask"
@@ -49,7 +49,7 @@ CREATE TABLE "RecurringTask"
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
-    "Comments"             VARCHAR(255),
+    "Comments"             VARCHAR(65535),
     "RelativeSize"         INT          NOT NULL
 );
 
@@ -61,7 +61,7 @@ CREATE TABLE "ToDoTask"
     "Active"               BOOL         NOT NULL,
     "Name"                 VARCHAR(255) NOT NULL,
     "Status"               VARCHAR(255) NOT NULL,
-    "Comments"             VARCHAR(255),
+    "Comments"             VARCHAR(65535),
     "RelativeSize"         INT          NOT NULL,
     "Priority"             INT          NOT NULL
 );

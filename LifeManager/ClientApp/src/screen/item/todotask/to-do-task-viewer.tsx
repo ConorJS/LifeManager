@@ -252,6 +252,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                     <input id="active-todo-task-name"
                            type="string"
                            value={activeItemDetails.newName}
+                           maxLength={80}
                            onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.NAME)}/>
                 </div>
 
@@ -271,6 +272,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                     <label htmlFor="editing-todo-task-comments">Comments</label>
                     <textarea id="editing-todo-task-comments"
                               rows={4}
+                              maxLength={2500}
                               typeof="string"
                               value={activeItemDetails.newComments}
                               onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.COMMENTS)}/>

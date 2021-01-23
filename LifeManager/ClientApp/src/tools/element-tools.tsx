@@ -40,4 +40,51 @@ export class ElementTools {
     public static makeListElementId(parentName: string, parentId: string, memberId: number | string): string {
         return `${parentName}@${StringTools.generateId()}-#${memberId}`;
     }
+
+    /**
+     * Get the width of text if it were to be rendered.
+     * 
+     * @param inputText The text.
+     */
+    public static getTextWidth(inputText?: string): number {
+        const container = document.createElement('canvas');
+        
+        let width = 0;
+        let text = inputText ?? '';
+        text = text.toString();
+
+        let context = container.getContext('2d');
+
+        if (context) {
+            context.font = window
+                .getComputedStyle(document.body)
+                .getPropertyValue('font');
+            width = context.measureText(text).width;
+            return width;
+            
+        } else {
+            throw Error(`Could not set up a canvas to test text width for: ${inputText}`);
+        }
+    }
+
+    /**
+     * Truncates text to fit within a certain width. The trimmed text is also passed back as a separate string.
+     * 
+     * @param inputText The text.
+     * @param width The width (in pixels).
+     * @return A tuple consisting of the truncated string, and the remainder of the string which was cut.
+     */
+    public static truncateTextToFitInWidth(inputText: string, width: number): { truncated: string, cut: string } {
+        let truncatedText: string = inputText;
+        while (true) {
+            let textWidth: number = this.getTextWidth(truncatedText);
+            
+            if (textWidth < width) {
+                return { truncated: truncatedText, cut: inputText.substr(truncatedText.length) } ;
+                
+            } else {
+                truncatedText = truncatedText.substring(0, truncatedText.length * width / textWidth);
+            }
+        }
+    }
 }
