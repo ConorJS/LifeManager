@@ -65,10 +65,10 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 accessor: row => (
                     <LmReactSelect
                         options={[
-                            new LmReactSelectOptions('Ready', chroma(AppConstants.LM_RED)),
-                            new LmReactSelectOptions('In Progress', chroma("#ecd50b")),
-                            new LmReactSelectOptions('Complete', chroma(AppConstants.LM_GREEN)),
-                            new LmReactSelectOptions('Cancelled', chroma('#888888')),
+                            new LmReactSelectOptions('Ready', chroma('#888888')),
+                            new LmReactSelectOptions('In Progress', chroma("#0ba5ec")),
+                            new LmReactSelectOptions('Complete', chroma(AppConstants.LM_GREEN_STRONG)),
+                            new LmReactSelectOptions('Cancelled', chroma(AppConstants.LM_RED_STRONG)),
                         ]}
                         valueChanged={(option: string) => {
                             return props.saveToDoTask({
