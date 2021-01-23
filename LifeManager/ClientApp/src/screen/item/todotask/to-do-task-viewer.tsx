@@ -295,6 +295,12 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
     return (
         <div>
+            <h2 className="page-header">To-Do List</h2>
+            
+            <div style={{float: 'right', marginBottom: -25}}>
+                <LmAddFab selected={() => changeAction(Action.CREATE)}/>
+            </div>
+            
             <div>
                 <ToDoTaskTable
                     toDoTasks={toDoTasks}
@@ -302,9 +308,6 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                     taskDeleted={removeToDoTask}
                     saveToDoTask={saveToDoTask}/>
             </div>
-
-            <LmAddFab selected={() => changeAction(Action.CREATE)}/>
-
             {modalElement}
         </div>
     )
