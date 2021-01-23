@@ -1,5 +1,5 @@
 ﻿import Modal from "./modal";
-import React, {CSSProperties} from "react";
+import React, {Component, CSSProperties} from "react";
 import './lm-modal.scss';
 
 interface LmModalProps {
@@ -9,7 +9,7 @@ interface LmModalProps {
     heightPixels?: number;
 }
 
-export class LmModal extends React.Component<LmModalProps, any> {
+export class LmModal extends Component<LmModalProps, any> {
     constructor(props: LmModalProps) {
         super(props);
         this.escFunction = this.escFunction.bind(this);
@@ -38,8 +38,10 @@ export class LmModal extends React.Component<LmModalProps, any> {
         return (
             <Modal>
                 <div className="wrapper">
-                    <div className="inner" onClick={() => this.props.handleClose()}>
-                        <div className="modal-container" style={dimensionsStyle}>
+                    <div className="inner" onMouseDown={() => this.props.handleClose()}>
+                        <div className="modal-container"
+                             style={dimensionsStyle}
+                             onMouseDown={event => event.stopPropagation()}>
                             {this.props.children}
                         </div>
                     </div>
