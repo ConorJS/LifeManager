@@ -38,11 +38,7 @@ export class LmModal extends React.Component<LmModalProps, any> {
         return (
             <Modal>
                 <div className="wrapper">
-                    <div className="inner">
-                        <button className="close" onClick={() => this.props.handleClose()}>
-                            X
-                        </button>
-
+                    <div className="inner" onClick={() => this.props.handleClose()}>
                         <div className="modal-container" style={dimensionsStyle}>
                             {this.props.children}
                         </div>
