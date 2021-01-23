@@ -4,6 +4,7 @@ import './to-do-task-viewer.scss';
 import {SizePicker} from "../../../components/sizepicker/size-picker";
 import {ToDoTaskTable} from "./to-do-task-table";
 import {PriorityPicker} from "../../../components/prioritypicker/priority-picker";
+import {LmAddFab} from "../../../components/lm-add-fab/lm-add-fab";
 
 //== types ============================================================================================================
 
@@ -302,10 +303,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                     saveToDoTask={saveToDoTask}/>
             </div>
 
-            <button className="btn lm-button positive"
-                    onClick={() => changeAction(Action.CREATE)}>
-                New
-            </button>
+            <LmAddFab selected={() => changeAction(Action.CREATE)}/>
 
             {modalElement}
         </div>

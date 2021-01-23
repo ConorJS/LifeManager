@@ -1,0 +1,10 @@
+﻿@import './../../app-constants';
+
+.lm-add-fab {
+  background-color: $lm-green-strong !important;
+  color: white !important;
+  
+  &:focus {
+    outline: none;
+  }
+}
