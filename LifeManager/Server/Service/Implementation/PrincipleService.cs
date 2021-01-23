@@ -1,30 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using LifeManager.Server.Database;
 using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 using LifeManager.Server.Model.Mapper;
-using LifeManager.Server.Security;
 using LifeManager.Server.Service.Implementation.Tool;
 
 namespace LifeManager.Server.Service.Implementation {
     public class PrincipleService : IPrincipleService {
         //== attributes =============================================================================================================================
-        
+
         private readonly ILifeManagerRepository _lifeManagerRepository;
 
         private readonly IModelServiceTools _modelServiceTools;
-        
-        private readonly PrincipleMapper _principleMapper = new PrincipleMapper();
-        
+
+        private readonly IPrincipleMapper _principleMapper;
+
         //== init ===================================================================================================================================
-        
-        public PrincipleService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools) {
+
+        public PrincipleService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools,
+            IPrincipleMapper principleMapper) {
+            
             _lifeManagerRepository = lifeManagerRepository;
             _modelServiceTools = modelServiceTools;
+            _principleMapper = principleMapper;
         }
-        
+
         //== methods ================================================================================================================================
 
         public IEnumerable<Principle> GetAll() {
@@ -49,7 +50,7 @@ namespace LifeManager.Server.Service.Implementation {
 
         public void Update(Principle domain) {
             _modelServiceTools.UpdateProcessing<PrincipleEntity>(domain);
-            
+
             _lifeManagerRepository.SaveEntity(_principleMapper.ToEntity(domain));
         }
 

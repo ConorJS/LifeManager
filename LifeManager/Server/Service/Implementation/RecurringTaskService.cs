@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using LifeManager.Server.Database;
 using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 using LifeManager.Server.Model.Mapper;
-using LifeManager.Server.Security;
 using LifeManager.Server.Service.Implementation.Tool;
 
 namespace LifeManager.Server.Service.Implementation {
@@ -16,13 +14,16 @@ namespace LifeManager.Server.Service.Implementation {
 
         private readonly IModelServiceTools _modelServiceTools;
         
-        private readonly RecurringTaskMapper _recurringTaskMapper = new RecurringTaskMapper();
+        private readonly IRecurringTaskMapper _recurringTaskMapper;
         
         //== init ===================================================================================================================================
         
-        public RecurringTaskService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools) {
+        public RecurringTaskService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools, 
+            IRecurringTaskMapper recurringTaskMapper) {
+            
             _lifeManagerRepository = lifeManagerRepository;
             _modelServiceTools = modelServiceTools;
+            _recurringTaskMapper = recurringTaskMapper;
         }
         
         //== methods ================================================================================================================================

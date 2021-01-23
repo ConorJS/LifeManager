@@ -9,20 +9,23 @@ using LifeManager.Server.Service.Implementation.Tool;
 namespace LifeManager.Server.Service.Implementation {
     public class AppointmentService : IAppointmentService {
         //== attributes =============================================================================================================================
-        
+
         private readonly ILifeManagerRepository _lifeManagerRepository;
 
         private readonly IModelServiceTools _modelServiceTools;
-        
-        private readonly AppointmentMapper _appointmentMapper = new AppointmentMapper();
-        
+
+        private readonly IAppointmentMapper _appointmentMapper;
+
         //== init ===================================================================================================================================
-        
-        public AppointmentService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools) {
+
+        public AppointmentService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools,
+            IAppointmentMapper appointmentMapper) {
+            
             _lifeManagerRepository = lifeManagerRepository;
             _modelServiceTools = modelServiceTools;
+            _appointmentMapper = appointmentMapper;
         }
-        
+
         //== methods ================================================================================================================================
 
         public IEnumerable<Appointment> GetAll() {
@@ -41,13 +44,13 @@ namespace LifeManager.Server.Service.Implementation {
 
         public void Create(Appointment domain) {
             _modelServiceTools.InitialiseNewItem(domain);
-            
+
             _lifeManagerRepository.SaveEntity(_appointmentMapper.ToEntity(domain));
         }
 
         public void Update(Appointment domain) {
             _modelServiceTools.UpdateProcessing<AppointmentEntity>(domain);
-            
+
             _lifeManagerRepository.SaveEntity(_appointmentMapper.ToEntity(domain));
         }
 

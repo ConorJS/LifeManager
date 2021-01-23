@@ -1,12 +1,18 @@
 ﻿using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 
-namespace LifeManager.Server.Model.Mapper {
-    public class AppointmentMapper {
+namespace LifeManager.Server.Model.Mapper.Implementation {
+    public class AppointmentMapper : IAppointmentMapper {
+        private readonly IItemMapper _itemMapper;
+
+        public AppointmentMapper(IItemMapper itemMapper) {
+            _itemMapper = itemMapper;
+        }
+
         public Appointment ToDomain(AppointmentEntity entity) {
             Appointment domain = new Appointment { };
 
-            new TaskMapper().ToDomain(entity, domain);
+            _itemMapper.ToDomain(entity, domain);
 
             return domain;
         }
@@ -14,7 +20,7 @@ namespace LifeManager.Server.Model.Mapper {
         public AppointmentEntity ToEntity(Appointment domain) {
             AppointmentEntity entity = new AppointmentEntity { };
 
-            new TaskMapper().ToEntity(domain, entity);
+            _itemMapper.ToEntity(domain, entity);
 
             return entity;
         }

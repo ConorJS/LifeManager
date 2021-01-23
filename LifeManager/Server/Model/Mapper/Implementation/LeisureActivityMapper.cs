@@ -1,12 +1,18 @@
 ﻿using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 
-namespace LifeManager.Server.Model.Mapper {
-    public class LeisureActivityMapper {
+namespace LifeManager.Server.Model.Mapper.Implementation {
+    public class LeisureActivityMapper : ILeisureActivityMapper {
+        private readonly IItemMapper _itemMapper;
+
+        public LeisureActivityMapper(IItemMapper itemMapper) {
+            _itemMapper = itemMapper;
+        }
+
         public LeisureActivity ToDomain(LeisureActivityEntity entity) {
             LeisureActivity domain = new LeisureActivity { };
 
-            new ItemMapper().ToDomain(entity, domain);
+            _itemMapper.ToDomain(entity, domain);
 
             return domain;
         }
@@ -14,7 +20,7 @@ namespace LifeManager.Server.Model.Mapper {
         public LeisureActivityEntity ToEntity(LeisureActivity domain) {
             LeisureActivityEntity entity = new LeisureActivityEntity { };
 
-            new ItemMapper().ToEntity(domain, entity);
+            _itemMapper.ToEntity(domain, entity);
 
             return entity;
         }

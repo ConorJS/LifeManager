@@ -15,13 +15,14 @@ namespace LifeManager.Server.Service.Implementation {
 
         private readonly IModelServiceTools _modelServiceTools;
 
-        private readonly ToDoTaskMapper _toDoTaskMapper = new ToDoTaskMapper();
+        private readonly IToDoTaskMapper _toDoTaskMapper;
         
         //== init ===================================================================================================================================
 
-        public ToDoTaskService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools) {
+        public ToDoTaskService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools, IToDoTaskMapper toDoTaskMapper) {
             _lifeManagerRepository = lifeManagerRepository;
             _modelServiceTools = modelServiceTools;
+            _toDoTaskMapper = toDoTaskMapper;
         }
         
         //== methods ================================================================================================================================

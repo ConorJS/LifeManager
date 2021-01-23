@@ -1,15 +1,21 @@
 ﻿using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 
-namespace LifeManager.Server.Model.Mapper {
-    public class ToDoTaskMapper {
+namespace LifeManager.Server.Model.Mapper.Implementation {
+    public class ToDoTaskMapper : IToDoTaskMapper {
+        private readonly IItemMapper _itemMapper;
+
+        public ToDoTaskMapper(IItemMapper itemMapper) {
+            _itemMapper = itemMapper;
+        }
+
         public ToDoTask ToDomain(ToDoTaskEntity entity) {
             ToDoTask domain = new ToDoTask {
-                 Status = entity.Status,
-                 Priority = entity.Priority
+                Status = entity.Status,
+                Priority = entity.Priority
             };
 
-            new TaskMapper().ToDomain(entity, domain);
+            _itemMapper.ToDomain(entity, domain);
 
             return domain;
         }
@@ -20,7 +26,7 @@ namespace LifeManager.Server.Model.Mapper {
                 Priority = domain.Priority
             };
 
-            new TaskMapper().ToEntity(domain, entity);
+            _itemMapper.ToEntity(domain, entity);
 
             return entity;
         }

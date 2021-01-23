@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using LifeManager.Server.Database;
 using LifeManager.Server.Database.Implementation;
+using LifeManager.Server.Model.Mapper;
+using LifeManager.Server.Model.Mapper.Implementation;
 using LifeManager.Server.Security;
 using LifeManager.Server.Service;
 using LifeManager.Server.Service.Implementation;
@@ -44,6 +46,15 @@ namespace LifeManager.Server {
             services.AddScoped<IPrincipleService, PrincipleService>();
             services.AddScoped<IRecurringTaskService, RecurringTaskService>();
             services.AddScoped<IToDoTaskService, ToDoTaskService>();
+            
+            services.AddScoped<IAppointmentMapper, AppointmentMapper>();
+            services.AddScoped<IChoreMapper, ChoreMapper>();
+            services.AddScoped<IItemMapper, ItemMapper>();
+            services.AddScoped<ILeisureActivityMapper, LeisureActivityMapper>();
+            services.AddScoped<IPrincipleMapper, PrincipleMapper>();
+            services.AddScoped<IRecurringTaskMapper, RecurringTaskMapper>();
+            services.AddScoped<ITaskMapper, TaskMapper>();
+            services.AddScoped<IToDoTaskMapper, ToDoTaskMapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

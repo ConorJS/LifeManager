@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using LifeManager.Server.Database;
 using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 using LifeManager.Server.Model.Mapper;
-using LifeManager.Server.Security;
 using LifeManager.Server.Service.Implementation.Tool;
 
 namespace LifeManager.Server.Service.Implementation {
@@ -16,13 +14,14 @@ namespace LifeManager.Server.Service.Implementation {
 
         private readonly IModelServiceTools _modelServiceTools;
         
-        private readonly ChoreMapper _choreMapper = new ChoreMapper();
+        private readonly IChoreMapper _choreMapper;
         
         //== init ===================================================================================================================================
         
-        public ChoreService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools) {
+        public ChoreService(ILifeManagerRepository lifeManagerRepository, IModelServiceTools modelServiceTools, IChoreMapper choreMapper) {
             _lifeManagerRepository = lifeManagerRepository;
             _modelServiceTools = modelServiceTools;
+            _choreMapper = choreMapper;
         }
         
         //== methods ================================================================================================================================

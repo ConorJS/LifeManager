@@ -1,7 +1,14 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
 
-namespace LifeManager.Server.Model.Mapper {
-    public class ItemMapper {
+namespace LifeManager.Server.Model.Mapper.Implementation {
+    public class ItemMapper : IItemMapper {
+        private readonly ILogger<ItemMapper> _logger;
+
+        public ItemMapper(ILogger<ItemMapper> logger) {
+            _logger = logger;
+        }
+
         public void ToDomain(IItemEntity entity, IItem domain) {
             domain.Id = entity.Id;
             domain.DateTimeCreated = entity.DateTimeCreated;
@@ -24,9 +31,17 @@ namespace LifeManager.Server.Model.Mapper {
             entity.Active = domain.Active;
 
             // Guard against over-sized name/field comments (indicates problem with UI or user tampering with DOM)
-            // TODO: Log a warning here
-            entity.Name = domain.Name.Length > 255 ? domain.Name.Substring(0, 255) : domain.Name;
-            entity.Comments = domain.Comments.Length > 65_535 ? domain.Comments.Substring(0, 65_535) : domain.Comments;
+            entity.Name = TruncateIfBeyond(domain.Name, 255, $"a name for a {domain.GetType()} (id {domain.Id}) ");
+            entity.Comments = TruncateIfBeyond(domain.Comments, 65_535, $"comments for a {domain.GetType()} (id {domain.Id}) ");
+        }
+
+        private string TruncateIfBeyond(string value, int limit, string referenceForLog) {
+            if (value.Length > limit) {
+                _logger.LogWarning($"Tried to save {referenceForLog} longer than {limit} characters ({value.Length}): {value}");
+                return value.Substring(0, limit);
+            }
+
+            return value;
         }
     }
 }
