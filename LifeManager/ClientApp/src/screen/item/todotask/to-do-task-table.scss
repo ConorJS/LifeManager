@@ -30,8 +30,12 @@ tr.row-highlight-on-hover {
   }
 }
 
+.row-alternating-colors:nth-of-type(odd) {
+  background-color: $lm-green-off-white;
+}
+
 .row-alternating-colors:nth-of-type(even) {
-  background-color: $lm-green-weak;
+  background-color: white;
 }
 
 .column-with-dividers {

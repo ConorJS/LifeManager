@@ -8,6 +8,7 @@ import {BrowserRouter} from 'react-router-dom';
 import {Root} from './screen/root'
 
 import registerServiceWorker from './registerServiceWorker';
+import {AppConstants} from "./app-constants";
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 const rootElement = document.getElementById('root');
@@ -19,4 +20,6 @@ ReactDOM.render(
     rootElement);
 
 registerServiceWorker();
+
+document.body.style = `background: ${AppConstants.LM_GREEN_OFF_WHITE};`;
 

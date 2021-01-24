@@ -104,7 +104,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     )
 
     return (
-        <MaUTable {...getTableProps()} className="to-do-task-table">
+        <MaUTable {...getTableProps()} className="to-do-task-table lm-shadowed">
             <TableHead className="table-header">
 
                 {headerGroups.map(headerGroup => (
