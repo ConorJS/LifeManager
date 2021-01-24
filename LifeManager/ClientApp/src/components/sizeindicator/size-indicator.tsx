@@ -1,6 +1,8 @@
 ﻿import React, {FunctionComponent} from "react";
 import './size-indicator.scss'
 import {SizePickerTools} from "../sizepicker/size-picker";
+import {ElementTools} from "../../tools/element-tools";
+import {StringTools} from "../../tools/string-tools";
 
 interface SizeIndicatorProps {
     sizeNumber: number;
@@ -16,8 +18,10 @@ export const SizeIndicator: FunctionComponent<SizeIndicatorProps> = (props: Size
 
     let rectangles: any[] = [];
     for (let i = maxSize - 1; i >= 0; i--) {
+        const key: string = ElementTools.makeListElementId("SizeIndicator", StringTools.generateId().toString(), i);
         rectangles.push(
-            <div style={{width: width, height: height, marginBottom: i == 0 ? 0 : spacing, marginLeft: spacing}}
+            <div id={key} key={key}
+                 style={{width: width, height: height, marginBottom: i === 0 ? 0 : spacing, marginLeft: spacing}}
                  className={props.sizeNumber >= i ? "rectangle-on" : "rectangle-off"}/>
         )
     }

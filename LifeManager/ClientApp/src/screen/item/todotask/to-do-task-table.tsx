@@ -1,7 +1,6 @@
 ﻿import React, {FunctionComponent} from "react";
 import {Cell, Column, useSortBy, useTable} from 'react-table'
 import {ToDoTask} from "./to-do-task-viewer";
-import {SizePickerTools} from "../../../components/sizepicker/size-picker";
 
 import MaUTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -43,7 +42,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 Header: 'Name',
                 accessor: row => {
                     const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 190);
-                    
+
                     return <span>{truncated}{cut ? '...' : ''}</span>
                 },
                 width: 250
@@ -98,7 +97,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 ),
                 width: 60
             }
-        ], []);
+        ], [props]);
 
     const {
         getTableProps,

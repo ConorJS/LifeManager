@@ -1,5 +1,6 @@
 ﻿import React, {Fragment, FunctionComponent, ReactElement} from "react";
 import './lm-input.scss';
+import {StringTools} from "../../tools/string-tools";
 
 interface LmInputProps {
     id: string;
@@ -13,13 +14,17 @@ interface LmInputProps {
 export const LmInput: FunctionComponent<LmInputProps> = (props: LmInputProps) => {
     let headerChildren: ReactElement[] = [];
 
+    const baseKey: string = `${props.label ?? "NoLabelInput@" + StringTools.generateId().toString()}-input`;
+    
     if (props.label) {
-        headerChildren.push(<label htmlFor={props.id}>{props.label}</label>);
+        const labelKey: string = `${baseKey}-label`;
+        headerChildren.push(<label id={labelKey} key={labelKey} htmlFor={props.id}>{props.label}</label>);
     }
 
     if (props.maxLength && props.value.length > props.maxLength * 0.85) {
+        const warningKey: string = `${baseKey}-exceed-limit-warning`;
         headerChildren.push(
-            <span className="input-limit-warning">
+            <span id={warningKey} key={warningKey} className="input-limit-warning">
                 {props.value.length}/{props.maxLength}
             </span>
         );
