@@ -154,7 +154,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                             {row.cells.map(cell => {
                                 return (
                                     <TableCell {...cell.getCellProps()}
-                                               className="column-with-dividers"
+                                               className="table-cell column-with-dividers"
                                                onClick={(event: React.MouseEvent) => stopPropagationForSomeCells(event, cell)}>
 
                                         {cell.render('Cell')}

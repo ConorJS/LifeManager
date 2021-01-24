@@ -16,6 +16,11 @@ th.table-header-cell {
   font-weight: bold;
 }
 
+.table-cell {
+  /* Needs to be !important to override .MuiTableCell-root in react-table */
+  padding: 4px 12px 0 !important;
+}
+
 tr.row-highlight-on-hover {
   &:hover {
     background-color: $lm-green;
