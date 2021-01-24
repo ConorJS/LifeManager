@@ -25,6 +25,8 @@ th.table-header-cell {
 }
 
 tr.row-highlight-on-hover {
+  transition: 0.3s;
+  
   &:hover {
     background-color: $lm-green;
   }

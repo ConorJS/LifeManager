@@ -21,9 +21,11 @@ div.priority-picker-button {
 
   border-radius: 10px;
   border: 2px solid black;
+
+  transition: 0.3s;
 }
 
-div.priority-one-button {
+div.priority-one-button {  
   &:hover {
     color: white;
     background-color: $lm-red-strong;
