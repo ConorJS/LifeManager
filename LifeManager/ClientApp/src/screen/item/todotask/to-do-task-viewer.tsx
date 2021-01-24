@@ -6,6 +6,7 @@ import {ToDoTaskTable} from "./to-do-task-table";
 import {PriorityPicker} from "../../../components/prioritypicker/priority-picker";
 import {LmAddFab} from "../../../components/lm-add-fab/lm-add-fab";
 import {LmInput} from "../../../components/lm-input/lm-input";
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 //== types ============================================================================================================
 
@@ -243,6 +244,23 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
     //== render =======================================================================================================
 
+    let deleteButton;
+    if (editing()) {
+        deleteButton =
+            <div>
+                <DeleteForeverIcon
+                    className="remove-item"
+                    onClick={(event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+                        if (!itemBeingEdited) {
+                            throw Error("No item is selected, removeToDoTask can't be performed.");
+                        }
+                        removeToDoTask(itemBeingEdited);
+                        event.stopPropagation();
+                    }}>DeleteForever
+                </DeleteForeverIcon>
+            </div>
+    }
+
     let modalElement;
     if (creating() || editing()) {
         modalElement =
@@ -278,6 +296,8 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                              onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.COMMENTS)}/>
                 </div>
 
+                {deleteButton}
+
                 <div className="modal-buttons-container">
                     <button className="btn lm-button positive modal-button"
                             onClick={editing() ? saveActiveToDoTask : createToDoTask}>
@@ -304,7 +324,6 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                 <ToDoTaskTable
                     toDoTasks={toDoTasks}
                     taskSelected={editItem}
-                    taskDeleted={removeToDoTask}
                     saveToDoTask={saveToDoTask}/>
             </div>
             {modalElement}

@@ -14,6 +14,9 @@ thead.table-header {
 th.table-header-cell {
   color: white;
   font-weight: bold;
+  
+  /* Needs to be !important to override .MuiTableCell-root in react-table */
+  padding: 4px 12px 2px !important;
 }
 
 .table-cell {
@@ -27,17 +30,11 @@ tr.row-highlight-on-hover {
   }
 }
 
-.row-alternating-colors:nth-of-type(even){
+.row-alternating-colors:nth-of-type(even) {
   background-color: $lm-green-weak;
 }
 
 .column-with-dividers {
   border-left: 1px solid $column-divider-grey;
   border-right: 1px solid $column-divider-grey;
-}
-
-.action-item {
-  &:hover {
-    color: $lm_red
-  }
 }

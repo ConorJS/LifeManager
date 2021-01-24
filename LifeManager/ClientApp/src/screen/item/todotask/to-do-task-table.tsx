@@ -7,7 +7,6 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import './to-do-task-table.scss'
 import {LmReactSelect, LmReactSelectOptions} from "../../../components/lmreactselect/lm-react-select";
@@ -20,7 +19,6 @@ import {PriorityIndicator} from "../../../components/priorityindicator/priority-
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
     taskSelected: (task: ToDoTask) => void
-    taskDeleted: (task: ToDoTask) => void
     saveToDoTask: (task: ToDoTask) => Promise<void>
 }
 
@@ -38,16 +36,6 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     const columns: Column<ToDoTask>[] = React.useMemo(
         () => [
             {
-                id: 'name',
-                Header: 'Name',
-                accessor: row => {
-                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 190);
-
-                    return <span>{truncated}{cut ? '...' : ''}</span>
-                },
-                width: 250
-            },
-            {
                 id: 'priority',
                 Header: "Priority",
                 accessor: row => <PriorityIndicator priorityNumber={row.priority}/>,
@@ -58,6 +46,16 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 Header: "Size",
                 accessor: row => <SizeIndicator outerDimensions={45} sizeNumber={row.relativeSize}/>,
                 width: 60
+            },
+            {
+                id: 'name',
+                Header: 'Name',
+                accessor: row => {
+                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 190);
+
+                    return <span>{truncated}{cut ? '...' : ''}</span>
+                },
+                width: 250
             },
             {
                 id: 'status',
@@ -80,22 +78,6 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                     />
                 ),
                 width: 175
-            },
-            {
-                id: 'actions',
-                Header: "",
-                accessor: row => (
-                    <div>
-                        <DeleteForeverIcon
-                            className="action-item"
-                            onClick={(event: any) => {
-                                props.taskDeleted(row);
-                                blockEventPropagation(event);
-                            }}>DeleteForever
-                        </DeleteForeverIcon>
-                    </div>
-                ),
-                width: 60
             }
         ], [props]);
 
