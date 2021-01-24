@@ -51,7 +51,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 id: 'name',
                 Header: 'Name',
                 accessor: row => {
-                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 190);
+                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 265);
 
                     return <span>{truncated}{cut ? '...' : ''}</span>
                 },
