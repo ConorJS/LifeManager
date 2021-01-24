@@ -32,7 +32,7 @@ export const SizeIndicator: FunctionComponent<SizeIndicatorProps> = (props: Size
                 {rectangles}
 
                 <span
-                    className="size-text"
+                    className="lm-text size-text"
                     style={{
                         float: 'right',
                         marginTop: Math.floor(0 - props.outerDimensions / 2.25),

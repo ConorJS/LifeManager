@@ -314,7 +314,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
     return (
         <div>
-            <h2 className="page-header">To-Do List</h2>
+            <h2 className="lm-text page-header">To-Do List</h2>
 
             <div style={{float: 'right', marginBottom: -25}}>
                 <LmAddFab selected={() => changeAction(Action.CREATE)}/>
