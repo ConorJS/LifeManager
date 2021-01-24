@@ -1,5 +1,5 @@
 ﻿import React, {Fragment, FunctionComponent, useState} from "react";
-import {PriorityPicker} from "../../components/prioritypicker/priority-picker";
+import {SizeIndicator} from "../../components/sizeindicator/size-indicator";
 
 export const Tester: FunctionComponent = () => {
     const [selectedOption, setSelectedOption] = useState(1);
@@ -10,12 +10,7 @@ export const Tester: FunctionComponent = () => {
 
     return (
         <Fragment>
-            <PriorityPicker
-                initialPriority={selectedOption}
-                prioritySelected={valueChanged}
-            />
-
-            {selectedOption}
+            <SizeIndicator sizeNumber={6} outerDimensions={40}/>
         </Fragment>
     )
 }

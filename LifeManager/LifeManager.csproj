@@ -34,6 +34,7 @@
         <TypeScriptCompile Include="ClientApp\src\components\lmreactselect\lm-react-select.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\modal\lm-modal.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\prioritypicker\priority-picker.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\sizeindicator\size-indicator.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\sizepicker\size-picker.tsx" />
         <TypeScriptCompile Include="ClientApp\src\react-table.config.d.ts" />
         <TypeScriptCompile Include="ClientApp\src\screen\item\todotask\to-do-task-table.tsx" />

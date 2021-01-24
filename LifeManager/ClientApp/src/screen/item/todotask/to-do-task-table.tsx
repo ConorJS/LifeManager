@@ -16,6 +16,7 @@ import chroma from "chroma-js";
 import {AppConstants} from "../../../app-constants";
 import {PriorityPickerTools} from "../../../components/prioritypicker/priority-picker";
 import {ElementTools} from "../../../tools/element-tools";
+import {SizeIndicator} from "../../../components/sizeindicator/size-indicator";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
@@ -56,7 +57,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             {
                 id: 'size',
                 Header: "Size",
-                accessor: row => SizePickerTools.sizeStringFromNumber(row.relativeSize),
+                accessor: row => <SizeIndicator outerDimensions={45} sizeNumber={row.relativeSize}/>,
                 width: 60
             },
             {
