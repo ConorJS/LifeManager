@@ -7,16 +7,21 @@ $column-divider-grey: #e0e0e0;
   position: relative;
 }
 
-thead.table-header {
-  background-color: $lm-green-strong;
-}
-
 th.table-header-cell {
+  background-color: $lm-green-strong;
   color: white;
   font-weight: bold;
-  
+  height: 31.5px;
+
   /* Needs to be !important to override .MuiTableCell-root in react-table */
   padding: 4px 12px 2px !important;
+
+  user-select: none;
+}
+
+th.table-header-cell-selected {
+  background-color: $lm-green;
+  color: black;
 }
 
 .table-cell {
@@ -26,7 +31,7 @@ th.table-header-cell {
 
 tr.row-highlight-on-hover {
   transition: 0.3s;
-  
+
   &:hover {
     background-color: $lm-green;
   }

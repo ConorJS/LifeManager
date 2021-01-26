@@ -1,17 +1,26 @@
 ﻿@import './app-constants';
 
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
 .lm-text {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
 }
 
 .lm-button {
   color: white;
-  
+
   &:hover {
     /* Overrides Bootstrap's 'btn' */
     color: white;
   }
-  
+
   &.positive {
     background-color: $lm-green-strong;
     border-color: $lm-green;
@@ -20,7 +29,7 @@
       background-color: $lm-green;
     }
   }
-  
+
   &.negative {
     background-color: $lm-red;
     border-color: $lm-red-weak;

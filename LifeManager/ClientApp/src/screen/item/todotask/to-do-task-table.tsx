@@ -7,6 +7,8 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 import './to-do-task-table.scss'
 import {LmReactSelect, LmReactSelectOptions} from "../../../components/lmreactselect/lm-react-select";
@@ -158,13 +160,13 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
 
     return (
         <MaUTable {...getTableProps()} className="to-do-task-table lm-shadowed">
-            <TableHead className="table-header">
+            <TableHead>
                 {headerGroups.map(headerGroup => (
                     <TableRow {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map(column => (
                             <TableCell {...column.getHeaderProps(column.getSortByToggleProps())}
                                        width={column.width}
-                                       className="lm-text table-header-cell column-with-dividers"
+                                       className={`lm-text no-select table-header-cell ${column.isSorted ? "table-header-cell-selected" : ""} column-with-dividers`}
                                        onClick={(event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => {
                                            blockEventPropagation(event);
                                            toggleSort(column);
@@ -175,8 +177,8 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                                 <span>
                                     {column.isSorted
                                         ? column.isSortedDesc
-                                            ? ' 🔽'
-                                            : ' 🔼'
+                                            ? <ArrowDropDownIcon/>
+                                            : <ArrowDropUpIcon/>
                                         : ''}
                                   </span>
 
