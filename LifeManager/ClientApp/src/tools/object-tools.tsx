@@ -48,19 +48,20 @@ export class ObjectTools {
     }
 
     /**
-     * Gets a value from a map with a key, guaranteeing a define value. 
+     * Gets a value from a map with a key, guaranteeing a define value.
      * If the value does not exist, then throws an error.
-     * 
+     *
      * @param map The map.
      * @param key The key to access the map with.
      */
     public static getOrFail<K, V>(map: Map<K, V>, key: K): V {
         let value: V | undefined = map.get(key);
-        
-        if (!value) {
-            throw Error(`No key ${key} in map ${StringTools.printMap(map)}`);
+
+        if (value === undefined) {
+            let extraWarning: string = map.has(key) ? '. The map seems to have this key though, but the value is undefined.' : '';
+            throw Error(`No key '${key}' in map ${StringTools.printMap(map)}${extraWarning}`);
         }
-        
+
         return value;
-    } 
+    }
 }

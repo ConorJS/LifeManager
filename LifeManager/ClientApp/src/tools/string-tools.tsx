@@ -20,9 +20,9 @@
 
     /**
      * Formats an array as a single string.
-     * 
+     *
      * e.g. A map with values 1 -> 'A' and 2 -> 'B' would show as [1, A][2, B]
-     * 
+     *
      * @param map The map.
      * @return The formatted map, as a string.
      */
@@ -32,5 +32,27 @@
             output += `[${key}, ${value}]`;
         });
         return output;
+    }
+
+    /**
+     * Compares two strings, with null/blank values falling after.
+     *
+     * @param a
+     * @param b
+     */
+    public static compareBlanksLast(a?: string, b?: string): number {
+        if (!a && !b) {
+            return 0;
+        }
+
+        if (!a) {
+            return 1;
+        }
+
+        if (!b) {
+            return -1;
+        }
+
+        return a.localeCompare(b);
     }
 }

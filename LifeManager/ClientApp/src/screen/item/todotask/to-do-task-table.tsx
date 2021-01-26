@@ -1,5 +1,5 @@
 ﻿import React, {FunctionComponent} from "react";
-import {Cell, Column, useSortBy, useTable} from 'react-table'
+import {Cell, Column, Row, useSortBy, UseSortByColumnProps, useTable} from 'react-table'
 import {ToDoTask} from "./to-do-task-viewer";
 
 import MaUTable from "@material-ui/core/Table";
@@ -16,6 +16,9 @@ import {ElementTools} from "../../../tools/element-tools";
 import {SizeIndicator} from "../../../components/sizeindicator/size-indicator";
 import {PriorityIndicator} from "../../../components/priorityindicator/priority-indicator";
 import {ExtraOnHover} from "../../../components/extraonhover/extra-on-hover";
+import {StringTools} from "../../../tools/string-tools";
+import {NumberTools} from "../../../tools/number-tools";
+import {ObjectTools} from "../../../tools/object-tools";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
@@ -40,13 +43,15 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 id: 'priority',
                 Header: "Priority",
                 accessor: row => <PriorityIndicator priorityNumber={row.priority}/>,
-                width: 60
+                width: 60,
+                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number => NumberTools.compare(rowA.original.priority, rowB.original.priority)
             },
             {
                 id: 'size',
                 Header: "Size",
                 accessor: row => <SizeIndicator outerDimensions={45} sizeNumber={row.relativeSize}/>,
-                width: 60
+                width: 60,
+                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number => -NumberTools.compare(rowA.original.relativeSize, rowB.original.relativeSize)
             },
             {
                 id: 'name',
@@ -54,8 +59,8 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 accessor: row => {
                     const maxCommentLength: number = 250;
                     const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 265, true);
-                    const truncatedComments: string = (row.comments && row.comments.length > maxCommentLength) 
-                        ? row.comments.substring(0, maxCommentLength) 
+                    const truncatedComments: string = (row.comments && row.comments.length > maxCommentLength)
+                        ? row.comments.substring(0, maxCommentLength)
                         : row.comments;
 
                     const smallerFontSize: number = 12;
@@ -76,6 +81,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                         extra={<div style={{wordBreak: 'break-all'}}><span style={{fontSize: smallerFontSize}}>{truncatedComments}</span></div>}
                     />
                 },
+                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number => StringTools.compareBlanksLast(rowA.original.name, rowB.original.name),
                 width: 250
             },
             {
@@ -99,6 +105,16 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                         widthPixels={150}
                     />
                 ),
+                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number => {
+                    const statusPrecedence = new Map<string, number>([
+                        ['In Progress', 0],
+                        ['Ready', 1],
+                        ['Complete', 2],
+                        ['Cancelled', 3]
+                    ]);
+
+                    return NumberTools.compare(ObjectTools.getOrFail(statusPrecedence, rowA.original.status), ObjectTools.getOrFail(statusPrecedence, rowB.original.status));
+                },
                 width: 175
             }
         ], [props]);
@@ -125,19 +141,44 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         useSortBy
     )
 
+    const toggleSort = (column: UseSortByColumnProps<ToDoTask>): void => {
+        if (column.isSorted && column.isSortedDesc) {
+            // Descending sort changes to no sort.
+            column.clearSortBy();
+
+        } else if (column.isSorted && !column.isSortedDesc) {
+            // Ascending sort changes to descending sort.
+            column.toggleSortBy(true);
+
+        } else {
+            // No sort changes to ascending sort.
+            column.toggleSortBy(false);
+        }
+    }
+
     return (
         <MaUTable {...getTableProps()} className="to-do-task-table lm-shadowed">
             <TableHead className="table-header">
-
                 {headerGroups.map(headerGroup => (
                     <TableRow {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map(column => (
-                            <TableCell {...column.getHeaderProps()}
+                            <TableCell {...column.getHeaderProps(column.getSortByToggleProps())}
                                        width={column.width}
                                        className="lm-text table-header-cell column-with-dividers"
-                                       onClick={blockEventPropagation}>
+                                       onClick={(event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => {
+                                           blockEventPropagation(event);
+                                           toggleSort(column);
+                                       }}>
 
                                 {column.render('Header')}
+
+                                <span>
+                                    {column.isSorted
+                                        ? column.isSortedDesc
+                                            ? ' 🔽'
+                                            : ' 🔼'
+                                        : ''}
+                                  </span>
 
                             </TableCell>
                         ))}
