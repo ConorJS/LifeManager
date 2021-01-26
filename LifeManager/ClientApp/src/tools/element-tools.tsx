@@ -44,6 +44,9 @@ export class ElementTools {
     /**
      * Get the width of text if it were to be rendered.
      * 
+     * TODO: This doesn't allow choosing a font size, so the returned text width value will be based on the default font size for an 
+     *  element created off the root node of the DOM.
+     * 
      * @param inputText The text.
      */
     public static getTextWidth(inputText?: string): number {

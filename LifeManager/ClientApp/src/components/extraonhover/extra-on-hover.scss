@@ -1,0 +1,13 @@
+﻿.extra {
+  max-height: 0;
+  transition: max-height 1.2s ease-out;
+  overflow: hidden;
+}
+
+.extra-on-hover-container:hover {
+  .extra {
+    // Larger than the container should ever be
+    max-height: 500px;
+    transition: max-height 1.2s ease-in;
+  } 
+}

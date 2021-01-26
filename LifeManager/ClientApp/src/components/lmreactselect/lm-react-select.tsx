@@ -100,17 +100,17 @@ export const LmReactSelect: FunctionComponent<LmReactSelectProps> = (props: LmRe
         props.valueChanged(option.value);
     }
 
-    let widthStyle: CSSProperties = !props.widthPixels ? {} : {width: props.widthPixels};
+    let widthStyle: CSSProperties = !props.widthPixels ? {} : {minWidth: props.widthPixels};
 
     return (
-        <React.Fragment>
-            <Select style={widthStyle}
-                    name="selectId"
-                    options={options}
-                    onChange={handleSelect}
-                    value={optionForValue(props.selection)}
-                    styles={colourStyles}
+        <div style={widthStyle}>
+            <Select
+                name="selectId"
+                options={options}
+                onChange={handleSelect}
+                value={optionForValue(props.selection)}
+                styles={colourStyles}
             />
-        </React.Fragment>
+        </div>
     )
 }

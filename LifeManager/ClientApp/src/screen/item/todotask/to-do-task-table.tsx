@@ -15,6 +15,7 @@ import {AppConstants} from "../../../app-constants";
 import {ElementTools} from "../../../tools/element-tools";
 import {SizeIndicator} from "../../../components/sizeindicator/size-indicator";
 import {PriorityIndicator} from "../../../components/priorityindicator/priority-indicator";
+import {ExtraOnHover} from "../../../components/extraonhover/extra-on-hover";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
@@ -53,7 +54,10 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 accessor: row => {
                     const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 265);
 
-                    return <span>{truncated}{cut ? '...' : ''}</span>
+                    return <ExtraOnHover
+                        always={<span>{truncated}{cut ? '...' : ''}</span>}
+                        extra={!cut ? undefined : <span style={{fontSize: 12}} className="text-appear-on-hover">{`...${cut}`}</span>}
+                    />
                 },
                 width: 250
             },
@@ -75,6 +79,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                             })
                         }}
                         selection={row.status}
+                        widthPixels={150}
                     />
                 ),
                 width: 175
