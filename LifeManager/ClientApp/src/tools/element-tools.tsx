@@ -75,15 +75,25 @@ export class ElementTools {
      * 
      * @param inputText The text.
      * @param width The width (in pixels).
+     * @param truncateOnWord If set, then instead of truncating in the middle of a word, we walk back to the most recent word, and truncate there.
      * @return A tuple consisting of the truncated string, and the remainder of the string which was cut.
      */
-    public static truncateTextToFitInWidth(inputText: string, width: number): { truncated: string, cut: string } {
+    public static truncateTextToFitInWidth(inputText: string, width: number, truncateOnWord?: boolean): { truncated: string, cut: string} {
         let truncatedText: string = inputText;
         while (true) {
             let textWidth: number = this.getTextWidth(truncatedText);
             
             if (textWidth < width) {
-                return { truncated: truncatedText, cut: inputText.substr(truncatedText.length) } ;
+                if (truncateOnWord && inputText !== truncatedText) {
+                    for (let i = truncatedText.length; i >= 0; i--) {
+                        if (truncatedText.charAt(i) === ' ') {
+                            return {truncated: inputText.substring(0, i), cut: inputText.substr(i)};
+                        }
+                    }
+                }
+                
+                // If we aren't truncating at the end of a word (or we wanted to, but the string contained no whitespace i.e. one whole word).
+                return {truncated: truncatedText, cut: inputText.substr(truncatedText.length)};
                 
             } else {
                 truncatedText = truncatedText.substring(0, truncatedText.length * width / textWidth);

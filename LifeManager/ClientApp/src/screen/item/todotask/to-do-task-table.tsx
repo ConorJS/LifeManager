@@ -52,11 +52,28 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 id: 'name',
                 Header: 'Name',
                 accessor: row => {
-                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 265);
+                    const maxCommentLength: number = 250;
+                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 265, true);
+                    const truncatedComments: string = (row.comments && row.comments.length > maxCommentLength) 
+                        ? row.comments.substring(0, maxCommentLength) 
+                        : row.comments;
 
+                    const smallerFontSize: number = 12;
+                    const nameFontWeight: number = 600;
+                    const nameStart = <span style={{fontWeight: nameFontWeight}}>{truncated}{cut ? '...' : ''}</span>
+                    const nameEnd = !cut ? undefined : <span style={{fontWeight: nameFontWeight, fontSize: smallerFontSize}}>{`...${cut}`}</span>
                     return <ExtraOnHover
-                        always={<span>{truncated}{cut ? '...' : ''}</span>}
-                        extra={!cut ? undefined : <span style={{fontSize: 12}} className="text-appear-on-hover">{`...${cut}`}</span>}
+                        always={
+                            <div style={{marginBottom: 8}}>
+                                <div>
+                                    {nameStart}
+                                </div>
+                                <div>
+                                    {nameEnd}
+                                </div>
+                            </div>
+                        }
+                        extra={<div style={{wordBreak: 'break-all'}}><span style={{fontSize: smallerFontSize}}>{truncatedComments}</span></div>}
                     />
                 },
                 width: 250
