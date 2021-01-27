@@ -1,5 +1,12 @@
 ﻿@import '../../../app-constants.scss';
 
+.editing-item-modal-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
 h2.page-header {
   margin-top: -10px;
   margin-bottom: -25px;
@@ -10,21 +17,17 @@ div.modal-field {
   display: flex;
   flex-direction: column;
   text-align: left;
-  margin: 25px;
+  margin: 0 25px;
 }
 
 div.modal-buttons-container {
-  bottom: 15px;
-  position: absolute;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   width: inherit;
 }
 
 button.modal-button {
   width: 100px;
-  margin-left: 25px;
-  margin-right: 25px;
 }
 
 .remove-item {

@@ -281,49 +281,51 @@ export const ToDoTaskViewer: FunctionComponent = () => {
     } else if (creating() || editing()) {
         modalElement =
             <LmModal handleClose={() => setActiveAction(Action.NONE)} widthPixels={400} heightPixels={575}>
-                <div>{editing() ? "Edit" : "Creat"}ing a To Do task...</div>
+                <div className="editing-item-modal-container">
+                    <div>{editing() ? "Edit" : "Creat"}ing a To Do task...</div>
 
-                <div className="modal-field">
-                    <LmInput id="active-todo-task-name"
-                             label="Name"
-                             value={activeItemDetails.newName}
-                             maxLength={80}
-                             onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.NAME)}/>
-                </div>
+                    <div className="modal-field">
+                        <LmInput id="active-todo-task-name"
+                                 label="Name"
+                                 value={activeItemDetails.newName}
+                                 maxLength={80}
+                                 onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.NAME)}/>
+                    </div>
 
-                <div className="modal-field">
-                    <label htmlFor="editing-todo-task-relative-size">Priority</label>
-                    <PriorityPicker initialPriority={activeItemDetails.newPriority}
-                                    prioritySelected={(priority) => setAttributeValue(priority, ItemAttribute.PRIORITY)}/>
-                </div>
+                    <div className="modal-field">
+                        <label htmlFor="editing-todo-task-relative-size">Priority</label>
+                        <PriorityPicker initialPriority={activeItemDetails.newPriority}
+                                        prioritySelected={(priority) => setAttributeValue(priority, ItemAttribute.PRIORITY)}/>
+                    </div>
 
-                <div className="modal-field">
-                    <label htmlFor="editing-todo-task-relative-size">Size</label>
-                    <SizePicker initialSize={activeItemDetails.newRelativeSize}
-                                sizeSelected={(size) => setAttributeValue(size, ItemAttribute.RELATIVE_SIZE)}/>
-                </div>
+                    <div className="modal-field">
+                        <label htmlFor="editing-todo-task-relative-size">Size</label>
+                        <SizePicker initialSize={activeItemDetails.newRelativeSize}
+                                    sizeSelected={(size) => setAttributeValue(size, ItemAttribute.RELATIVE_SIZE)}/>
+                    </div>
 
-                <div className="modal-field">
-                    <LmInput id="editing-todo-task-comments"
-                             label="Comments"
-                             maxLength={2500}
-                             value={activeItemDetails.newComments}
-                             useTextArea={true}
-                             onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.COMMENTS)}/>
-                </div>
+                    <div className="modal-field">
+                        <LmInput id="editing-todo-task-comments"
+                                 label="Comments"
+                                 maxLength={2500}
+                                 value={activeItemDetails.newComments}
+                                 useTextArea={true}
+                                 onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.COMMENTS)}/>
+                    </div>
 
-                {deleteButton}
+                    {deleteButton}
 
-                <div className="modal-buttons-container">
-                    <button className="btn lm-button positive modal-button"
-                            onClick={editing() ? saveActiveToDoTask : createToDoTask}>
-                        Save
-                    </button>
+                    <div className="modal-buttons-container">
+                        <button className="btn lm-button positive modal-button"
+                                onClick={editing() ? saveActiveToDoTask : createToDoTask}>
+                            Save
+                        </button>
 
-                    <button className="btn lm-button negative modal-button"
-                            onClick={stopAction}>
-                        Cancel
-                    </button>
+                        <button className="btn lm-button negative modal-button"
+                                onClick={stopAction}>
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </LmModal>
     }
