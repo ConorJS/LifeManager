@@ -1,0 +1,17 @@
+﻿div.confirmation-modal-elements-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+div.confirmation-modal-message {
+  word-break: break-all;
+  margin: 0 55px;
+}
+
+div.confirmation-modal-buttons-container {
+  bottom: 15px;
+  display: flex;
+  justify-content: space-around;
+}

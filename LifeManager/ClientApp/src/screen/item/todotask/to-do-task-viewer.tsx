@@ -7,6 +7,7 @@ import {PriorityPicker} from "../../../components/prioritypicker/priority-picker
 import {LmAddFab} from "../../../components/lm-add-fab/lm-add-fab";
 import {LmInput} from "../../../components/lm-input/lm-input";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import {ConfirmationModal} from "../../../components/confirmationmodal/confirmation-modal";
 
 //== types ============================================================================================================
 
@@ -70,6 +71,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
     const [activeAction, setActiveAction] = useState<Action>(Action.NONE);
     const [activeItemDetails, setActiveItemDetails] = useState<ActiveItemDetails>(new ActiveItemDetails());
     const [itemBeingEdited, setItemBeingEdited] = useState<ToDoTask>();
+    const [inRemovalModal, setInRemovalModal] = useState(false);
 
     //== methods ======================================================================================================
 
@@ -251,10 +253,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
                 <DeleteForeverIcon
                     className="remove-item"
                     onClick={(event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-                        if (!itemBeingEdited) {
-                            throw Error("No item is selected, removeToDoTask can't be performed.");
-                        }
-                        removeToDoTask(itemBeingEdited);
+                        setInRemovalModal(true);
                         event.stopPropagation();
                     }}>DeleteForever
                 </DeleteForeverIcon>
@@ -262,7 +261,24 @@ export const ToDoTaskViewer: FunctionComponent = () => {
     }
 
     let modalElement;
-    if (creating() || editing()) {
+    if (inRemovalModal) {
+        modalElement =
+            <ConfirmationModal
+                acceptBehaviour={() => {
+                    if (!itemBeingEdited) {
+                        throw Error("Should not be shown removal modal if no item is being edited.");
+                    }
+                    setInRemovalModal(false);
+                    setActiveAction(Action.NONE);
+                    removeToDoTask(itemBeingEdited);
+                }}
+                rejectionBehaviour={() => {
+                    setInRemovalModal(false)
+                }}
+                warningMessage={`Are you sure you want to remove the task '${itemBeingEdited?.name}'?`}
+            />
+
+    } else if (creating() || editing()) {
         modalElement =
             <LmModal handleClose={() => setActiveAction(Action.NONE)} widthPixels={400} heightPixels={575}>
                 <div>{editing() ? "Edit" : "Creat"}ing a To Do task...</div>
