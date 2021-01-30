@@ -19,7 +19,7 @@ export const LmInput: FunctionComponent<LmInputProps> = (props: LmInputProps) =>
      *
      * @param event The change event (fired whenever the contents of the input field changes).
      */
-    const onChangeHandler = (event: SyntheticEvent) => {
+    function onChangeHandler(event: SyntheticEvent): void {
         const target: HTMLInputElement = event.target as HTMLInputElement;
         const value: string = target.value;
         setTempValue(value);

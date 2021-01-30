@@ -83,7 +83,7 @@ export const LmReactSelect: FunctionComponent<LmReactSelectProps> = (props: LmRe
         singleValue: (styles: any, {data}: any) => ({...styles, ...dot(data.color.css())}),
     };
 
-    const optionForValue = (value: string): OptionType => {
+    function optionForValue(value: string): OptionType {
         for (let option of options) {
             if (option.value === value) {
                 return option;
@@ -93,7 +93,7 @@ export const LmReactSelect: FunctionComponent<LmReactSelectProps> = (props: LmRe
         throw Error(`${value} could not be matched to an option.`);
     }
 
-    const handleSelect = (selectedOption: ValueType<OptionType, false>): void => {
+    function handleSelect(selectedOption: ValueType<OptionType, false>): void {
         // ValueType<OptionType> has a union type (but should always resolve to OptionType for single-select, ReadonlyArray<OptionType> for multi).
         const option: OptionType = ReactSelectTools.resolve(selectedOption)[0];
 

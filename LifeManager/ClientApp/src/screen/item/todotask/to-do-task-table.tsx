@@ -52,7 +52,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
      * @param setting The name of the setting (also the identifier).
      * @param setTo Whether or not the setting is being switched on (true) or off (false).
      */
-    const updateSetting = (setting: string, setTo: boolean): void => {
+    function updateSetting(setting: string, setTo: boolean): void {
         if (setting === HIDE_COMPLETE_CANCELLED) {
             setHideCompleteCancelledToggle(setTo);
 
@@ -68,8 +68,23 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
      *
      * @param rowItem The row.
      */
-    const doesExternalFilteringExcludeItem = (rowItem: ToDoTask): boolean => {
+    function doesExternalFilteringExcludeItem(rowItem: ToDoTask): boolean {
         return hideCompleteCancelledToggle && ['Complete', 'Cancelled'].includes(rowItem.status);
+    }
+
+    function toggleSort(column: UseSortByColumnProps<ToDoTask>): void {
+        if (column.isSorted && column.isSortedDesc) {
+            // Descending sort changes to no sort.
+            column.clearSortBy();
+
+        } else if (column.isSorted && !column.isSortedDesc) {
+            // Ascending sort changes to descending sort.
+            column.toggleSortBy(true);
+
+        } else {
+            // No sort changes to ascending sort.
+            column.toggleSortBy(false);
+        }
     }
 
     const columns: Column<ToDoTask>[] = React.useMemo(
@@ -176,21 +191,6 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         useSortBy
     )
 
-    const toggleSort = (column: UseSortByColumnProps<ToDoTask>): void => {
-        if (column.isSorted && column.isSortedDesc) {
-            // Descending sort changes to no sort.
-            column.clearSortBy();
-
-        } else if (column.isSorted && !column.isSortedDesc) {
-            // Ascending sort changes to descending sort.
-            column.toggleSortBy(true);
-
-        } else {
-            // No sort changes to ascending sort.
-            column.toggleSortBy(false);
-        }
-    }
-
     let statusSettingsWidget =
         <div style={{display: (statusSettingsWidgetOpen ? "block" : "none")}}>
             <SettingsWidget options={[new Setting(HIDE_COMPLETE_CANCELLED, hideCompleteCancelledToggle)]}
@@ -240,7 +240,6 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             </TableHead>
 
             <TableBody {...getTableBodyProps()}>
-
                 {rows.map((row, i) => {
                     if (doesExternalFilteringExcludeItem(row.original)) {
                         return (<React.Fragment key={`excluded-row#${row.original.id}`}/>);

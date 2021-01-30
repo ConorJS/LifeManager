@@ -75,12 +75,12 @@ export const ToDoTaskViewer: FunctionComponent = () => {
 
     //== methods ======================================================================================================
 
-    const loadAllTasks = async (): Promise<ToDoTask[]> => {
+    async function loadAllTasks(): Promise<ToDoTask[]> {
         const response = await fetch('api/ToDoTask/GetAll');
         return await response.json();
     }
 
-    const changeAction = (activeItemType: Action): void => {
+    function changeAction(activeItemType: Action): void {
         setActiveItemDetails({
             ...activeItemDetails,
             newName: '',
@@ -93,7 +93,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         setActiveAction(activeItemType);
     }
 
-    const stopAction = (): void => {
+    function stopAction(): void {
         changeAction(Action.NONE);
         setItemBeingEdited(undefined);
     }
@@ -142,7 +142,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         }
     }
 
-    const editItem = (toDoTask: ToDoTask) => {
+    function editItem(toDoTask: ToDoTask): void {
         changeAction(Action.EDIT);
         setActiveItemDetails({
             ...activeItemDetails,
@@ -155,7 +155,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         setItemBeingEdited(toDoTask)
     }
 
-    const createToDoTask = () => {
+    function createToDoTask(): void {
         if (!creating()) {
             // TODO: This problem should be addressed with form validation, and appropriate error messages.
             console.log("We are not in edit mode, yet saveActiveToDoTask was called.");
@@ -181,7 +181,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             });
     }
 
-    const saveActiveToDoTask = (): void => {
+    function saveActiveToDoTask(): void {
         if (!editing() || !itemBeingEdited) {
             // TODO: This problem should be addressed with form validation, and appropriate error messages.
             console.log(`${editing() ? "No item is being edited" : "We are not in edit mode"}, yet saveActiveToDoTask was called.`);
@@ -199,7 +199,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         saveToDoTask(updatedTask).then();
     }
 
-    const saveToDoTask = (toDoTask: ToDoTask): Promise<void> => {
+    function saveToDoTask(toDoTask: ToDoTask): Promise<void> {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -218,7 +218,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         });
     }
 
-    const removeToDoTask = (toDoTask: ToDoTask): void => {
+    function removeToDoTask(toDoTask: ToDoTask): void {
         fetch(`api/ToDoTask/Remove/${toDoTask.id}`).then(() => {
             // Close the edit window if the item being edited was just removed.
             if (itemBeingEdited === toDoTask) {
@@ -229,7 +229,7 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         });
     }
 
-    const refresh = (): void => {
+    function refresh(): void {
         loadAllTasks().then(data => {
             console.log("Calling setToDoTasks...");
             setToDoTasks(data);

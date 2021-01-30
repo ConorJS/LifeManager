@@ -2,13 +2,13 @@
 import {LmModal} from "../modal/lm-modal";
 import './confirmation-modal.scss';
 
-interface ConfirmationModalInterface {
+interface ConfirmationModalProps {
     acceptBehaviour: () => void,
     rejectionBehaviour: () => void,
     warningMessage: string;
 }
 
-export const ConfirmationModal: FunctionComponent<ConfirmationModalInterface> = (props: ConfirmationModalInterface) => {
+export const ConfirmationModal: FunctionComponent<ConfirmationModalProps> = (props: ConfirmationModalProps) => {
     return (
         <LmModal handleClose={props.rejectionBehaviour} widthPixels={350} heightPixels={275}>
             <div className="confirmation-modal-elements-container">
