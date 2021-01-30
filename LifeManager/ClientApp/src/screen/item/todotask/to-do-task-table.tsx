@@ -108,15 +108,15 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 Header: 'Name',
                 accessor: row => {
                     const maxCommentLength: number = 250;
-                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 265, true);
+                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 250, true);
                     const truncatedComments: string = (row.comments && row.comments.length > maxCommentLength)
                         ? row.comments.substring(0, maxCommentLength)
                         : row.comments;
 
                     const smallerFontSize: number = 12;
                     const nameFontWeight: number = 600;
-                    const nameStart = <span style={{fontWeight: nameFontWeight}}>{truncated}{cut ? '...' : ''}</span>
-                    const nameEnd = !cut ? undefined : <span style={{fontWeight: nameFontWeight, fontSize: smallerFontSize}}>{`...${cut}`}</span>
+                    const nameStart = <span style={{fontWeight: nameFontWeight}}>{truncated}</span>
+                    const nameEnd = !cut ? undefined : <span style={{fontWeight: nameFontWeight, fontSize: smallerFontSize}}>{cut}</span>
                     return <ExtraOnHover
                         always={
                             <div style={{marginBottom: 8}}>
