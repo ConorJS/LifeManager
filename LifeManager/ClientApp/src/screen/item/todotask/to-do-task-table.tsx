@@ -205,7 +205,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 {headerGroups.map(headerGroup => (
                     <TableRow {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map(column => (
-                            <TableCell {...column.getHeaderProps(column.getSortByToggleProps())}
+                            <TableCell {...column.getHeaderProps(column.getSortByToggleProps({title: undefined}))}
                                        width={column.width}
                                        className={`lm-text no-select table-header-cell ${column.isSorted ? "table-header-cell-selected" : ""} column-with-dividers`}
                                        onClick={(event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => {
