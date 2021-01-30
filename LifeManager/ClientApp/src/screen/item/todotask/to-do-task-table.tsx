@@ -243,7 +243,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
 
                 {rows.map((row, i) => {
                     if (doesExternalFilteringExcludeItem(row.original)) {
-                        return (<React.Fragment/>);
+                        return (<React.Fragment key={`excluded-row#${row.original.id}`}/>);
 
                     } else {
                         prepareRow(row)
