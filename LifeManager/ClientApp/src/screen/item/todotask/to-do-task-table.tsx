@@ -1,4 +1,4 @@
-﻿import React, {FunctionComponent} from "react";
+﻿import React, {FunctionComponent, useState} from "react";
 import {Cell, Column, Row, useSortBy, UseSortByColumnProps, useTable} from 'react-table'
 import {ToDoTask} from "./to-do-task-viewer";
 
@@ -9,6 +9,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import './to-do-task-table.scss'
 import {LmReactSelect, LmReactSelectOptions} from "../../../components/lmreactselect/lm-react-select";
@@ -21,6 +22,7 @@ import {ExtraOnHover} from "../../../components/extraonhover/extra-on-hover";
 import {StringTools} from "../../../tools/string-tools";
 import {NumberTools} from "../../../tools/number-tools";
 import {ObjectTools} from "../../../tools/object-tools";
+import {Setting, SettingsWidget} from "../../../components/settingswidget/settings-widget";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
@@ -29,6 +31,11 @@ interface ToDoTaskTableProps {
 }
 
 export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDoTaskTableProps) => {
+    const [statusSettingsWidgetOpen, setStatusSettingsModalOpen] = useState(false);
+    const [hideCompleteCancelledToggle, setHideCompleteCancelledToggle] = useState(false);
+
+    const HIDE_COMPLETE_CANCELLED: string = "Hide Completed & Cancelled";
+
     function blockEventPropagation(mouseEvent: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>): void {
         mouseEvent.stopPropagation();
     }
@@ -37,6 +44,32 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         if (cell.column.id === 'actions' || cell.column.id === 'status') {
             mouseEvent.stopPropagation();
         }
+    }
+
+    /**
+     * Updates a setting flag.
+     *
+     * @param setting The name of the setting (also the identifier).
+     * @param setTo Whether or not the setting is being switched on (true) or off (false).
+     */
+    const updateSetting = (setting: string, setTo: boolean): void => {
+        if (setting === HIDE_COMPLETE_CANCELLED) {
+            setHideCompleteCancelledToggle(setTo);
+
+        } else {
+            throw Error(`Unrecognized setting ${setting} changed.`);
+        }
+    }
+
+    /**
+     * Defines filtering that excludes items that isn't implemented within the framework/hooks offered by react-table (useFilters).
+     *
+     * These may be able to be performed by react-table (somehow), but aren't, likely due to lack of knowledge/understanding of react-table.
+     *
+     * @param rowItem The row.
+     */
+    const doesExternalFilteringExcludeItem = (rowItem: ToDoTask): boolean => {
+        return hideCompleteCancelledToggle && ['Complete', 'Cancelled'].includes(rowItem.status);
     }
 
     const columns: Column<ToDoTask>[] = React.useMemo(
@@ -158,6 +191,14 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         }
     }
 
+    let statusSettingsWidget =
+        <div style={{display: (statusSettingsWidgetOpen ? "block" : "none")}}>
+            <SettingsWidget options={[new Setting(HIDE_COMPLETE_CANCELLED, hideCompleteCancelledToggle)]}
+                            optionChanged={updateSetting}
+                            widgetClosed={() => setStatusSettingsModalOpen(false)}
+            />
+        </div>
+
     return (
         <MaUTable {...getTableProps()} className="to-do-task-table lm-shadowed">
             <TableHead>
@@ -171,6 +212,15 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                                            blockEventPropagation(event);
                                            toggleSort(column);
                                        }}>
+
+                                {column.id === 'status' ? statusSettingsWidget : <React.Fragment/>}
+                                {column.id === 'status' ?
+                                    <SettingsIcon className="status-settings-widget-button" onClick={(event: React.MouseEvent<SVGSVGElement>) => {
+                                        setStatusSettingsModalOpen(true);
+                                        event.stopPropagation();
+                                    }}/>
+                                    : <React.Fragment/>
+                                }
 
                                 {column.render('Header')}
 
@@ -192,26 +242,31 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             <TableBody {...getTableBodyProps()}>
 
                 {rows.map((row, i) => {
-                    prepareRow(row)
-                    return (
-                        <TableRow {...row.getRowProps()}
-                                  className="row-alternating-colors row-highlight-on-hover"
-                                  onClick={() => props.taskSelected(row.original)}>
+                    if (doesExternalFilteringExcludeItem(row.original)) {
+                        return (<React.Fragment/>);
 
-                            {row.cells.map(cell => {
-                                return (
-                                    <TableCell {...cell.getCellProps()}
-                                               className="table-cell column-with-dividers lm-text"
-                                               onClick={(event: React.MouseEvent) => stopPropagationForSomeCells(event, cell)}>
+                    } else {
+                        prepareRow(row)
+                        return (
+                            <TableRow {...row.getRowProps()}
+                                      className="row-alternating-colors row-highlight-on-hover"
+                                      onClick={() => props.taskSelected(row.original)}>
 
-                                        {cell.render('Cell')}
+                                {row.cells.map(cell => {
+                                    return (
+                                        <TableCell {...cell.getCellProps()}
+                                                   className="table-cell column-with-dividers lm-text"
+                                                   onClick={(event: React.MouseEvent) => stopPropagationForSomeCells(event, cell)}>
 
-                                    </TableCell>
-                                )
-                            })}
+                                            {cell.render('Cell')}
 
-                        </TableRow>
-                    )
+                                        </TableCell>
+                                    )
+                                })}
+
+                            </TableRow>
+                        )
+                    }
                 })}
 
             </TableBody>

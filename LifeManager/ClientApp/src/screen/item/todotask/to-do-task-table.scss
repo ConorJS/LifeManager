@@ -49,3 +49,16 @@ tr.row-highlight-on-hover {
   border-left: 1px solid $column-divider-grey;
   border-right: 1px solid $column-divider-grey;
 }
+
+.status-settings-widget-button {
+  color: gray;
+  position: relative;
+  top: -2px;
+  left: -9px;
+  
+  transition: 10s;
+
+  &:hover {
+    color: white;
+  }
+}

@@ -37,6 +37,7 @@
         <TypeScriptCompile Include="ClientApp\src\components\modal\lm-modal.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\priorityindicator\priority-indicator.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\prioritypicker\priority-picker.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\settingswidget\settings-widget.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\sizeindicator\size-indicator.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\sizepicker\size-picker.tsx" />
         <TypeScriptCompile Include="ClientApp\src\react-table.config.d.ts" />
