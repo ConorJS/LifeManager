@@ -323,7 +323,7 @@ function exit_with_message() {
   echo
 
   if [[ -n $path_to_file_to_open ]]; then
-    start "$path_to_file_to_open"
+    open_in_os "$path_to_file_to_open"
   fi
 
   exit 1
