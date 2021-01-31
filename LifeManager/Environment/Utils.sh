@@ -288,45 +288,45 @@ function exit_with_message() {
   name_of_step=$1
   path_to_file_to_open=$2
   # 3..n	All of the hints to give the user if the failure happens.
-  
+
   cols=$(tput cols)
 
-    echo
-    echo
-    pad_string '        ' '!' $((cols - 10))
-    pad_string '        ' '!' $((cols - 10))
-    echo
-    echo "          Step '$name_of_step' failed."
+  echo
+  echo
+  pad_string '        ' '!' $((cols - 10))
+  pad_string '        ' '!' $((cols - 10))
+  echo
+  echo "          Step '$name_of_step' failed."
 
-    if [[ -n "$3" ]]; then
-      echo
+  if [[ -n "$3" ]]; then
+    echo
 
-      if [[ -n "$4" ]]; then
-        echo '          Hints: '
-        hints_index=0
-        for arg_supplied in "${@:3}"; do
-          hints_index=$((hints_index + 1))
-          print_wrapped_with_padding "$hints_index: $arg_supplied" ' ' 10
-        done
+    if [[ -n "$4" ]]; then
+      echo '          Hints: '
+      hints_index=0
+      for arg_supplied in "${@:3}"; do
+        hints_index=$((hints_index + 1))
+        print_wrapped_with_padding "$hints_index: $arg_supplied" ' ' 10
+      done
 
-      else
-        print_wrapped_with_padding 'Hint: '"$3" ' ' 10
-      fi
+    else
+      print_wrapped_with_padding 'Hint: '"$3" ' ' 10
     fi
+  fi
 
-    echo
-    echo "          Exiting..."
-    echo
-    pad_string '        ' '!' $((cols - 10))
-    pad_string '        ' '!' $((cols - 10))
-    echo
-    echo
+  echo
+  echo "          Exiting..."
+  echo
+  pad_string '        ' '!' $((cols - 10))
+  pad_string '        ' '!' $((cols - 10))
+  echo
+  echo
 
-    if [[ -n $path_to_file_to_open ]]; then
-      start "$path_to_file_to_open"
-    fi
+  if [[ -n $path_to_file_to_open ]]; then
+    start "$path_to_file_to_open"
+  fi
 
-    exit 1
+  exit 1
 }
 
 # Prompts the user for either 'Yes' or 'No', with a message.
@@ -670,22 +670,22 @@ function contains() {
 # Determines if a string contains a value.
 #
 # 1 The string.
-# 2 The value. 
-# 
-# Example 1: string="abc" value="ab" returns true (0). 
-# Example 2: string="a" value="ab" returns false (1). 
+# 2 The value.
+#
+# Example 1: string="abc" value="ab" returns true (0)
+# Example 2: string="a" value="ab" returns false (1).
 function string_contains() {
   string=$1
   value=$2
-  
+
   if [[ -z $string ]]; then
     return 1
   fi
-  
+
   if [[ $string == *"$value"* ]]; then
     return 0
-  fi 
-  
+  fi
+
   return 1
 }
 
@@ -693,8 +693,8 @@ function string_contains() {
 function platform_is_windows() {
   if string_contains "$(uname)" "MINGW"; then
     return 0
-  fi 
-  
+  fi
+
   return 1
 }
 
@@ -702,18 +702,42 @@ function platform_is_windows() {
 function platform_is_linux() {
   if string_contains "$(uname)" "Linux"; then
     return 0
-  fi 
-  
+  fi
+
   return 1
+}
+
+# Throws an error message if the platform isn't know.
+function error_if_unknown_platform() {
+  error_context=$1
+
+  echo "Error when performing '$error_context': The current platform is neither Windows (MINGW) nor Linux."
+  exit 1
 }
 
 # Determines if (on a Windows platform) the current session is running with Administrator privileges.
 function elevated_privileges_check_windows() {
   if ! net session >/dev/null 2>&1; then
     # Is not an Administrator.
-    return 1;
+    return 1
   else
     # Is an Administrator.
-    return 0;
+    return 0
+  fi
+}
+
+# Opens a file in a platform-agnostic manner.
+function open_in_os() {
+  file_or_folder=$1
+
+  if platform_is_windows; then
+    start "$file_or_folder"
+    
+  elif platform_is_linux; then
+    gio open "$file_or_folder"
+    
+  else
+    error_if_unknown_platform "open_in_os: Attempted to open '$file_or_folder'"
+    exit 1
   fi
 }
