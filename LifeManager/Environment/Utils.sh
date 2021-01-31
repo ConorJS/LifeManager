@@ -75,7 +75,7 @@ function download_and_extract_to() {
   extension=$(split_string_and_get_last "$filename" '.')
 
   # See if the extracting this kind of file is supported
-  if contains "${supported_formats[*]}" "$extension"; then
+  if ! contains "${supported_formats[*]}" "$extension"; then
     echo "ERROR in '${FUNCNAME[0]}': The file extension '.$extension' is not supported by download_and_extract_to"
     exit 1
   fi
@@ -661,10 +661,50 @@ function contains() {
   validate_arg_count $# "${FUNCNAME[0]}" 2 2
 
   if [[ " $expanded_array " == *" ${value} "* ]]; then
-    return 1
+    return 0
   fi
 
-  return 0
+  return 1
+}
+
+# Determines if a string contains a value.
+#
+# 1 The string.
+# 2 The value. 
+# 
+# Example 1: string="abc" value="ab" returns true (0). 
+# Example 2: string="a" value="ab" returns false (1). 
+function string_contains() {
+  string=$1
+  value=$2
+  
+  if [[ -z $string ]]; then
+    return 1
+  fi
+  
+  if [[ $string == *"$value"* ]]; then
+    return 0
+  fi 
+  
+  return 1
+}
+
+# Determines if the current platform is Windows (Cygwin/MinGW)
+function platform_is_windows() {
+  if string_contains "$(uname)" "MINGW"; then
+    return 0
+  fi 
+  
+  return 1
+}
+
+# Determines if the current platform is Linux
+function platform_is_linux() {
+  if string_contains "$(uname)" "Linux"; then
+    return 0
+  fi 
+  
+  return 1
 }
 
 # Determines if (on a Windows platform) the current session is running with Administrator privileges.

@@ -44,12 +44,20 @@ assert_equals 'ABC' "$(pad_string 'ABC' '#' 3)" "Pad no characters (equal length
 assert_equals 'ABC' "$(pad_string 'ABC' '#' 2)" "Pad no characters (smaller length to pad to)"
 
 echo 'Testing: contains'
-assert_return_code 1 "contains" "Matches first in list" "zip rar 7z" "zip"
-assert_return_code 1 "contains" "Matches last in list" "zip rar 7z" "7z"
-assert_return_code 1 "contains" "Matches middle of list" "zip rar 7z" "rar"
-assert_return_code 0 "contains" "No match" "zip rar 7z" "gee"
-assert_return_code 0 "contains" "No match, with tricky whitespace" "zip rar 7z" "p r"
-assert_return_code 1 "contains" "Multiple match (false positive)" "zip rar 7z" "zip rar"
-assert_return_code 0 "contains" "No multiple match when matching values are not adjacent/in order as per list" "zip rar 7z" "7z rar"
+assert_return_code 0 "contains" "Matches first in list" "zip rar 7z" "zip"
+assert_return_code 0 "contains" "Matches last in list" "zip rar 7z" "7z"
+assert_return_code 0 "contains" "Matches middle of list" "zip rar 7z" "rar"
+assert_return_code 1 "contains" "No match" "zip rar 7z" "gee"
+assert_return_code 1 "contains" "No match, with tricky whitespace" "zip rar 7z" "p r"
+assert_return_code 0 "contains" "Multiple match (false positive)" "zip rar 7z" "zip rar"
+assert_return_code 1 "contains" "No multiple match when matching values are not adjacent/in order as per list" "zip rar 7z" "7z rar"
+
+echo 'Testing: string_contains'
+assert_return_code 0 "string_contains" "Simple positive case" "abcdef" "cde"
+assert_return_code 1 "string_contains" "Simple negative case" "abcdef" "efg"
+assert_return_code 0 "string_contains" "Full string match" "abcdef" "abcdef"
+assert_return_code 1 "string_contains" "Subject is superset of string" "abcdef" "abcdefg"
+assert_return_code 0 "string_contains" "Subject is empty" "abcdef" ""
+assert_return_code 1 "string_contains" "String is empty" "" "a"
 
 echo 'All tests passed.'
