@@ -715,6 +715,21 @@ function error_if_unknown_platform() {
   exit 1
 }
 
+# Determines, in a platform-agnostic manner, if the current session is running with elevated privileges.
+function elevated_privileges_check() {
+  if platform_is_windows; then
+    elevated_privileges_check_windows
+    return $?
+
+  elif platform_is_linux; then
+    elevated_privileges_check_linux
+    return $?
+
+  else
+    error_if_unknown_platform "elevated_privileges_check"
+  fi
+}
+
 # Determines if (on a Windows platform) the current session is running with Administrator privileges.
 function elevated_privileges_check_windows() {
   if ! net session >/dev/null 2>&1; then
@@ -726,16 +741,27 @@ function elevated_privileges_check_windows() {
   fi
 }
 
+# Determines if (on a Linux platform) the current session is running with Root privileges.
+function elevated_privileges_check_linux() {
+  if [ "$(id -u)" = "0" ]; then
+    # Is root.
+    return 1
+  else
+    # Is not root.
+    return 0
+  fi
+}
+
 # Opens a file in a platform-agnostic manner.
 function open_in_os() {
   file_or_folder=$1
 
   if platform_is_windows; then
     start "$file_or_folder"
-    
+
   elif platform_is_linux; then
     gio open "$file_or_folder"
-    
+
   else
     error_if_unknown_platform "open_in_os: Attempted to open '$file_or_folder'"
     exit 1

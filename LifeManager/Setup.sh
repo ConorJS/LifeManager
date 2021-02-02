@@ -11,8 +11,8 @@ postgres_log_file="LocalEnv/postgres.log"
 
 # ===== Force elevated privileges =====================================================================================
 
-if ! elevated_privileges_check_windows; then
-  exit_with_message 'Check elevated user privileges' '' 'Run the terminal which runs Setup.sh as Administrator (on Windows/CygWin).'
+if ! elevated_privileges_check; then
+  exit_with_message 'Check elevated user privileges' '' 'Run the terminal which runs Setup.sh as Administrator (on Windows/CygWin), or as root (on Linux)'
 fi
 
 # ===== Create/Start PostgreSQL database ==============================================================================
