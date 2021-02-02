@@ -745,10 +745,10 @@ function elevated_privileges_check_windows() {
 function elevated_privileges_check_linux() {
   if [ "$(id -u)" = "0" ]; then
     # Is root.
-    return 1
+    return 0
   else
     # Is not root.
-    return 0
+    return 1
   fi
 }
 
