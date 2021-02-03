@@ -12,10 +12,8 @@ function fail_if_not_command() {
   validate_arg_count $# "${FUNCNAME[0]}" 1 2
 
   if ! (type "$command_string") &>/dev/null; then
-    echo "ERROR in '${FUNCNAME[0]}': \'$command_string\' is not on the path."
-
     if [ -n "$additional_error_message" ]; then
-      echo "$additional_error_message"
+      exit_with_message "$additional_error_message" "" "Install the required program indicated by the error message."
     fi
 
     exit 1

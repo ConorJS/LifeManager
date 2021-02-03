@@ -17,6 +17,8 @@ fi
 
 # ===== Create/Start PostgreSQL database ==============================================================================
 
+fail_if_not_command pg_ctl "Check PostgreSQL is installed"
+
 status_output=$(pg_ctl status "-D$db_directory")
 db_running=0
 if [[ "${status_output}" =~ "pg_ctl: server is running" ]]; then
