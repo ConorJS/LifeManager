@@ -83,7 +83,7 @@ if [[ db_running -eq 0 ]]; then
 
     cd Environment/Database || exit # Changing directory to: project/Environment/Database
     # If this fails due to a permission error on Windows, assign Edit permissions on the LocalEnv folder to 'NETWORK_SERVICE'.
-    ./CreateDatabase.sh || exit_if_error_code $? 'Setting up the LifeManager PostgreSQL database'
+    execute_script_hardened ./CreateDatabase.sh || exit_if_error_code $? 'Setting up the LifeManager PostgreSQL database'
 
     cd ../.. # Changing directory to: /project/
   fi
@@ -94,7 +94,7 @@ cd Environment/Database || exit # Changing directory to: project/Environment/Dat
 run_flyway_hint_1="Check for checksum mismatches above. Will require re-creating the database to correct."
 run_flyway_hint_2="Check for PSQLExceptions caused by incorrect scripts: Will require fixing the responsible script."
 run_flyway_hint_3="Ensure MigrateDatabase.sh has execute permissions (if on Linux): sudo chmod 755 ./Environment/Database/MigrateDatabase.sh"
-./MigrateDatabase.sh || exit_if_error_code $? 'Running Flyway migration scripts' "" "$run_flyway_hint_1" "$run_flyway_hint_2" "$run_flyway_hint_3"
+execute_script_hardened ./MigrateDatabase.sh || exit_if_error_code $? 'Running Flyway migration scripts' "" "$run_flyway_hint_1" "$run_flyway_hint_2" "$run_flyway_hint_3"
 cd ../.. # Changing directory to: /project/
 
 print_marker "Setup complete"

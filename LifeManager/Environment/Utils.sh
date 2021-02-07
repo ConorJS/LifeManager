@@ -787,7 +787,7 @@ function execute_script_hardened() {
   path_to_script=$1
 
   if platform_is_linux; then
-  	sudo chmod 574 "$path_to_script"
+  	sudo chmod 575 "$path_to_script"
   fi
   
   $path_to_script "${@:2}"
