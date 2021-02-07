@@ -22,7 +22,7 @@ cd Environment/Database || exit # Changing directory to: project/Environment/Dat
 
 # Create the database if it doesn't exist
 PGPASSWORD=lfemgr
-PGUSER=conor
+PGUSER=lmadmin
 mkdir "$database_path"
 psql -d postgres -f ../Database/createDatabase.sql -v "ON_ERROR_STOP=1" -v v1="'$database_path'" || exit_if_error_code $? 'Running the the LifeManager Postgres database creation SQL script' 
 PGPASSWORD=

@@ -65,7 +65,7 @@ if [[ db_running -eq 0 ]]; then
   if [[ create_database -eq 1 ]]; then
     print_marker "Initialising the database"
 
-    pg_ctl initdb -U conor -D "$db_directory"
+    pg_ctl initdb -U lmadmin -D "$db_directory"
   fi
 
   print_marker "Starting the database server"
