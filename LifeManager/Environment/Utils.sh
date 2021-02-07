@@ -781,7 +781,8 @@ function elevated_privileges_check_linux() {
 #
 # NOTE: Does not support passing parameters to script (yet), although this should be easy to implement.
 #
-# 1 The script name.
+# 1    The script name.
+# 2..n Parameters to the script.
 function execute_script_hardened() {
   path_to_script=$1
 
@@ -789,7 +790,7 @@ function execute_script_hardened() {
   	sudo chmod 574 "$path_to_script"
   fi
   
-  $path_to_script
+  $path_to_script "${@:2}"
   execution_return_code=$?
   
   if platform_is_linux; then
