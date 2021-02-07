@@ -774,6 +774,31 @@ function elevated_privileges_check_linux() {
   fi
 }
 
+# Runs a script. 
+# 
+# In Linux, this will modify the script permissions to r-x before execution, then restore
+# the permissions to the (assumed) default of rw- afterwards. 
+#
+# NOTE: Does not support passing parameters to script (yet), although this should be easy to implement.
+#
+# 1 The script name.
+function execute_script_hardened() {
+  path_to_script=$1
+
+  if platform_is_linux; then
+  	sudo chmod 574 "$path_to_script"
+  fi
+  
+  $path_to_script
+  execution_return_code=$?
+  
+  if platform_is_linux; then
+  	sudo chmod 464 "$path_to_script"
+  fi
+  
+  return $execution_return_code
+}
+
 # Opens a file in a platform-agnostic manner.
 function open_in_os() {
   file_or_folder=$1

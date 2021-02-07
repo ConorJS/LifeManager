@@ -72,8 +72,9 @@ if [[ db_running -eq 0 ]]; then
 
   echo "Logging Postgres server output to: $postgres_log_file"
 
-  start_db_fail_hint_1="Check task manager. A PostgreSQL instance may already be running, potentially owned by another user."
-  pg_ctl start -D "$db_directory" >>$postgres_log_file || exit_if_error_code $? 'Starting the LifeManager PostgreSQL database' "$postgres_log_file" "$start_db_fail_hint_1"
+  start_db_fail_hint_1="Check for running PostgreSQL processes; A PostgreSQL instance may already be running, potentially owned by another user."
+  start_db_fail_hint_2="If a running PostgreSQL is owned by NT_AUTHORITY/NETWORK_SERVICE on Windows: Run services.msc, find the PostgreSQL service and change its startup type to 'Manual', instead of 'Automatic', to avoid this issue in the future."
+  pg_ctl start -D "$db_directory" >>$postgres_log_file || exit_if_error_code $? 'Starting the LifeManager PostgreSQL database' "$postgres_log_file" "$start_db_fail_hint_1" "$start_db_fail_hint_2"
 
   echo "Successfully started Postgres database server."
 
