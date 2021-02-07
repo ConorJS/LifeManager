@@ -11,8 +11,16 @@ postgres_log_file="LocalEnv/postgres.log"
 
 # ===== Force elevated privileges =====================================================================================
 
-if ! elevated_privileges_check; then
-  exit_with_message 'Check elevated user privileges' '' 'Run the terminal which runs Setup.sh as Administrator (on Windows/CygWin), or as root (on Linux)'
+if platform_is_windows; then
+  if ! elevated_privileges_check; then
+    exit_with_message 'Check elevated user privileges' '' 'Run the terminal which runs Setup.sh as Administrator (on Windows/CygWin)'
+  fi
+elif platform_is_linux; then
+  if elevated_privileges_check; then
+    exit_with_message 'Check elevated user privileges' '' 'Do not run the terminal which runs Setup.sh as root (on Linux)'
+  fi
+else
+  error_if_unknown_platform "Privilege check before Setup.sh execution"
 fi
 
 # ===== Create/Start PostgreSQL database ==============================================================================
@@ -20,6 +28,7 @@ fi
 fail_if_not_command pg_ctl "Check PostgreSQL is installed"
 
 status_output=$(pg_ctl status "-D$db_directory")
+
 db_running=0
 if [[ "${status_output}" =~ "pg_ctl: server is running" ]]; then
   print_marker "The database is already running."
@@ -83,7 +92,8 @@ print_marker "Running Flyway migrations"
 cd Environment/Database || exit # Changing directory to: project/Environment/Database
 run_flyway_hint_1="Check for checksum mismatches above. Will require re-creating the database to correct."
 run_flyway_hint_2="Check for PSQLExceptions caused by incorrect scripts: Will require fixing the responsible script."
-./MigrateDatabase.sh || exit_if_error_code $? 'Running Flyway migration scripts' "" "$run_flyway_hint_1" "$run_flyway_hint_2"
+run_flyway_hint_3="Ensure MigrateDatabase.sh has execute permissions (if on Linux): sudo chmod 755 ./Environment/Database/MigrateDatabase.sh"
+./MigrateDatabase.sh || exit_if_error_code $? 'Running Flyway migration scripts' "" "$run_flyway_hint_1" "$run_flyway_hint_2" "$run_flyway_hint_3"
 cd ../.. # Changing directory to: /project/
 
 print_marker "Setup complete"

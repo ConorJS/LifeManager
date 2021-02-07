@@ -13,7 +13,9 @@ function fail_if_not_command() {
 
   if ! (type "$command_string") &>/dev/null; then
     if [ -n "$additional_error_message" ]; then
-      exit_with_message "$additional_error_message" "" "Install the required program indicated by the error message."
+      exit_with_message "Executable check: '$command_string' ($additional_error_message)" "" "Install the required program indicated by the error message."
+    else
+      exit_with_message "Executable check: [$command_string]" "" "Install the required program indicated by the error message."
     fi
 
     exit 1
@@ -46,7 +48,7 @@ function download_and_extract_to() {
 
   validate_arg_count $# "${FUNCNAME[0]}" 3 4
 
-  supported_formats=('zip' 'rar' '7z')
+  supported_formats=('zip' 'rar' '7z' 'gz')
 
   fail_if_not_command 7z
 
@@ -78,9 +80,31 @@ function download_and_extract_to() {
     exit 1
   fi
 
-  #-s hides download progress bar
+  # Download the file (-s hides download progress bar)
   curl "$url" -o "$output_directory/$filename"
-  7z x "$output_directory/$filename" "-o$output_directory" >>/dev/null
+
+  # NOTE: We assume all .gz files are tar.gz, which is potentially incorrect.
+  # If the file is a compressed tarball (tar.gz), we need to decompress (remove .gz) and then open the tarball (remove .tar).
+  if [ "$extension" = "gz" ]; then
+    # Fail immediately if the file is not a .tar.gz.
+    if [[ ! "${filename: -6}" == "tar.gz" ]]; then
+      echo "ERROR in '${FUNCNAME[0]}': The .gz file: '$filename' is not a .tar.gz (compressed tarball) file; this is not supported."
+      exit 1
+    fi
+
+    # Extract the .tar file from the .tar.gz and store it in a temporary directory
+    7z x "$output_directory/$filename" "-o$output_directory/temptarballdir" >>/dev/null
+
+    decompressed_tarball_filename=${filename::-3}
+    7z x "$output_directory/temptarballdir/$decompressed_tarball_filename" "-o$output_directory" >>/dev/null
+
+    rm -r "$output_directory/temptarballdir"
+
+  else
+    7z x "$output_directory/$filename" "-o$output_directory" >>/dev/null
+  fi
+
+  # Remove the downloaded file (same for tarball and non-tarball cases)
   rm "$output_directory/$filename"
 
   # Output a warning if the produced directory *still* doesn't have the same hash as what we expect
@@ -105,7 +129,7 @@ function download_and_extract_to() {
 #
 # 1 folder:	The relative or absolute path to the folder.
 #
-# Returns: 		The 8 hex character CRC32 hash of the whole folder, names included
+# Returns: 		The 8 hex character CRC32 hash of the whole folder, names not included (required for cross-plaform compatibility)
 # Example IN: 	/path/to/file
 # Example OUT: 	FB34CA12
 function hash_folder_contents() {
@@ -115,7 +139,7 @@ function hash_folder_contents() {
 
   fail_if_not_command 7z "hash_folder_contents needs 7-zip to calculate CRC hashes"
 
-  hash_line=$(7z h "$folder" | grep "CRC32  for data and names")
+  hash_line=$(7z h "$folder" | grep "CRC32  for data:")
 
   hash=$(split_string_and_get_last "$hash_line" " ")
   echo "$hash"
