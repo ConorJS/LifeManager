@@ -1,0 +1,148 @@
+== VMWare Workstation virtual machine configuration ====================================================
+
+# Create VM
+## Ubuntu (from disc image)
+## Full name: CServer
+## User name: c
+## Password: b(short)
+## Virtual machine name: UbuntuServer
+## Location: C:\Virtual Machines\UbuntuServer
+## Maximum disk size: 35GB
+## CHECK Store virtual disk as single file
+## Customize Hardware:
+### Memory: 6144MB
+### Processors: 1, 6 cores per processor
+### Network Adapter: Check 'Bridged: Connected directly to the physical network'
+
+== Initial Setup =======================================================================================
+
+# Skip 'Online Accounts'
+## 'Next' top-right through all 
+
+# Remove all favorites except terminal and file explorer
+
+# Update .bashrc
+gio open ~/.bashrc
+At bottom, paste: 
+	## Custom ##############################
+	Contents of repo/.bashrc, uncomment Linux lines, comment Windows lines
+		Can comment Linux/Windows lines with (replace OS with Linux or Windows): 
+			FIND:(alias.*#OS)$
+			REPLACE:#$1
+		Can comment Linux/Windows lines with (replace OS with Linux or Windows): 
+			FIND:#(alias.*#OS)$
+			REPLACE:$1
+
+# Configure terminal preferences
+gsettings get org.gnome.Terminal.ProfilesList default
+GNOME_TERMINAL_PROFILE=`gsettings get org.gnome.Terminal.ProfilesList default | awk -F \' '{print $2}'`
+gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ font 'Monospace 9'
+gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ default-size-rows 36
+gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ default-size-columns 120
+
+# Favorite terminal
+Right click the terminal when open in sidebar, select 'Favorite'
+
+# Update package manager
+sudo apt-get update
+
+== Basic programs =======================================================================================
+
+# Download/install/favorite Chrome
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt install ./google-chrome-stable_current_amd64.deb
+google-chrome (opens it, then mark as Favorite)
+
+# Download/install Notepadqq
+sudo apt install notepadqq
+notepadqq (opens it, then mark as Favorite)
+
+# Set Notepadqq as default text editor
+touch a
+gio open .
+Right click 'a' in the file explorer > Properties > Open With > Notepadqq > Set as default
+
+== Repository ===========================================================================================
+
+# Install Git
+sudo apt install git
+
+# Git credentials
+git config --global credential.helper store
+
+# Clone LifeManager
+git clone https://github.com/ConorJS/LifeManager.git ~/LifeManager/Repository
+
+== Docker ===============================================================================================
+
+# Allow apt to use a repository over HTTPS
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
+	
+# Add Docker’s official GPG key
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# Verify the GPG key:
+sudo apt-key fingerprint 0EBFCD88
+
+# Set up the Docker 'stable' repository:
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+   
+# Install the Docker engine
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+# Add and populate Docker group 
+sudo groupadd docker
+
+# aG = append to group, without removing user from other groups
+sudo usermod -aG docker ${USER}
+
+# Test the Docker engine
+docker run hello-world
+
+# Test LifeManager docker instance [NOTE: If this works, remove 'sudo' from Docker.sh]
+cd ~/LifeManager/Repository
+sudo chmod 555 Docker.sh
+./Docker.sh
+
+== Kubernetes ==========================================================================================
+# More info (Minikube): https://minikube.sigs.k8s.io/docs/start/
+
+# Install kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# Validate kubectl
+kubectl version --client
+
+# Install Minikube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+# Start Minikube
+minikube start
+
+# Check the Minikube pod is running 
+kubectl get po -A
+
+# Run the Minikube dashboard (Optional)
+minikube dashboard
+
+# Create/expose deployment (TODO - This is a Hello World app currently)
+kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.4
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+
+# View services (optional) (TODO - This is a Hello World app currently)
+kubectl get services hello-minikube
+
+============= Optional
+
+# Install net-tools (ifconfig)
+sudo apt install net-tools

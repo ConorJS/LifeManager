@@ -9,11 +9,11 @@ RUN echo "dotnet Version:" &&  dotnet --version
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY *.csproj ./
+COPY ./LifeManager/*.csproj ./
 RUN dotnet restore
 
 # Copy everything else and build
-COPY . ./
+COPY ./LifeManager ./
 RUN dotnet publish -c Release -o out
 
 # Build runtime image

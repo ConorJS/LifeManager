@@ -21,3 +21,19 @@ Create, Edit, Delete, etc. for all object types could be generalised?
 Try to remove setting up 'Postgres' user, if possible, in createDatabase.sql
 Move test scripts out of root of project folder/Environment folder, only have scratch test here (work on tests here, then move)
 Standardise naming of UI source folders
+
+
+--- Other
+Backup of changelist name/comments for bash utilities changes:
+
+Title:
+[n+m+4] Split Utils.sh into StringUtils, FileUtils, SecurityUtils, ScriptUserUtils, etc. SEE COMMENTS ON CHANGELIST!!!
+
+Comments:
+Add hints/reminders of Bash functionality which -doesn't- need to be build with a function (to the appropriate *Utils category), e.g.:
+echo ${bar: -2} to print last n characters of string
+echo ${bar::-2} to print all of a string excluding the last 2 characters
+'if test -f "$FILE"; then' to check if a file exists.
+
+Also add an appropriate prefix to each function name, so it's easy to tell where the file is from the call site.
+Use git copy (or whatever the command is) to copy Utils.sh once per file created, so as to preserve VCS history.
