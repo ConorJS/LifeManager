@@ -21,21 +21,39 @@
 
 # Remove all favorites except terminal and file explorer
 
+# Longer screen lock delay
+Win/Action key -> Activities -> Privacy (left pane) -> Screen Lock (left pane) -> Set 'Blank Screen Delay' to 15 minutes
+
+== Repository ==========================================================================================
+
+# Install Git
+sudo apt install git
+
+# Git credentials
+git config --global credential.helper store
+
+# Clone LifeManager
+git clone https://github.com/ConorJS/LifeManager.git ~/LifeManager/Repository
+
+== Configure terminal ==================================================================================
+
 # Update .bashrc
 gio open ~/.bashrc
 At bottom, paste: 
 	## Custom ##############################
-	Contents of repo/.bashrc, uncomment Linux lines, comment Windows lines
+	gio open ~/LifeManager/Repository/.bashrc_template.sh
+	Contents of repo/.bashrc_template.sh, uncomment Linux lines, comment Windows lines
 		Can comment Linux/Windows lines with (replace OS with Linux or Windows): 
 			FIND:(alias.*#OS)$
 			REPLACE:#$1
-		Can comment Linux/Windows lines with (replace OS with Linux or Windows): 
+		Can UNcomment Linux/Windows lines with (replace OS with Linux or Windows): 
 			FIND:#(alias.*#OS)$
 			REPLACE:$1
 
 # Configure terminal preferences
 gsettings get org.gnome.Terminal.ProfilesList default
 GNOME_TERMINAL_PROFILE=`gsettings get org.gnome.Terminal.ProfilesList default | awk -F \' '{print $2}'`
+gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ use-system-font false
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ font 'Monospace 9'
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ default-size-rows 36
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ default-size-columns 120
@@ -46,12 +64,15 @@ Right click the terminal when open in sidebar, select 'Favorite'
 # Update package manager
 sudo apt-get update
 
+# High ~/.bash_history limit:
+HISTFILESIZE=1000
+
 == Basic programs =======================================================================================
 
 # Download/install/favorite Chrome
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo apt install ./google-chrome-stable_current_amd64.deb
-google-chrome (opens it, then mark as Favorite)
+google-chrome (opens it, then mark as Favorite, also grab: https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm?hl=en)
 
 # Download/install Notepadqq
 sudo apt install notepadqq
@@ -61,17 +82,6 @@ notepadqq (opens it, then mark as Favorite)
 touch a
 gio open .
 Right click 'a' in the file explorer > Properties > Open With > Notepadqq > Set as default
-
-== Repository ===========================================================================================
-
-# Install Git
-sudo apt install git
-
-# Git credentials
-git config --global credential.helper store
-
-# Clone LifeManager
-git clone https://github.com/ConorJS/LifeManager.git ~/LifeManager/Repository
 
 == Docker ===============================================================================================
 
@@ -83,7 +93,7 @@ sudo apt-get install \
     gnupg-agent \
     software-properties-common
 	
-# Add Dockerâ€™s official GPG key
+# Add Docker’s official GPG key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
 # Verify the GPG key:
@@ -98,51 +108,155 @@ sudo add-apt-repository \
 # Install the Docker engine
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 
-# Add and populate Docker group 
+# Add and populate Docker group (UNNECESSARY?)
 sudo groupadd docker
 
 # aG = append to group, without removing user from other groups
 sudo usermod -aG docker ${USER}
 
-# Test the Docker engine
+# [OPTIONAL] Test the Docker engine
 docker run hello-world
 
-# Test LifeManager docker instance [NOTE: If this works, remove 'sudo' from Docker.sh]
+# [OPTIONAL] Test LifeManager docker instance [NOTE: If this works, remove 'sudo' from Docker.sh]
 cd ~/LifeManager/Repository
 sudo chmod 555 Docker.sh
 ./Docker.sh
 
-== Kubernetes ==========================================================================================
+== Kubernetes (installation - once only per VM) ===================================================
 # More info (Minikube): https://minikube.sigs.k8s.io/docs/start/
 
 # Install kubectl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
-# Validate kubectl
+# [OPTIONAL] Validate kubectl
 kubectl version --client
 
 # Install Minikube
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
-# Start Minikube
+== Kubernetes (installation - once only per VM) ===================================================
+
+# Start Minikube (needs own terminal)
+# NOTE: Will need to restart machine to apply group changes above, to allow Docker driver to run 
+# under an unprivileged user - TODO: Find better way to apply group changes
+# NOTE 2: This takes a minute or two...
 minikube start
 
-# Check the Minikube pod is running 
+# [OPTIONAL] Check the Minikube pod is running
 kubectl get po -A
 
-# Run the Minikube dashboard (Optional)
+# [OPTIONAL] Run the Minikube dashboard
 minikube dashboard
 
-# Create/expose deployment (TODO - This is a Hello World app currently)
+# [OPTIONAL] Create/expose test deployment
 kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.4
 kubectl expose deployment hello-minikube --type=NodePort --port=8080
 
-# View services (optional) (TODO - This is a Hello World app currently)
+# [OPTIONAL] Delete the test deployment
+kubectl delete service hello-node
+kubectl delete deployment hello-node
+
+# [OPTIONAL] View services (TODO - This is a Hello World app currently)
 kubectl get services hello-minikube
 
-============= Optional
+# [OPTIONAL] Show all Docker images:
+docker images --all
+
+============= Kubernetes (deployment)=================================================================
+
+## Pushing to a minikube cluster (see: https://minikube.sigs.k8s.io/docs/handbook/pushing/)
+# Switch the current terminal from targeting the default Docker driver (if present) to that of minikube's
+# This means all Docker images built/deployed in this terminal will be a part of the local Kubernetes 
+# cluster managed by minikube
+eval $(minikube docker-env)
+
+## Creating an appropriately tagged LifeManager Docker image
+lm
+COMMIT=$(git rev-parse --verify HEAD)
+docker image build . -t "lifemanager-image:latest" -t "lifemanager-image:${COMMIT}"
+
+# Applying the LifeManager deployment
+kubectl apply -f deployment.yaml
+
+# Applying the LifeManager service
+kubectl apply -f service.yaml
+
+# Applying the LifeManager ingress resource
+kubectl apply -f ingress.yaml
+
+# Add '${minikube ip}	lifemanager.info' to hosts file
+o /etc/hosts
+<modify file>
+
+# Enabling the minikube ingress controller
+minikube addons enable ingress
+
+============= Kubernetes (helpful/to be integrated) ==================================================
+
+# See if the active terminal is running with minikube's Docker driver
+echo $MINIKUBE_ACTIVE_DOCKERD
+
+# Show current logs for a pod
+kubectl logs <lifemanager pod name>
+
+# Proxy the ports on VM that minikube runs Kubernetes to interact with the the host (localhost)
+# NOTE: Do this in another terminal, as this is a blocking process!
+minikube tunnel
+
+# Caching images in minikube (e.g. Alpine, as follows)
+minikube cache add alpine:latest
+
+# Restart the LifeManager Kubernetes deployment
+kubectl rollout restart deployment lifemanager-deployment
+
+# Get a shell running in the pod
+kubectl exec --stdin --tty <lifemanager pod name> -- /bin/bash
+
+# Diagnostics
+kubectl get [deploy|svc|pod]
+
+# Delete all LifeManager deployments|services|pods
+kubectl get [deploy|svc|pod] awk '/lifemanager/{print $1}' | xargs kubectl delete [deploy|svc|pod] 
+
+# Get LifeManager pod name, and port forward to it so it is visible on the host
+kubectl port-forward <lifemanger pod name> 5051:80
+
+# Port forward the LifeManager Kubernetes service so that it is visible on the host (bypassing ingress)
+kubectl port-forward svc/lifemanager-service 5051:5052
+
+== Kubernetes (old) ==================================================================================
+
+# Running the built LifeManager image
+docker run -p 5050:80 lifemanager
+
+# Running the LifeManager image directly in Kubernetes
+kubectl run lifemanager --image=lifemanager --image-pull-policy=Never
+
+============= Optional ===============================================================================
 
 # Install net-tools (ifconfig)
 sudo apt install net-tools
+
+# Install apt-file (allows search for packages in apt e.g. apt-file search somepackage)
+sudo apt install apt-file
+
+============= Doesn't work (yet) =====================================================================
+
+## Fix mouse scroll
+# Install xserver-xorg-input-evdev (fixes issue where you can't scroll while moving mouse in a Linux VM)
+sudo apt-get install xserver-xorg-input-evdev
+
+# Configure Ubuntu to use the evdev driver:
+o /usr/share/X11/xorg.conf.d/40-libinput.conf
+# Then, in the section like (note there are many similar sections, refer to the one with 'pointer' on line 2):
+# Section "InputClass"
+#        Identifier "libinput pointer catchall"
+#        MatchIsPointer "on"
+#        MatchDevicePath "/dev/input/event*"
+#        Driver "libinput"
+# Change 'Driver "libinput"' to 'Driver "evdev"'
+
+
+
