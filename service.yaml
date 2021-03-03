@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    run: lifemanager-app
+    app: lifemanager-app
+  name: lifemanager-service
+spec:
+  selector:
+    app: lifemanager-app
+  ports:
+  - name: http
+    protocol: TCP
+    port: 5052
+    targetPort: 80
