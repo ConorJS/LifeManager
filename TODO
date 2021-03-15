@@ -13,14 +13,24 @@ Automated UI tests (when UI is more stable)
 'Processing' overlay when waiting on important async events
 Generalise HTTP requests
 	This should make it easier to diagnose: "localhost/:1 Uncaught (in promise) SyntaxError: Unexpected token < in JSON at position 0"
+Clean-up Kubernetes YAML files
+    Try removing 'version' number from deployment.yaml ('v101')
+Distinguish between 'quality of life' and necessary steps in KubernetesHostVMInstructions
+Flyway file structure:
+    Move Flyway conf into Database/Flyway/conf instead of Database/
+    More Flyway scripts into Database/Flyway/sql instead of Database/Flyway/
+    Test local setup and Kubernetes
+Separate Postgres user for running Flyway migrations
+    Needs to be tested for local setup and Kubernetes
 
 
---- Lower priority
+--- Lower priorityq
 Return error responses from controllers if things go wrong
 Create, Edit, Delete, etc. for all object types could be generalised?
 Try to remove setting up 'Postgres' user, if possible, in createDatabase.sql
 Move test scripts out of root of project folder/Environment folder, only have scratch test here (work on tests here, then move)
 Standardise naming of UI source folders
+Better name for pgAdmin4 Docker instance login user
 
 
 --- Other
