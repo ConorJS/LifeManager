@@ -122,6 +122,29 @@ cd ~/LifeManager/Repository
 sudo chmod 555 Docker.sh
 ./Docker.sh
 
+== Docker (helpful) ===============================================================================
+
+# Bash shell in a Docker instance
+docker exec -it <container id> /bin/bash
+docker exec -it $(docker ps | grep lifemanager-db-image | awk '{print  $1 " bash"}' )
+
+# Remove all dangling Docker images
+docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+
+# Show information about a Docker instance
+docker inspect lifemanager-db
+
+# Show IP address of Docker instance
+docker inspect lifemanager-db | grep \"IPAddress\":
+
+# Remove/Kill all Docker containers/images like a certain name
+docker image list -a | awk '/<name section e.g. lifemanager-db>/{print $3}' | xargs docker rmi
+docker container list -a | awk '/<name section e.g. lifemanager-db>/{print $1}' | xargs docker container kill
+docker container list -a | awk '/<name section e.g. lifemanager-db>/{print $1}' | xargs docker container rm
+
+# Remove all stopped Docker containers in a (mostly) safe mannner, will also hit containers with 'Exited' and 'ago' in the image/container name.
+docker container list -a | grep Exited | awk '/ago/{print $1}' | xargs docker container rm 
+
 == Kubernetes (installation - once only per VM) ===================================================
 # More info (Minikube): https://minikube.sigs.k8s.io/docs/start/
 
@@ -164,7 +187,7 @@ kubectl get services hello-minikube
 # [OPTIONAL] Show all Docker images:
 docker images --all
 
-============= Kubernetes (deployment)=================================================================
+============= Kubernetes (Appliation deployment) =====================================================
 
 ## Pushing to a minikube cluster (see: https://minikube.sigs.k8s.io/docs/handbook/pushing/)
 # Switch the current terminal from targeting the default Docker driver (if present) to that of minikube's
@@ -192,6 +215,53 @@ o /etc/hosts
 
 # Enabling the minikube ingress controller
 minikube addons enable ingress
+
+============= Kubernetes (PostgreSQL database) =======================================================
+
+## Creating an appropriately tagged LifeManager PostgreSQL Docker image
+lm
+cd LifeManager/Environment/Database
+COMMIT=$(git rev-parse --verify HEAD)
+docker image build . -t "lifemanager-db-image:latest" -t "lifemanager-db-image:${COMMIT}"
+
+# Runs the plain 'postgres' image as a Docker PostgreSQL database instance called 'lifemanager-db', on port 5432.
+docker run -d --name lifemanager-db -e POSTGRES_PASSWORD=lfemgr -v ~/pg-data-test:/var/lib/postgresql/data -p 5432:5432 postgres
+
+# Runs the 'lifemanager-db-image' as a Docker PostgreSQL database instance called 'lifemanager-db', on port 5432.
+docker run -d --name lifemanager-db-image \
+	-e POSTGRES_PASSWORD=lfemgr \
+	-v ~/pg-data-test:/var/lib/postgresql/data \
+	-p 5432:5432 \
+	lifemanager-db-image
+	
+# Run a pgAdmin 4 instance (TODO: Get this into Kubernetes cluster)
+docker run -p 80:80 -e 'PGADMIN_DEFAULT_EMAIL=user@domain.local' -e 'PGADMIN_DEFAULT_PASSWORD=SuperSecret' --name lifemanager-pgadmin -d dpage/pgadmin4
+
+# [USEFUL] Show logs for LifeManager database instance (Docker only)
+docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker container logs
+
+# [USEFUL] Kill/delete/show logs for any/all Docker container which run from LifeManager database images (Docker only)
+sudo rm ~/pg-data-test -R
+docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker container kill
+docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker container rm
+docker container list -a | grep Exited | awk '/ago/{print $1}' | xargs docker container rm 
+docker image list -a | awk '/lifemanager-db-image/{print $3}' | xargs docker rmi
+docker image build . -t "lifemanager-db-image:latest" -t "lifemanager-db-image:${COMMIT}"
+docker run -d --name lifemanager-db-image \
+	-e POSTGRES_PASSWORD=lfemgr \
+	-v ~/pg-data-test:/var/lib/postgresql/data \
+	-p 5432:5432 \
+	lifemanager-db-image
+# (Wait a few seconds for database to be ready before executing these)
+docker exec -it $(docker ps | grep lifemanager-db-image | awk '{print  $1 " bash"}' )
+psql -h localhost -U lmadmin -d lifemanager
+\l
+
+============= Kubernetes (Flyway) ====================================================================
+
+# Runs the Flyway docker instance, providing the LifeManager Flyway configuration and migration script paths.
+lm
+docker run --rm -v $(pwd)/LifeManager/Environment/Database/Flyway/:/flyway/sql -v $(pwd)/LifeManager/Environment/Database/:/flyway/conf flyway/flyway migrate
 
 ============= Kubernetes (helpful/to be integrated) ==================================================
 
