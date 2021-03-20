@@ -1,0 +1,32 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lifemanager-postgres
+      version: v101
+  template:
+    metadata:
+      labels:
+        app: lifemanager-postgres
+        version: v101
+    spec:
+      containers:
+        - name: postgres
+          image: lifemanager-db-image
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: lifemanager-persistent-storage-volume
+      volumes:
+        - name: lifemanager-persistent-storage-volume
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim

@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: lifemanager-postgres-service
+  labels:
+    app: lifemanager-postgres
+spec:
+  selector:
+    app: lifemanager-postgres
+  type: ClusterIP
+  ports:
+  - name: http
+    protocol: TCP
+    port: 5432
+    targetPort: 5432

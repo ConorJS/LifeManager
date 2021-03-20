@@ -216,9 +216,9 @@ o /etc/hosts
 # Enabling the minikube ingress controller
 minikube addons enable ingress
 
-============= Kubernetes (PostgreSQL database) =======================================================
+============= Docker (PostgreSQL database) =============================================================
 
-## Creating an appropriately tagged LifeManager PostgreSQL Docker image
+## Creating an appropriately tagged LifeManager PostgreSQL Docker image (this doesn't 
 lm
 cd LifeManager/Environment/Database
 COMMIT=$(git rev-parse --verify HEAD)
@@ -246,6 +246,7 @@ docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker
 docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker container rm
 docker container list -a | grep Exited | awk '/ago/{print $1}' | xargs docker container rm 
 docker image list -a | awk '/lifemanager-db-image/{print $3}' | xargs docker rmi
+COMMIT=$(git rev-parse --verify HEAD)
 docker image build . -t "lifemanager-db-image:latest" -t "lifemanager-db-image:${COMMIT}"
 docker run -d --name lifemanager-db-image \
 	-e POSTGRES_PASSWORD=lfemgr \
@@ -257,16 +258,39 @@ docker exec -it $(docker ps | grep lifemanager-db-image | awk '{print  $1 " bash
 psql -h localhost -U lmadmin -d lifemanager
 \l
 
-============= Kubernetes (Flyway) ====================================================================
+============= Docker (Flyway) ========================================================================
 
 # Runs the Flyway docker instance, providing the LifeManager Flyway configuration and migration script paths.
 lm
-docker run --rm -v $(pwd)/LifeManager/Environment/Database/Flyway/:/flyway/sql -v $(pwd)/LifeManager/Environment/Database/:/flyway/conf flyway/flyway migrate
+docker run --rm \
+	-v $(pwd)/LifeManager/Environment/Database/Flyway:/flyway/sql \
+	-v $(pwd)/LifeManager/Environment/Database/../:/flyway/conf \
+	flyway/flyway \
+	-url=jdbc:postgresql://172.17.0.2:5432/lifemanager \
+	-user=lmadmin -password=lfemgr \
+	-defaultSchema=public -schemas=lifemanager,public \
+	-validateMigrationNaming=true \
+	migrate
+
+============= Kubernetes (PostgreSQL database) =======================================================
+
+# Configure the PostgreSQL config map, deployment, persistent volume, persistent volume claim and service in Kubernetes.
+kubectl create -f postgres-configmap.yaml 
+kubectl create -f postgres-storage.yaml 
+kubectl create -f postgres-deployment.yaml 
+kubectl create -f postgres-service.yaml
+
+#[TESTING] Find the Postgres service port, then connect to Postgres service
+kubectl get svc lifemanager-postgres-service
+psql -h localhost -U lmadmin --password -p <port> postgres-persistent-storage
 
 ============= Kubernetes (helpful/to be integrated) ==================================================
 
 # See if the active terminal is running with minikube's Docker driver
 echo $MINIKUBE_ACTIVE_DOCKERD
+
+# SSH into minikube (Can be used to view persistence volumes directly)
+minikube ssh
 
 # Show current logs for a pod
 kubectl logs <lifemanager pod name>
@@ -311,6 +335,14 @@ sudo apt install net-tools
 
 # Install apt-file (allows search for packages in apt e.g. apt-file search somepackage)
 sudo apt install apt-file
+
+# Install ping
+sudo apt-get update apt-get install iputils-ping
+
+============= Generally helpful ======================================================================
+
+# Search apt index
+apt-cache search <keyword>
 
 ============= Doesn't work (yet) =====================================================================
 

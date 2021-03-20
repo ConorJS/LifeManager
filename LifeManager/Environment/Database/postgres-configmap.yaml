@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: lifemanager-postgres
+    version: v101
+data:
+  POSTGRES_DB: lifemanager
+  POSTGRES_USER: lmadmin
+  POSTGRES_PASSWORD: lfemgr
