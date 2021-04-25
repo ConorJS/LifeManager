@@ -4,7 +4,6 @@
     <file url="file://$PROJECT_DIR$/LifeManager/Environment/Database/Flyway/V00.00.01_201206_1037__createInitialTaskModelTables.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/LifeManager/Environment/Database/Flyway/V00.00.01_201229_1130__createUserTable.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/LifeManager/Environment/Database/Flyway/V00.00.01_201229_1204__createTestUser.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/LifeManager/Environment/Database/createDatabase.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />
   </component>
 </project>
