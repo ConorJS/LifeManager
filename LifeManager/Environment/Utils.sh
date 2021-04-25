@@ -356,7 +356,7 @@ function exit_with_message() {
 #
 # 1 The message to prompt with.
 #
-# Returns: 0 if 'No', 1 if 'Yes.'
+# Returns: 0 if 'Yes', 1 if 'No.'
 function prompt_yes_no() {
   message=$1
 
