@@ -93,7 +93,7 @@ sudo apt-get install \
     gnupg-agent \
     software-properties-common
 	
-# Add Docker’s official GPG key
+# Add Dockerâ€™s official GPG key
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
 # Verify the GPG key:
@@ -218,7 +218,7 @@ minikube addons enable ingress
 
 ============= Docker (PostgreSQL database) =============================================================
 
-## Creating an appropriately tagged LifeManager PostgreSQL Docker image (this doesn't 
+## Creating an appropriately tagged LifeManager PostgreSQL Docker image (duplicated in Kubernetes Postgres section)
 lm
 cd LifeManager/Environment/Database
 COMMIT=$(git rev-parse --verify HEAD)
@@ -274,14 +274,21 @@ docker run --rm \
 
 ============= Kubernetes (PostgreSQL database) =======================================================
 
+# Create the Docker image for the Postgres deployment (must be within minikube's Docker service)
+lm
+cd LifeManager/Environment/Database
+COMMIT=$(git rev-parse --verify HEAD)
+docker image build . -t "lifemanager-db-image:latest" -t "lifemanager-db-image:${COMMIT}"
+
 # Configure the PostgreSQL config map, deployment, persistent volume, persistent volume claim and service in Kubernetes.
 kubectl create -f postgres-configmap.yaml 
 kubectl create -f postgres-storage.yaml 
 kubectl create -f postgres-deployment.yaml 
 kubectl create -f postgres-service.yaml
 
-#[TESTING] Find the Postgres service port, then connect to Postgres service
+#[TESTING] Find the Postgres service port, then connect to Postgres service from the LifeManager pod
 kubectl get svc lifemanager-postgres-service
+kubectl get pod | grep lifemanager-deployment | awk '{print $1}'
 psql -h localhost -U lmadmin --password -p <port> postgres-persistent-storage
 
 ============= Kubernetes (helpful/to be integrated) ==================================================
@@ -337,7 +344,8 @@ sudo apt install net-tools
 sudo apt install apt-file
 
 # Install ping
-sudo apt-get update apt-get install iputils-ping
+apt-get update 
+apt-get install iputils-ping
 
 ============= Generally helpful ======================================================================
 
