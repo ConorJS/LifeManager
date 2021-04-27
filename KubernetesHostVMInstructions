@@ -39,17 +39,9 @@ git clone https://github.com/ConorJS/LifeManager.git ~/LifeManager/Repository
 
 # Update .bashrc
 gio open ~/.bashrc
-At bottom, paste: 
-	## Custom ##############################
-	gio open ~/LifeManager/Repository/.bashrc_template.sh
-	Contents of repo/.bashrc_template.sh, uncomment Linux lines, comment Windows lines
-		Can comment Linux/Windows lines with (replace OS with Linux or Windows): 
-			FIND:(alias.*#OS)$
-			REPLACE:#$1
-		Can UNcomment Linux/Windows lines with (replace OS with Linux or Windows): 
-			FIND:#(alias.*#OS)$
-			REPLACE:$1
-
+At bottom, paste the contents of the following file:
+	gio open ~/LifeManager/Repository/.bashrc_Linux.sh
+	
 # Update package manager
 sudo apt-get update
 
@@ -72,11 +64,13 @@ HISTFILESIZE=1000
 # [QOL] Download/install/favorite Chrome
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo apt install ./google-chrome-stable_current_amd64.deb
-google-chrome (opens it, then mark as Favorite, also grab: https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm?hl=en)
+# Opens Chrome; mark as Favorite, also grab: https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm?hl=en)
+google-chrome
 
 # [QOL] Download/install Notepadqq
 sudo apt install notepadqq
-notepadqq (opens it, then mark as Favorite)
+# Favorite when open
+notepadqq 
 
 # [QOL] Set Notepadqq as default text editor
 touch a
@@ -149,6 +143,7 @@ docker container list -a | grep Exited | awk '/ago/{print $1}' | xargs docker co
 # More info (Minikube): https://minikube.sigs.k8s.io/docs/start/
 
 # Install kubectl
+sudo apt install curl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
@@ -159,13 +154,7 @@ kubectl version --client
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
-== Kubernetes (installation - once only per VM) ===================================================
-
-# Start Minikube (needs own terminal)
-# NOTE: Will need to restart machine to apply group changes above, to allow Docker driver to run 
-# under an unprivileged user - TODO: Find better way to apply group changes
-# NOTE 2: This takes a minute or two...
-minikube start
+== Kubernetes (testing - optional) ================================================================
 
 # [OPTIONAL] Check the Minikube pod is running
 kubectl get po -A
