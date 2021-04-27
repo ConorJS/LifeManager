@@ -1,0 +1,12 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: flyway-migration-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: flyway
+        image: lifemanager-flyway-image
+        imagePullPolicy: "Never"
+      restartPolicy: Never

@@ -291,6 +291,14 @@ kubectl get svc lifemanager-postgres-service
 kubectl get pod | grep lifemanager-deployment | awk '{print $1}'
 psql -h localhost -U lmadmin --password -p <port> postgres-persistent-storage
 
+============= Kubernetes (Flyway)=====================================================================
+
+# Running Flyway migration job
+lm
+cd LifeManager/Environment/Database/Flyway/
+docker image build . -t "lifemanager-flyway-image:latest" -t "lifemanager-flyway-image:${COMMIT}"
+kubectl apply -f flyway-migration-job.yaml
+
 ============= Kubernetes (helpful/to be integrated) ==================================================
 
 # See if the active terminal is running with minikube's Docker driver
