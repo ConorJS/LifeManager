@@ -280,6 +280,40 @@ kubectl create -f postgres-storage.yaml
 kubectl create -f postgres-deployment.yaml 
 kubectl create -f postgres-service.yaml
 
+# Back up the Postgres database
+bkdir=~/Desktop/backup456
+lm
+cd LifeManager/Environment/Database
+kubectl delete -f postgres-deployment.yaml 
+kubectl delete -f postgres-service.yaml 
+kubectl delete -f postgres-storage.yaml 
+minikube stop
+sudo cp -r /var/lib/docker/volumes/minikube/_data/data/psql $bkdir
+minikube start
+kubectl create -f postgres-storage.yaml 
+kubectl create -f postgres-deployment.yaml 
+kubectl create -f postgres-service.yaml
+
+# Restore the Postgres database from a backup (OVERWRITES EXISTING DATABASE!)
+bkdir=~/Desktop/backup456
+lm
+cd LifeManager/Environment/Database
+kubectl delete -f postgres-deployment.yaml 
+kubectl delete -f postgres-service.yaml 
+kubectl delete -f postgres-storage.yaml 
+minikube stop
+sudo rm -rf /var/lib/docker/volumes/minikube/_data/data/psql
+sudo cp -r $bkdir /var/lib/docker/volumes/minikube/_data/data/psql
+minikube start
+kubectl create -f postgres-storage.yaml 
+kubectl create -f postgres-deployment.yaml 
+kubectl create -f postgres-service.yaml
+
+#[USEFUL] Remove the Postgres Kubernetes objects in an order that works
+kubectl delete -f postgres-deployment.yaml 
+kubectl delete -f postgres-service.yaml 
+kubectl delete -f postgres-storage.yaml 
+
 #[TESTING] Find the Postgres service port, then connect to Postgres service from the LifeManager pod
 kubectl get svc lifemanager-postgres-service
 kubectl get pod | grep lifemanager-deployment | awk '{print $1}'
@@ -353,6 +387,9 @@ apt-get install iputils-ping
 
 # Search apt index
 apt-cache search <keyword>
+
+# Recursively show files in filesystem, with full paths and file sizes
+du -a
 
 ============= Doesn't work (yet) =====================================================================
 
