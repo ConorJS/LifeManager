@@ -1,4 +1,10 @@
-CREATE ROLE lmadmin WITH LOGIN PASSWORD 'lfemgr';
+DO $$
+    BEGIN
+        CREATE ROLE lmadmin WITH LOGIN PASSWORD 'lfemgr';
+    EXCEPTION WHEN DUPLICATE_OBJECT THEN
+        RAISE NOTICE 'Not creating role lmadmin - it already exists.';
+    END
+$$;
 
 CREATE DATABASE lifemanager
     WITH OWNER lmadmin
