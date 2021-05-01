@@ -150,10 +150,8 @@ kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
 kubectl apply -f ingress.yaml
 
-# Get the Minikube server IP instance, and add ''<ip>	lifemanager.info' to hosts file.
-minikube ip
-o /etc/hosts
-<modify file>
+# Gets the Minikube server IP instance, and adds ''<ip>	lifemanager.info' to hosts file.
+sudo -- sh -c "printf '\n%s\tlifemanager.info' $(minikube ip) >> /etc/hosts"
 
 # Enabling the minikube ingress controller
 minikube addons enable ingress
