@@ -19,7 +19,7 @@
 # Skip 'Online Accounts'
 ## 'Next' top-right through all 
 
-# [QOL] Remove all favorites except terminal and file explorer
+# [QOL] Open terminal (Action key, Terminal), then remove all favorites except terminal and file explorer.
 
 # [QOL] Longer screen lock delay
 Win/Action key -> Activities -> Privacy (left pane) -> Screen Lock (left pane) -> Set 'Blank Screen Delay' to 15 minutes
@@ -52,9 +52,6 @@ gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profi
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ font 'Monospace 9'
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ default-size-rows 36
 gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:$GNOME_TERMINAL_PROFILE/ default-size-columns 120
-
-# [QOL] Favorite terminal
-Right click the terminal when open in sidebar, select 'Favorite'
 
 # [QOL] High ~/.bash_history limit:
 HISTFILESIZE=1000
@@ -103,10 +100,10 @@ sudo add-apt-repository \
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 
 # Add and populate Docker group (Should be unnecessary, installing Docker should do this)
-# Restart the VM after this, to apply the setting, and test the Docker engine with the next step to verify.
 sudo groupadd docker
 
 # aG = append to group, without removing user from other groups
+# Restart the VM after this, to apply the setting, and test the Docker engine with the next step to verify.
 sudo usermod -aG docker ${USER}
 
 # [OPTIONAL] Test the Docker engine
@@ -116,29 +113,6 @@ docker run hello-world
 cd ~/LifeManager/Repository
 sudo chmod 555 Docker.sh
 ./Docker.sh
-
-== Docker (helpful) ===============================================================================
-
-# Bash shell in a Docker instance
-docker exec -it <container id> /bin/bash
-docker exec -it $(docker ps | grep lifemanager-db-image | awk '{print  $1 " bash"}' )
-
-# Remove all dangling Docker images
-docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
-
-# Show information about a Docker instance
-docker inspect lifemanager-db
-
-# Show IP address of Docker instance
-docker inspect lifemanager-db | grep \"IPAddress\":
-
-# Remove/Kill all Docker containers/images like a certain name
-docker image list -a | awk '/<name section e.g. lifemanager-db>/{print $3}' | xargs docker rmi
-docker container list -a | awk '/<name section e.g. lifemanager-db>/{print $1}' | xargs docker container kill
-docker container list -a | awk '/<name section e.g. lifemanager-db>/{print $1}' | xargs docker container rm
-
-# Remove all stopped Docker containers in a (mostly) safe mannner, will also hit containers with 'Exited' and 'ago' in the image/container name.
-docker container list -a | grep Exited | awk '/ago/{print $1}' | xargs docker container rm 
 
 == Kubernetes (installation - once only per VM) ===================================================
 # More info (Minikube): https://minikube.sigs.k8s.io/docs/start/
@@ -154,28 +128,6 @@ kubectl version --client
 # Install Minikube
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
-
-== Kubernetes (testing - optional) ================================================================
-
-# [OPTIONAL] Check the Minikube pod is running
-kubectl get po -A
-
-# [OPTIONAL] Run the Minikube dashboard
-minikube dashboard
-
-# [OPTIONAL] Create/expose test deployment
-kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.4
-kubectl expose deployment hello-minikube --type=NodePort --port=8080
-
-# [OPTIONAL] Delete the test deployment
-kubectl delete service hello-node
-kubectl delete deployment hello-node
-
-# [OPTIONAL] View services (TODO - This is a Hello World app currently)
-kubectl get services hello-minikube
-
-# [OPTIONAL] Show all Docker images:
-docker images --all
 
 ============= Kubernetes (Appliation deployment) =====================================================
 
@@ -193,13 +145,9 @@ lm
 COMMIT=$(git rev-parse --verify HEAD)
 docker image build . -t "lifemanager-image:latest" -t "lifemanager-image:${COMMIT}"
 
-# Applying the LifeManager deployment
+# Applying the LifeManager cluster objects
 kubectl apply -f deployment.yaml
-
-# Applying the LifeManager service
 kubectl apply -f service.yaml
-
-# Applying the LifeManager ingress resource
 kubectl apply -f ingress.yaml
 
 # Get the Minikube server IP instance, and add ''<ip>	lifemanager.info' to hosts file.
@@ -210,61 +158,13 @@ o /etc/hosts
 # Enabling the minikube ingress controller
 minikube addons enable ingress
 
-============= Docker (PostgreSQL database) =============================================================
+== Kubernetes (Post-installation testing - optional) =================================================
 
-## Creating an appropriately tagged LifeManager PostgreSQL Docker image (duplicated in Kubernetes Postgres section)
-lm
-cd LifeManager/Environment/Database
-COMMIT=$(git rev-parse --verify HEAD)
-docker image build . -t "lifemanager-db-image:latest" -t "lifemanager-db-image:${COMMIT}"
+# [OPTIONAL] Check the Minikube pod is running
+kubectl get po -A
 
-# Runs the plain 'postgres' image as a Docker PostgreSQL database instance called 'lifemanager-db', on port 5432.
-docker run -d --name lifemanager-db -e POSTGRES_PASSWORD=lfemgr -v ~/pg-data-test:/var/lib/postgresql/data -p 5432:5432 postgres
-
-# Runs the 'lifemanager-db-image' as a Docker PostgreSQL database instance called 'lifemanager-db', on port 5432.
-docker run -d --name lifemanager-db-image \
-	-e POSTGRES_PASSWORD=lfemgr \
-	-v ~/pg-data-test:/var/lib/postgresql/data \
-	-p 5432:5432 \
-	lifemanager-db-image
-	
-# Run a pgAdmin 4 instance (TODO: Get this into Kubernetes cluster)
-docker run -p 80:80 -e 'PGADMIN_DEFAULT_EMAIL=user@domain.local' -e 'PGADMIN_DEFAULT_PASSWORD=SuperSecret' --name lifemanager-pgadmin -d dpage/pgadmin4
-
-# [USEFUL] Show logs for LifeManager database instance (Docker only)
-docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker container logs
-
-# [USEFUL] Kill/delete/show logs for any/all Docker container which run from LifeManager database images (Docker only)
-sudo rm ~/pg-data-test -R
-docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker container kill
-docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker container rm
-docker container list -a | grep Exited | awk '/ago/{print $1}' | xargs docker container rm 
-docker image list -a | awk '/lifemanager-db-image/{print $3}' | xargs docker rmi
-COMMIT=$(git rev-parse --verify HEAD)
-docker image build . -t "lifemanager-db-image:latest" -t "lifemanager-db-image:${COMMIT}"
-docker run -d --name lifemanager-db-image \
-	-e POSTGRES_PASSWORD=lfemgr \
-	-v ~/pg-data-test:/var/lib/postgresql/data \
-	-p 5432:5432 \
-	lifemanager-db-image
-# (Wait a few seconds for database to be ready before executing these)
-docker exec -it $(docker ps | grep lifemanager-db-image | awk '{print  $1 " bash"}' )
-psql -h localhost -U lmadmin -d lifemanager
-\l
-
-============= Docker (Flyway) ========================================================================
-
-# Runs the Flyway docker instance, providing the LifeManager Flyway configuration and migration script paths.
-lm
-docker run --rm \
-	-v $(pwd)/LifeManager/Environment/Database/Flyway:/flyway/sql \
-	-v $(pwd)/LifeManager/Environment/Database/../:/flyway/conf \
-	flyway/flyway \
-	-url=jdbc:postgresql://172.17.0.2:5432/lifemanager \
-	-user=lmadmin -password=lfemgr \
-	-defaultSchema=public -schemas=lifemanager,public \
-	-validateMigrationNaming=true \
-	migrate
+# [OPTIONAL] Run the Minikube dashboard
+minikube dashboard
 
 ============= Kubernetes (PostgreSQL database) =======================================================
 
@@ -353,24 +253,6 @@ kubectl get [deploy|svc|pod]
 # Delete all LifeManager deployments|services|pods
 kubectl get [deploy|svc|pod] awk '/lifemanager/{print $1}' | xargs kubectl delete [deploy|svc|pod] 
 
-== Kubernetes (old) ==================================================================================
-
-# Proxy the ports on VM that minikube runs Kubernetes to interact with the the host (localhost)
-# NOTE: Do this in another terminal, as this is a blocking process!
-minikube tunnel
-
-# Running the built LifeManager image
-docker run -p 5050:80 lifemanager
-
-# Running the LifeManager image directly in Kubernetes
-kubectl run lifemanager --image=lifemanager --image-pull-policy=Never
-
-# Get LifeManager pod name, and port forward to it so it is visible on the host
-kubectl port-forward <lifemanger pod name> 5051:80
-
-# Port forward the LifeManager Kubernetes service so that it is visible on the host (bypassing ingress)
-kubectl port-forward svc/lifemanager-service 5051:5052
-
 ============= Optional ===============================================================================
 
 # Install net-tools (ifconfig)
@@ -408,4 +290,117 @@ o /usr/share/X11/xorg.conf.d/40-libinput.conf
 # Change 'Driver "libinput"' to 'Driver "evdev"'
 
 
+========================================================================================================
+============= OLD ======================================================================================
+========================================================================================================
 
+============= Docker (PostgreSQL database) =============================================================
+
+## Creating an appropriately tagged LifeManager PostgreSQL Docker image (duplicated in Kubernetes Postgres section)
+lm
+cd LifeManager/Environment/Database
+COMMIT=$(git rev-parse --verify HEAD)
+docker image build . -t "lifemanager-db-image:latest" -t "lifemanager-db-image:${COMMIT}"
+
+# Runs the plain 'postgres' image as a Docker PostgreSQL database instance called 'lifemanager-db', on port 5432.
+docker run -d --name lifemanager-db -e POSTGRES_PASSWORD=lfemgr -v ~/pg-data-test:/var/lib/postgresql/data -p 5432:5432 postgres
+
+# Runs the 'lifemanager-db-image' as a Docker PostgreSQL database instance called 'lifemanager-db', on port 5432.
+docker run -d --name lifemanager-db-image \
+	-e POSTGRES_PASSWORD=lfemgr \
+	-v ~/pg-data-test:/var/lib/postgresql/data \
+	-p 5432:5432 \
+	lifemanager-db-image
+	
+# Run a pgAdmin 4 instance (TODO: Get this into Kubernetes cluster)
+docker run -p 80:80 -e 'PGADMIN_DEFAULT_EMAIL=user@domain.local' -e 'PGADMIN_DEFAULT_PASSWORD=SuperSecret' --name lifemanager-pgadmin -d dpage/pgadmin4
+
+# [USEFUL] Show logs for LifeManager database instance (Docker only)
+docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker container logs
+
+# [USEFUL] Kill/delete/show logs for any/all Docker container which run from LifeManager database images (Docker only)
+sudo rm ~/pg-data-test -R
+docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker container kill
+docker container list -a | awk '/lifemanager-db-image/{print $1}' | xargs docker container rm
+docker container list -a | grep Exited | awk '/ago/{print $1}' | xargs docker container rm 
+docker image list -a | awk '/lifemanager-db-image/{print $3}' | xargs docker rmi
+COMMIT=$(git rev-parse --verify HEAD)
+docker image build . -t "lifemanager-db-image:latest" -t "lifemanager-db-image:${COMMIT}"
+docker run -d --name lifemanager-db-image \
+	-e POSTGRES_PASSWORD=lfemgr \
+	-v ~/pg-data-test:/var/lib/postgresql/data \
+	-p 5432:5432 \
+	lifemanager-db-image
+# (Wait a few seconds for database to be ready before executing these)
+docker exec -it $(docker ps | grep lifemanager-db-image | awk '{print  $1 " bash"}' )
+psql -h localhost -U lmadmin -d lifemanager
+\l
+
+============= Docker (Flyway) ========================================================================
+
+# Runs the Flyway docker instance, providing the LifeManager Flyway configuration and migration script paths.
+lm
+docker run --rm \
+	-v $(pwd)/LifeManager/Environment/Database/Flyway:/flyway/sql \
+	-v $(pwd)/LifeManager/Environment/Database/../:/flyway/conf \
+	flyway/flyway \
+	-url=jdbc:postgresql://172.17.0.2:5432/lifemanager \
+	-user=lmadmin -password=lfemgr \
+	-defaultSchema=public -schemas=lifemanager,public \
+	-validateMigrationNaming=true \
+	migrate
+
+== Docker (helpful) ===============================================================================
+
+# Bash shell in a Docker instance
+docker exec -it <container id> /bin/bash
+docker exec -it $(docker ps | grep lifemanager-db-image | awk '{print  $1 " bash"}' )
+
+# Remove all dangling Docker images
+docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+
+# Show information about a Docker instance
+docker inspect lifemanager-db
+
+# Show IP address of Docker instance
+docker inspect lifemanager-db | grep \"IPAddress\":
+
+# Remove/Kill all Docker containers/images like a certain name
+docker image list -a | awk '/<name section e.g. lifemanager-db>/{print $3}' | xargs docker rmi
+docker container list -a | awk '/<name section e.g. lifemanager-db>/{print $1}' | xargs docker container kill
+docker container list -a | awk '/<name section e.g. lifemanager-db>/{print $1}' | xargs docker container rm
+
+# Remove all stopped Docker containers in a (mostly) safe mannner, will also hit containers with 'Exited' and 'ago' in the image/container name.
+docker container list -a | grep Exited | awk '/ago/{print $1}' | xargs docker container rm 
+
+== Kubernetes (old) ==================================================================================
+
+# Create/expose test deployment
+kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.4
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+
+# Delete the test deployment
+kubectl delete service hello-node
+kubectl delete deployment hello-node
+
+# View services (TODO - This is a Hello World app currently)
+kubectl get services hello-minikube
+
+# Show all Docker images:
+docker images --all
+
+# Proxy the ports on VM that minikube runs Kubernetes to interact with the the host (localhost)
+# NOTE: Do this in another terminal, as this is a blocking process!
+minikube tunnel
+
+# Running the built LifeManager image
+docker run -p 5050:80 lifemanager
+
+# Running the LifeManager image directly in Kubernetes
+kubectl run lifemanager --image=lifemanager --image-pull-policy=Never
+
+# Get LifeManager pod name, and port forward to it so it is visible on the host
+kubectl port-forward <lifemanger pod name> 5051:80
+
+# Port forward the LifeManager Kubernetes service so that it is visible on the host (bypassing ingress)
+kubectl port-forward svc/lifemanager-service 5051:5052
