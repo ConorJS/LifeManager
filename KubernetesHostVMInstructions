@@ -156,6 +156,13 @@ sudo -- sh -c "printf '\n%s\tlifemanager.info' $(minikube ip) >> /etc/hosts"
 # Enabling the minikube ingress controller
 minikube addons enable ingress
 
+# Redeploying the LifeManager application
+lm
+kubectl delete -f deployment.yaml
+COMMIT=$(git rev-parse --verify HEAD)
+docker image build . -t "lifemanager-image:latest" -t "lifemanager-image:${COMMIT}"
+kubectl create -f deployment.yaml
+
 == Kubernetes (Post-installation testing - optional) =================================================
 
 # [OPTIONAL] Check the Minikube pod is running
