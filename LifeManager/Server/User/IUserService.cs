@@ -1,4 +1,4 @@
-﻿namespace LifeManager.Server.Security {
+﻿namespace LifeManager.Server.User {
     public interface IUserService {
         public User GetUser(long id);
         

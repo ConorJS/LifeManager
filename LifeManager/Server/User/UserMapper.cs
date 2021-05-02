@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LifeManager.Server.Security {
+namespace LifeManager.Server.User {
     public class UserMapper {
         public User ToDomain(UserEntity entity) {
             return new User {

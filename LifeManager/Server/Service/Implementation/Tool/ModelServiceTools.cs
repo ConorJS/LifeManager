@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using LifeManager.Server.Database;
 using LifeManager.Server.Model;
-using LifeManager.Server.Security;
+using LifeManager.Server.User;
 
 namespace LifeManager.Server.Service.Implementation.Tool {
     public class ModelServiceTools : IModelServiceTools {

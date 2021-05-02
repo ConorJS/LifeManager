@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LifeManager.Server.Model;
 using LifeManager.Server.Model.Entity;
-using LifeManager.Server.Security;
+using LifeManager.Server.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace LifeManager.Server.Database.Implementation {

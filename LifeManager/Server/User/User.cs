@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LifeManager.Server.Security {
+namespace LifeManager.Server.User {
     public class User {
         public long Id { get; set; }
 

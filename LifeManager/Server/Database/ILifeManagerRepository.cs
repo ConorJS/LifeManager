@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LifeManager.Server.Model;
-using LifeManager.Server.Security;
+using LifeManager.Server.User;
 
 namespace LifeManager.Server.Database {
     public interface ILifeManagerRepository : IDisposable {

@@ -1,5 +1,5 @@
 ﻿using LifeManager.Server.Model.Entity;
-using LifeManager.Server.Security;
+using LifeManager.Server.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace LifeManager.Server.Database.Implementation {

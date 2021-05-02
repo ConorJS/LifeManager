@@ -1,6 +1,6 @@
 ﻿using LifeManager.Server.Database;
 
-namespace LifeManager.Server.Security {
+namespace LifeManager.Server.User {
     public class UserService : IUserService {
         private readonly ILifeManagerRepository _lifeManagerRepository;
         
