@@ -1,5 +1,5 @@
 ﻿import React, {Fragment, FunctionComponent} from "react";
-import {SizeIndicator} from "../../components/sizeindicator/size-indicator";
+import {SizeIndicator} from "../../components/size-indicator/size-indicator";
 
 export const Tester: FunctionComponent = () => {
     return (

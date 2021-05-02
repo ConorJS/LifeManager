@@ -1,13 +1,13 @@
 ﻿import React, {FunctionComponent, SyntheticEvent, useState} from "react";
 import {LmModal} from '../../../components/modal/lm-modal';
 import './to-do-task-viewer.scss';
-import {SizePicker} from "../../../components/sizepicker/size-picker";
+import {SizePicker} from "../../../components/size-picker/size-picker";
 import {ToDoTaskTable} from "./to-do-task-table";
-import {PriorityPicker} from "../../../components/prioritypicker/priority-picker";
+import {PriorityPicker} from "../../../components/priority-picker/priority-picker";
 import {LmAddFab} from "../../../components/lm-add-fab/lm-add-fab";
 import {LmInput} from "../../../components/lm-input/lm-input";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import {ConfirmationModal} from "../../../components/confirmationmodal/confirmation-modal";
+import {ConfirmationModal} from "../../../components/confirmation-modal/confirmation-modal";
 
 //== types ============================================================================================================
 

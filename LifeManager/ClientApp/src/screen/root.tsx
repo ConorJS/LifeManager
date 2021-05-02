@@ -1,7 +1,7 @@
 import React, {Fragment, FunctionComponent, useState} from 'react';
 
 import './root.scss'
-import {ToDoTaskViewer} from "./item/todotask/to-do-task-viewer";
+import {ToDoTaskViewer} from "./item/to-do-task/to-do-task-viewer";
 import {Tester} from "./test/tester";
 
 enum MenuItem {

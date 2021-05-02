@@ -12,17 +12,17 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import './to-do-task-table.scss'
-import {LmReactSelect, LmReactSelectOptions} from "../../../components/lmreactselect/lm-react-select";
+import {LmReactSelect, LmReactSelectOptions} from "../../../components/lm-react-select/lm-react-select";
 import chroma from "chroma-js";
 import {AppConstants} from "../../../app-constants";
 import {ElementTools} from "../../../tools/element-tools";
-import {SizeIndicator} from "../../../components/sizeindicator/size-indicator";
-import {PriorityIndicator} from "../../../components/priorityindicator/priority-indicator";
-import {ExtraOnHover} from "../../../components/extraonhover/extra-on-hover";
+import {SizeIndicator} from "../../../components/size-indicator/size-indicator";
+import {PriorityIndicator} from "../../../components/priority-indicator/priority-indicator";
+import {ExtraOnHover} from "../../../components/extra-on-hover/extra-on-hover";
 import {StringTools} from "../../../tools/string-tools";
 import {NumberTools} from "../../../tools/number-tools";
 import {ObjectTools} from "../../../tools/object-tools";
-import {Setting, SettingsWidget} from "../../../components/settingswidget/settings-widget";
+import {Setting, SettingsWidget} from "../../../components/settings-widget/settings-widget";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];

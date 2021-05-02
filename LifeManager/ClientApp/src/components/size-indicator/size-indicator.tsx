@@ -1,6 +1,6 @@
 ﻿import React, {FunctionComponent} from "react";
 import './size-indicator.scss'
-import {SizePickerTools} from "../sizepicker/size-picker";
+import {SizePickerTools} from "../size-picker/size-picker";
 import {ElementTools} from "../../tools/element-tools";
 import {StringTools} from "../../tools/string-tools";
 

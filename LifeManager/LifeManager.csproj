@@ -29,19 +29,19 @@
 
     <ItemGroup>
         <TypeScriptCompile Include="ClientApp\src\app-constants.tsx" />
-        <TypeScriptCompile Include="ClientApp\src\components\confirmationmodal\confirmation-modal.tsx" />
-        <TypeScriptCompile Include="ClientApp\src\components\extraonhover\extra-on-hover.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\confirmation-modal\confirmation-modal.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\extra-on-hover\extra-on-hover.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\lm-add-fab\lm-add-fab.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\lm-input\lm-input.tsx" />
-        <TypeScriptCompile Include="ClientApp\src\components\lmreactselect\lm-react-select.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\lm-react-select\lm-react-select.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\modal\lm-modal.tsx" />
-        <TypeScriptCompile Include="ClientApp\src\components\priorityindicator\priority-indicator.tsx" />
-        <TypeScriptCompile Include="ClientApp\src\components\prioritypicker\priority-picker.tsx" />
-        <TypeScriptCompile Include="ClientApp\src\components\settingswidget\settings-widget.tsx" />
-        <TypeScriptCompile Include="ClientApp\src\components\sizeindicator\size-indicator.tsx" />
-        <TypeScriptCompile Include="ClientApp\src\components\sizepicker\size-picker.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\priority-indicator\priority-indicator.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\priority-picker\priority-picker.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\settings-widget\settings-widget.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\size-indicator\size-indicator.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\size-picker\size-picker.tsx" />
         <TypeScriptCompile Include="ClientApp\src\react-table.config.d.ts" />
-        <TypeScriptCompile Include="ClientApp\src\screen\item\todotask\to-do-task-table.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\screen\item\to-do-task\to-do-task-table.tsx" />
         <TypeScriptCompile Include="ClientApp\src\screen\test\tester.tsx" />
         <TypeScriptCompile Include="ClientApp\src\tools\element-tools.tsx" />
         <TypeScriptCompile Include="ClientApp\src\tools\number-tools.tsx" />
