@@ -73,7 +73,8 @@ lmroot="~/LifeManager/Repository"
 alias lm="cd $lmroot"
 
 # Running LifeManager setup (changing dir if needed)
-alias lms="cd $lmroot/LifeManager/ && sudo chmod 555 Setup.sh && ./Setup.sh" 
+alias lms="cd $lmroot/LifeManager/ && sudo chmod 555 Setup.sh && ./Setup.sh"
+alias lmsf="cd $lmroot/LifeManager/ && stopdb; sudo chmod 555 Setup.sh && ./Setup.sh" 
 
 # Stops the LifeManager database
 alias stopdb="cd $lmroot/LifeManager/ && sudo chmod 555 StopDatabase.sh && ./StopDatabase.sh" 

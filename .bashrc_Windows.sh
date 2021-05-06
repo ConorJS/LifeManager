@@ -67,13 +67,14 @@ render_revision() {
 
 ## == Application
 
-#lmroot="$USERPROFILE/Repositories/LifeManager"
+lmroot="$USERPROFILE/Repositories/LifeManager"
 
 # Go to LifeManager directory
 alias lm="cd $lmroot"
 
 # Running LifeManager setup (changing dir if needed)
 alias lms="cd '$lmroot'/LifeManager && ./Setup.sh"
+alias lmsf="cd '$lmroot'/LifeManager && stopdb; ./Setup.sh"
 
 # Stops the LifeManager database
 alias stopdb="cd '$lmroot'/LifeManager && ./StopDatabase.sh"
