@@ -1,5 +1,6 @@
 ﻿using LifeManager.Server.Model.Entity;
 using LifeManager.Server.User;
+using LifeManager.Server.User.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace LifeManager.Server.Database.Implementation {
@@ -20,6 +21,8 @@ namespace LifeManager.Server.Database.Implementation {
         //== entity definitions =====================================================================================================================
 
         public DbSet<UserEntity> User { get; set; }
+        
+        public DbSet<UserConfigurationEntity> UserConfiguration { get; set; }
 
         public DbSet<AppointmentEntity> Appointment { get; set; }
 

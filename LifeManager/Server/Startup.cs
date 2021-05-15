@@ -25,8 +25,10 @@ namespace LifeManager.Server {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
-            services.AddDbContext<LifeManagerDatabaseContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("MyWebApiConnection")));
+            services.AddDbContext<LifeManagerDatabaseContext>(options => options
+                .UseLazyLoadingProxies()
+                .UseNpgsql(Configuration.GetConnectionString("MyWebApiConnection"))
+            );
 
             services.AddControllersWithViews()
                 .AddJsonOptions(options => {

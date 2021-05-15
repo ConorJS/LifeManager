@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Castle.Core.Internal;
 using LifeManager.Server.Model;
-using LifeManager.Server.Model.Entity;
 using LifeManager.Server.User;
+using LifeManager.Server.User.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace LifeManager.Server.Database.Implementation {
@@ -26,6 +27,16 @@ namespace LifeManager.Server.Database.Implementation {
 
         public UserEntity LoadUser(long id) {
             return DetachedEntityOrNull(_dbContext.User.Find(id));
+        }
+
+        public UserConfigurationEntity LoadUserConfiguration(long userId) {
+            IList<UserConfigurationEntity> configItems = _dbContext.User.Find(userId).UserConfigurationEntity;
+            return DetachedEntityOrNull(configItems.IsNullOrEmpty() ? null : configItems[0]);
+        }
+
+        public void SaveUserConfiguration(UserConfigurationEntity entity) {
+            _dbContext.Set<UserConfigurationEntity>().Update(entity);
+            _dbContext.SaveChanges();
         }
         
         //== queries ================================================================================================================================

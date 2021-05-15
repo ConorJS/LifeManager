@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using LifeManager.Server.Model;
 using LifeManager.Server.User;
+using LifeManager.Server.User.Configuration;
 
 namespace LifeManager.Server.Database {
     public interface ILifeManagerRepository : IDisposable {
@@ -9,7 +10,11 @@ namespace LifeManager.Server.Database {
 
         public UserEntity LoadUser(long id);
 
-        //== queries ================================================================================================================================
+        public UserConfigurationEntity LoadUserConfiguration(long id);
+
+        public void SaveUserConfiguration(UserConfigurationEntity entity);
+
+        //== general item queries ===================================================================================================================
 
         public List<T> LoadEntities<T>(long ownedByUserId) where T : class, IItemEntity;
 
