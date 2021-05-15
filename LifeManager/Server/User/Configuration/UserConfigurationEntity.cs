@@ -4,14 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LifeManager.Server.User.Configuration {
-    // TODO: Remove Entity from name
-    [Table("UserConfigurationEntity")]
+    [Table("UserConfiguration")]
     public class UserConfigurationEntity {
         //== attributes: base =======================================================================================================================
         
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UserConfigurationEntityId { get; set; }
+        public int Id { get; set; }
         
         public DateTime DateTimeCreated { get; set; }
 

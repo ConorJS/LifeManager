@@ -1,16 +1,16 @@
 ﻿SET search_path TO lifemanager;
 
-CREATE TABLE "UserConfigurationEntity"
+CREATE TABLE "UserConfiguration"
 (
-    "UserConfigurationEntityId"         INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    "Id"                                INT GENERATED ALWAYS AS IDENTITY UNIQUE,
     "UserId"                            INT     NOT NULL,
     "DateTimeCreated"                   TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified"              TIMESTAMP WITHOUT TIME ZONE,
     "ToDoTaskHideCompletedAndCancelled" BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-ALTER TABLE "UserConfigurationEntity"
-    ADD CONSTRAINT "FK_UserId_UserConfigurationEntity" FOREIGN KEY ("UserId") REFERENCES "User" ("Id");
+ALTER TABLE "UserConfiguration"
+    ADD CONSTRAINT "FK_UserId_UserConfiguration" FOREIGN KEY ("UserId") REFERENCES "User" ("Id");
 
 -- TODO: Remove
 -- CREATE TABLE "UserConfiguration_ColumnSortOrder"
@@ -25,8 +25,6 @@ ALTER TABLE "UserConfigurationEntity"
 -- ALTER TABLE "UserConfiguration_ColumnSortOrder"
 --     ADD CONSTRAINT "FK_UserConfiguration_ColumnSortOrder" FOREIGN KEY ("UserConfigurationId") REFERENCES "UserConfiguration" ("Id");
 
-INSERT INTO lifemanager."UserConfigurationEntity"("UserId",
-                                                  "DateTimeCreated",
-                                                  "DateTimeLastModified",
-                                                  "ToDoTaskHideCompletedAndCancelled")
+INSERT INTO lifemanager."UserConfiguration"("UserId", "DateTimeCreated", "DateTimeLastModified",
+                                            "ToDoTaskHideCompletedAndCancelled")
 VALUES (1, now(), now(), false);

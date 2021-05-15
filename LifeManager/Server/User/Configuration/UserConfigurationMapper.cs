@@ -13,7 +13,7 @@ namespace LifeManager.Server.User.Configuration {
             };
 
             return new UserConfiguration {
-                Id = entity.UserConfigurationEntityId,
+                Id = entity.Id,
                 DateTimeCreated = entity.DateTimeCreated,
                 DateTimeLastModified = entity.DateTimeLastModified,
                 User = new UserMapper().ToDomain(entity.UserEntity),
@@ -29,7 +29,7 @@ namespace LifeManager.Server.User.Configuration {
             }
 
             return new UserConfigurationEntity {
-                UserConfigurationEntityId = (int) domain.Id,
+                Id = (int) domain.Id,
                 SortedColumns = mappedColumnSortOrderEntities,
 
                 // When mapping down to the entity model for the first time, populate these values.
