@@ -19,10 +19,8 @@ namespace LifeManager.Server.User.Configuration {
         [ForeignKey("UserId")]
         public virtual UserEntity UserEntity { get; set; }
         
-        // TODO: Sorted columns
-        //public virtual ICollection<ColumnSortOrderEntity> SortedColumns { get; set; }
-        //[InverseProperty()]
-        public ICollection<ColumnSortOrderEntity> SortedColumns = new List<ColumnSortOrderEntity>();
+        [InverseProperty("Configuration")]
+        public virtual ICollection<ColumnSortOrderEntity> SortedColumns { get; set; }
         
         //== attributes: to do tasks ================================================================================================================
         

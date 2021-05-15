@@ -12,19 +12,25 @@ CREATE TABLE "UserConfiguration"
 ALTER TABLE "UserConfiguration"
     ADD CONSTRAINT "FK_UserId_UserConfiguration" FOREIGN KEY ("UserId") REFERENCES "User" ("Id");
 
--- TODO: Remove
--- CREATE TABLE "UserConfiguration_ColumnSortOrder"
--- (
---     "TableName"           VARCHAR(255) NOT NULL,
---     "ColumnName"          VARCHAR(255) NOT NULL,
---     "Precedence"          INT          NOT NULL,
---     "UserConfigurationId" BIGINT       NOT NULL DEFAULT -1
--- );
--- TODO: Remove
+CREATE TABLE "UserConfiguration_ColumnSortOrder"
+(
+    "Id"                  INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    "UserConfigurationId" BIGINT       NOT NULL,
+    "TableName"           VARCHAR(255) NOT NULL,
+    "ColumnName"          VARCHAR(255) NOT NULL,
+    "Precedence"          INT          NOT NULL
+);
 
--- ALTER TABLE "UserConfiguration_ColumnSortOrder"
---     ADD CONSTRAINT "FK_UserConfiguration_ColumnSortOrder" FOREIGN KEY ("UserConfigurationId") REFERENCES "UserConfiguration" ("Id");
+ALTER TABLE "UserConfiguration_ColumnSortOrder"
+    ADD CONSTRAINT "FK_UserConfiguration_ColumnSortOrder" FOREIGN KEY ("UserConfigurationId") REFERENCES "UserConfiguration" ("Id");
 
+
+-- Dummy values only. These should be removed when Users are fully implemented (i.e. when multiple may exist)
 INSERT INTO lifemanager."UserConfiguration"("UserId", "DateTimeCreated", "DateTimeLastModified",
                                             "ToDoTaskHideCompletedAndCancelled")
 VALUES (1, now(), now(), false);
+
+INSERT INTO lifemanager."UserConfiguration_ColumnSortOrder"("UserConfigurationId",
+                                                            "TableName", "ColumnName", "Precedence")
+VALUES (1, 'DummyTable', 'DummyColumn', 0);
+

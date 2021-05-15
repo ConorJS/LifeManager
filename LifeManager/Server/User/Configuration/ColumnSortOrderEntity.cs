@@ -8,8 +8,8 @@ namespace LifeManager.Server.User.Configuration {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         
-        [ForeignKey("Dept")]
-        public long UserConfigurationId { get; set; }
+        [ForeignKey("UserConfigurationId")]
+        public virtual UserConfigurationEntity Configuration { get; set; }
         
         public string TableName { get; set; }
 
