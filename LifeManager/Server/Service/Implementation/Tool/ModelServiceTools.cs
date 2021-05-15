@@ -39,6 +39,8 @@ namespace LifeManager.Server.Service.Implementation.Tool {
                 FailReferencingVerb("update", domain.Id, typeof(T));
             }
 
+            // TODO: Check if the object differs from the existing object.
+            // TODO: It may be better to move UpdateProcessing calls within the SaveEntity call, so that we can compare the two entity models.
             domain.DateTimeLastModified = DateTime.Now;
         }
 
