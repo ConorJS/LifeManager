@@ -2,8 +2,8 @@
 
 CREATE TABLE "UserConfiguration"
 (
-    "Id"                                INT GENERATED ALWAYS AS IDENTITY UNIQUE,
-    "UserId"                            INT     NOT NULL,
+    "Id"                                BIGINT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    "UserId"                            BIGINT  NOT NULL,
     "DateTimeCreated"                   TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified"              TIMESTAMP WITHOUT TIME ZONE,
     "ToDoTaskHideCompletedAndCancelled" BOOLEAN NOT NULL DEFAULT FALSE
@@ -14,7 +14,7 @@ ALTER TABLE "UserConfiguration"
 
 CREATE TABLE "UserConfiguration_ColumnSortOrder"
 (
-    "Id"                  INT GENERATED ALWAYS AS IDENTITY UNIQUE,
+    "Id"                  BIGINT GENERATED ALWAYS AS IDENTITY UNIQUE,
     "UserConfigurationId" BIGINT       NOT NULL,
     "TableName"           VARCHAR(255) NOT NULL,
     "ColumnName"          VARCHAR(255) NOT NULL,
