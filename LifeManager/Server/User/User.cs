@@ -1,4 +1,5 @@
 ﻿using System;
+using LifeManager.Server.User.Configuration;
 
 namespace LifeManager.Server.User {
     public class User {
@@ -9,5 +10,7 @@ namespace LifeManager.Server.User {
         public DateTime? DateTimeCreated { get; set; }
 
         public DateTime? DateTimeLastModified { get; set; }
+
+        public UserConfiguration Configuration { get; set; }
     }
 }

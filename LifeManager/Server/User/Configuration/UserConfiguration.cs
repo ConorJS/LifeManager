@@ -14,7 +14,7 @@ namespace LifeManager.Server.User.Configuration {
         public ToDoTaskScreenConfiguration ToDoTaskConfig { get; set; }
 
         public class ToDoTaskScreenConfiguration {
-            public ICollection<ColumnSortOrder> ColumnSortOrderConfig;
+            public IList<ColumnSortOrder> ColumnSortOrderConfig { get; set; }
             
             public bool HideCompletedAndCancelled { get; set; }
         } 

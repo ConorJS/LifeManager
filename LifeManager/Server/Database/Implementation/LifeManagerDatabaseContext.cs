@@ -21,7 +21,7 @@ namespace LifeManager.Server.Database.Implementation {
         //== entity definitions =====================================================================================================================
 
         public DbSet<UserEntity> User { get; set; }
-        
+
         public DbSet<UserConfigurationEntity> UserConfiguration { get; set; }
 
         public DbSet<AppointmentEntity> Appointment { get; set; }

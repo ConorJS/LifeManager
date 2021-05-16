@@ -8,7 +8,7 @@ namespace LifeManager.Server.User.Configuration {
         
         public UserConfiguration ToDomain(UserConfigurationEntity entity) {
             UserConfiguration.ToDoTaskScreenConfiguration toDoTaskConfig = new UserConfiguration.ToDoTaskScreenConfiguration {
-                ColumnSortOrderConfig = ToDomain(entity.SortedColumns, TO_DO_TASK_TABLE_NAME),
+                ColumnSortOrderConfig = new List<ColumnSortOrder>(ToDomain(entity.SortedColumns, TO_DO_TASK_TABLE_NAME)),
                 HideCompletedAndCancelled = entity.ToDoTaskHideCompletedAndCancelled
             };
 
@@ -16,7 +16,6 @@ namespace LifeManager.Server.User.Configuration {
                 Id = entity.Id,
                 DateTimeCreated = entity.DateTimeCreated,
                 DateTimeLastModified = entity.DateTimeLastModified,
-                User = new UserMapper().ToDomain(entity.UserEntity),
                 ToDoTaskConfig = toDoTaskConfig
             };
         }
@@ -36,7 +35,6 @@ namespace LifeManager.Server.User.Configuration {
                 // These could get overridden during the save; this is mostly to fulfil the non-null constraint on the entity.
                 DateTimeCreated = domain.DateTimeCreated ?? DateTime.Now,
                 DateTimeLastModified = domain.DateTimeLastModified ?? DateTime.Now,
-                UserEntity = new UserMapper().ToEntity(domain.User),
                 ToDoTaskHideCompletedAndCancelled = domain.ToDoTaskConfig.HideCompletedAndCancelled
             };
         }

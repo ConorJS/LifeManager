@@ -32,5 +32,5 @@ VALUES (1, now(), now(), false);
 
 INSERT INTO lifemanager."UserConfiguration_ColumnSortOrder"("UserConfigurationId",
                                                             "TableName", "ColumnName", "Precedence")
-VALUES (1, 'DummyTable', 'DummyColumn', 0);
+VALUES (1, 'ToDoTask', 'Status', 0);
 

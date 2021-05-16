@@ -26,7 +26,19 @@ namespace LifeManager.Server.Database.Implementation {
         //== user ===================================================================================================================================
 
         public UserEntity LoadUser(long id) {
-            return DetachedEntityOrNull(_dbContext.User.Find(id));
+            /*
+             * TODO - Fix this
+             * 
+             * Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection
+             * but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which
+             * can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information.
+             * To identify the query that's triggering this warning call
+             * 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'
+             */
+            return DetachedEntityOrNull(_dbContext.User
+                .Include(user => user.UserConfigurationEntity)
+                .ThenInclude(config => config.SortedColumns)
+                .FirstOrDefault(entity => entity.Id == id));
         }
 
         public UserConfigurationEntity LoadUserConfiguration(long userId) {
@@ -38,7 +50,7 @@ namespace LifeManager.Server.Database.Implementation {
             _dbContext.Set<UserConfigurationEntity>().Update(entity);
             _dbContext.SaveChanges();
         }
-        
+
         //== queries ================================================================================================================================
 
         public List<T> LoadEntities<T>(long ownedByUserId) where T : class, IItemEntity {
@@ -50,7 +62,7 @@ namespace LifeManager.Server.Database.Implementation {
 
             return entities;
         }
-        
+
         public T LoadEntity<T>(long id) where T : class, IItemEntity {
             var entity = DetachedEntityOrNull(_dbContext.Set<T>().Find(id));
 

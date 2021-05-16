@@ -17,6 +17,7 @@ namespace LifeManager.Server.User {
 
         public DateTime DateTimeLastModified { get; set; }
         
+        // TODO: Rename field to 'Configuration'
         [InverseProperty("UserEntity")]
         public virtual IList<UserConfigurationEntity> UserConfigurationEntity { get; set; }
     }

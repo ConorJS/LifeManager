@@ -12,12 +12,57 @@ enum MenuItem {
     TEST
 }
 
+export class User {
+    id?: Number;
+
+    dateTimeCreated?: Date;
+
+    dateTimeLastModified?: Date;
+
+    displayName?: string;
+
+    status?: string;
+    
+    configuration?: UserConfiguration;
+}
+
+export class UserConfiguration {
+    id?: Number;
+
+    dateTimeCreated?: Date;
+
+    dateTimeLastModified?: Date;
+    
+    toDoTaskConfig?: ToDoTaskConfig; 
+}
+
+export class ColumnSortOrder {
+    columnName?: string;
+    
+    precedence?: Number;
+}
+
+export class ToDoTaskConfig {
+    columnSortOrderConfig?: ColumnSortOrder[];
+
+    hideCompletedAndCancelled?: boolean;
+}
+
 export const Root: FunctionComponent = () => {
     //== state ========================================================================================================
 
+    const [doRefresh, setDoRefresh] = useState<boolean>(true);
+    const [activeUser, setActiveUser] = useState<User>();
     const [selectedNavigationItem, setSelectedNavigationItem] = useState(MenuItem.HOME);
 
-    //== render =======================================================================================================
+    //== methods ======================================================================================================
+    
+    async function loadUser(): Promise<User> {
+        const response = await fetch('api/User/GetLoggedInUser');
+        return await response.json();
+    }
+
+    //== execution ====================================================================================================
 
     let activeComponent;
     switch (selectedNavigationItem) {
@@ -40,6 +85,21 @@ export const Root: FunctionComponent = () => {
             activeComponent = <Tester/>
             break;
     }
+    
+    function refresh() {
+        loadUser().then(data => {
+            console.log("Calling setActiveUser...");
+            setActiveUser(data);
+        });
+    }
+
+    // TODO: Refactor this away?
+    if (doRefresh) {
+        refresh();
+        setDoRefresh(false);
+    }
+    
+    //== render =======================================================================================================
 
     return (
         <Fragment>

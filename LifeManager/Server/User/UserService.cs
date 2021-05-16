@@ -20,8 +20,11 @@ namespace LifeManager.Server.User {
             return GetUser(1);
         }
 
+        // TODO: This probably won't be necessary
         public UserConfiguration GetUserConfiguration(long id) {
-            UserConfigurationEntity entity = _lifeManagerRepository.LoadUserConfiguration(id);
+            // TODO: Implement a UserController (REST endpoint), user creation, and a proper user system.
+            //UserConfigurationEntity entity = _lifeManagerRepository.LoadUserConfiguration(id);
+            UserConfigurationEntity entity = _lifeManagerRepository.LoadUserConfiguration(1);
 
             return new UserConfigurationMapper().ToDomain(entity);
         }
