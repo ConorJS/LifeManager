@@ -29,7 +29,7 @@ namespace LifeManager.Server.User.Configuration {
             }
 
             return new UserConfigurationEntity {
-                Id = (int) domain.Id,
+                Id = domain.Id,
                 SortedColumns = mappedColumnSortOrderEntities,
 
                 // When mapping down to the entity model for the first time, populate these values.
