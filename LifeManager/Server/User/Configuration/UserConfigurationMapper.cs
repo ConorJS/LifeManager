@@ -4,10 +4,11 @@ using System.Linq;
 
 namespace LifeManager.Server.User.Configuration {
     public class UserConfigurationMapper {
-        private static readonly string TO_DO_TASK_TABLE_NAME = "ToDoTask";
+        private static readonly string TO_DO_TASK_TABLE_NAME = UserConfiguration.ToDoTaskTableViewConfiguration.TABLE_NAME;
         
         public UserConfiguration ToDomain(UserConfigurationEntity entity) {
-            UserConfiguration.ToDoTaskScreenConfiguration toDoTaskConfig = new UserConfiguration.ToDoTaskScreenConfiguration {
+            UserConfiguration.ToDoTaskTableViewConfiguration toDoTaskConfig = new UserConfiguration.ToDoTaskTableViewConfiguration {
+                UserConfigurationId = entity.Id,
                 ColumnSortOrderConfig = new List<ColumnSortOrder>(ToDomain(entity.SortedColumns, TO_DO_TASK_TABLE_NAME)),
                 HideCompletedAndCancelled = entity.ToDoTaskHideCompletedAndCancelled
             };
@@ -42,15 +43,22 @@ namespace LifeManager.Server.User.Configuration {
         private ICollection<ColumnSortOrder> ToDomain(ICollection<ColumnSortOrderEntity> entities, string tableName) {
             return entities
                 .Where(entity => tableName.Equals(entity.TableName))
-                .Select(entity => new ColumnSortOrder {Precedence = entity.Precedence, ColumnName = entity.ColumnName})
+                .Select(entity => new ColumnSortOrder {
+                    UserConfigurationId = entity.UserConfigurationId,
+                    ColumnName = entity.ColumnName,
+                    IsSortedAscending = entity.IsSortedAscending,
+                    Precedence = entity.Precedence 
+                })
                 .ToList();
         }
 
         private ICollection<ColumnSortOrderEntity> ToEntity(ICollection<ColumnSortOrder> domainItems, string tableName) {
             return domainItems
-                .Select(domain => new ColumnSortOrderEntity() {
+                .Select(domain => new ColumnSortOrderEntity {
+                    UserConfigurationId = domain.UserConfigurationId,
                     TableName = tableName,
                     ColumnName = domain.ColumnName,
+                    IsSortedAscending = domain.IsSortedAscending,
                     Precedence = domain.Precedence
                 })
                 .ToList();

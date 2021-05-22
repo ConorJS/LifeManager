@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Service;
+using LifeManager.Server.User;
+using LifeManager.Server.User.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,10 +13,13 @@ namespace LifeManager.Server.Controllers {
         private readonly ILogger<ToDoTaskController> _logger;
 
         private readonly IToDoTaskService _toDoTaskService;
+        
+        private readonly IUserService _userService;
 
-        public ToDoTaskController(ILogger<ToDoTaskController> logger, IToDoTaskService toDoTaskService) {
+        public ToDoTaskController(ILogger<ToDoTaskController> logger, IToDoTaskService toDoTaskService, IUserService userService) {
             _logger = logger;
             _toDoTaskService = toDoTaskService;
+            _userService = userService;
         }
 
         // TODO: Should only select all tasks for a given user
@@ -46,6 +51,13 @@ namespace LifeManager.Server.Controllers {
         public Response Remove(long id) {
             _toDoTaskService.Remove(id);
 
+            return new Response {Body = "success"};
+        }
+
+        [HttpPost("UpdateUserConfig")]
+        public Response UpdateUserConfig(UserConfiguration.ToDoTaskTableViewConfiguration toDoTaskTableViewConfiguration) {
+            _userService.SaveTableViewConfiguration(toDoTaskTableViewConfiguration);
+            
             return new Response {Body = "success"};
         }
     }

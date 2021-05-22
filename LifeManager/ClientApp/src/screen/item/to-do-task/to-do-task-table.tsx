@@ -1,5 +1,5 @@
-﻿import React, {FunctionComponent, useState} from "react";
-import {Cell, Column, Row, useSortBy, UseSortByColumnProps, useTable} from 'react-table'
+﻿import React, {FunctionComponent, useEffect, useState} from "react";
+import {Cell, Column, ColumnInstance, Row, useSortBy, useTable} from 'react-table'
 import {ToDoTask} from "./to-do-task-viewer";
 
 import MaUTable from "@material-ui/core/Table";
@@ -23,18 +23,32 @@ import {StringTools} from "../../../tools/string-tools";
 import {NumberTools} from "../../../tools/number-tools";
 import {ObjectTools} from "../../../tools/object-tools";
 import {Setting, SettingsWidget} from "../../../components/settings-widget/settings-widget";
+import {ColumnSortOrder, ToDoTaskConfig} from "../../root";
+import {StateTools} from "../../../tools/state-tools";
 
 interface ToDoTaskTableProps {
     toDoTasks: ToDoTask[];
-    taskSelected: (task: ToDoTask) => void
-    saveToDoTask: (task: ToDoTask) => Promise<void>
+    config: ToDoTaskConfig;
+    taskSelected: (task: ToDoTask) => void;
+    saveToDoTask: (task: ToDoTask) => Promise<void>;
+    saveConfig: (config: ToDoTaskConfig) => Promise<void>;
 }
 
 export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDoTaskTableProps) => {
-    const [statusSettingsWidgetOpen, setStatusSettingsModalOpen] = useState(false);
-    const [hideCompleteCancelledToggle, setHideCompleteCancelledToggle] = useState(false);
+    //== attributes ===================================================================================================
 
     const HIDE_COMPLETE_CANCELLED: string = "Hide Completed & Cancelled";
+
+    const [statusSettingsWidgetOpen, setStatusSettingsModalOpen] = useState(false);
+    const [hideCompleteCancelledToggle, setHideCompleteCancelledToggle] = useState(false);
+    const [config, setConfig] = useState(props.config);
+
+    useEffect(() => {
+        console.log(`Pre-save of config at ${new Date()}`);
+        props.saveConfig(config).then(value => console.log("Async config save completed successfully."));
+    }, [config])
+
+    //== attributes ===================================================================================================
 
     function blockEventPropagation(mouseEvent: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>): void {
         mouseEvent.stopPropagation();
@@ -72,19 +86,48 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         return hideCompleteCancelledToggle && ['Complete', 'Cancelled'].includes(rowItem.status);
     }
 
-    function toggleSort(column: UseSortByColumnProps<ToDoTask>): void {
+    function initialSortState(): { id: string, desc: boolean }[] {
+        return config.columnSortOrderConfig
+            .filter(sortOrderConfig => sortOrderConfig.columnName !== 'dummy').map(sortOrderConfig => {
+                return {id: sortOrderConfig.columnName, desc: !sortOrderConfig.isSortedAscending};
+            });
+    }
+
+    function toggleSort(column: ColumnInstance<ToDoTask>): void {
+        const configId: Number = config.userConfigurationId;
+        const columnId = column.id;
+
+        const index: number = getOrDefaultColumnSortOrderIndex(column);
+
+        // TODO: Multi-column sorting will need to set/adjust precedence value(s) accordingly.
+        const columnSortOrder: ColumnSortOrder = index === -1 ?
+            new ColumnSortOrder(configId, columnId, false, 0) :
+            // TODO: Does this need to copy the ColumnSortOrder in this manner, to not break the 'config' state
+            //  when we subsequently update isSortedAscending?
+            config.columnSortOrderConfig[index];
+
         if (column.isSorted && column.isSortedDesc) {
             // Descending sort changes to no sort.
             column.clearSortBy();
+            StateTools.updateArray(config, setConfig, 'columnSortOrderConfig', undefined, index);
 
         } else if (column.isSorted && !column.isSortedDesc) {
             // Ascending sort changes to descending sort.
             column.toggleSortBy(true);
+            columnSortOrder.isSortedAscending = false;
+            StateTools.updateArray(config, setConfig, 'columnSortOrderConfig', columnSortOrder, index);
 
         } else {
             // No sort changes to ascending sort.
             column.toggleSortBy(false);
+            columnSortOrder.isSortedAscending = true;
+            StateTools.updateArray(config, setConfig, 'columnSortOrderConfig', columnSortOrder, index);
         }
+    }
+
+    function getOrDefaultColumnSortOrderIndex(column: ColumnInstance<ToDoTask>): number {
+        return config.columnSortOrderConfig
+            .findIndex(sortOrderConfig => sortOrderConfig.columnName === column.id);
     }
 
     const columns: Column<ToDoTask>[] = React.useMemo(
@@ -116,7 +159,8 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                     const smallerFontSize: number = 12;
                     const nameFontWeight: number = 600;
                     const nameStart = <span style={{fontWeight: nameFontWeight}}>{truncated}</span>
-                    const nameEnd = !cut ? undefined : <span style={{fontWeight: nameFontWeight, fontSize: smallerFontSize}}>{cut}</span>
+                    const nameEnd = !cut ? undefined :
+                        <span style={{fontWeight: nameFontWeight, fontSize: smallerFontSize}}>{cut}</span>
                     return <ExtraOnHover
                         always={
                             <div style={{marginBottom: 8}}>
@@ -128,7 +172,10 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                                 </div>
                             </div>
                         }
-                        extra={<div style={{wordBreak: 'break-all'}}><span style={{fontSize: smallerFontSize}}>{truncatedComments}</span></div>}
+                        extra={
+                            <div style={{wordBreak: 'break-all'}}>
+                                <span style={{fontSize: smallerFontSize}}>{truncatedComments}</span>
+                            </div>}
                     />
                 },
                 sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number => StringTools.compareBlanksLast(rowA.original.name, rowB.original.name),
@@ -180,12 +227,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             columns: columns,
             data: props.toDoTasks,
             initialState: {
-                sortBy: [
-                    {
-                        id: 'name',
-                        desc: false
-                    }
-                ]
+                sortBy: initialSortState()
             }
         },
         useSortBy
@@ -215,10 +257,11 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
 
                                 {column.id === 'status' ? statusSettingsWidget : <React.Fragment/>}
                                 {column.id === 'status' ?
-                                    <SettingsIcon className="status-settings-widget-button" onClick={(event: React.MouseEvent<SVGSVGElement>) => {
-                                        setStatusSettingsModalOpen(true);
-                                        event.stopPropagation();
-                                    }}/>
+                                    <SettingsIcon className="status-settings-widget-button"
+                                                  onClick={(event: React.MouseEvent<SVGSVGElement>) => {
+                                                      setStatusSettingsModalOpen(true);
+                                                      event.stopPropagation();
+                                                  }}/>
                                     : <React.Fragment/>
                                 }
 

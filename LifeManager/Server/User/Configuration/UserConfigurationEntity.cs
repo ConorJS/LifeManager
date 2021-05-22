@@ -19,6 +19,7 @@ namespace LifeManager.Server.User.Configuration {
         [ForeignKey("UserId")]
         public virtual UserEntity UserEntity { get; set; }
         
+        // TODO: Switch this to a list
         [InverseProperty("Configuration")]
         public virtual ICollection<ColumnSortOrderEntity> SortedColumns { get; set; }
         

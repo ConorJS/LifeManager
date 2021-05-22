@@ -12,6 +12,8 @@ namespace LifeManager.Server.Database {
 
         public UserConfigurationEntity LoadUserConfiguration(long id);
 
+        public UserConfigurationEntity LoadUserConfigurationAttached(long userConfigurationId);
+
         public void SaveUserConfiguration(UserConfigurationEntity entity);
 
         //== general item queries ===================================================================================================================

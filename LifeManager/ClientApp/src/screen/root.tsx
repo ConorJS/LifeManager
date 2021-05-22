@@ -13,39 +13,71 @@ enum MenuItem {
 }
 
 export class User {
-    id?: Number;
+    id: Number;
 
     dateTimeCreated?: Date;
 
     dateTimeLastModified?: Date;
 
-    displayName?: string;
+    displayName: string;
 
-    status?: string;
-    
-    configuration?: UserConfiguration;
+    status: string;
+
+    configuration: UserConfiguration;
+
+    constructor(id: Number, displayName: string, status: string, configuration: UserConfiguration) {
+        this.id = id;
+        this.displayName = displayName;
+        this.status = status;
+        this.configuration = configuration;
+    }
 }
 
 export class UserConfiguration {
-    id?: Number;
+    id: Number;
 
     dateTimeCreated?: Date;
 
     dateTimeLastModified?: Date;
-    
-    toDoTaskConfig?: ToDoTaskConfig; 
+
+    toDoTaskConfig: ToDoTaskConfig;
+
+    constructor(id: Number, toDoTaskConfig: ToDoTaskConfig) {
+        this.id = id;
+        this.toDoTaskConfig = toDoTaskConfig;
+    }
 }
 
 export class ColumnSortOrder {
-    columnName?: string;
+    userConfigurationId?: Number;
     
-    precedence?: Number;
+    columnName: string;
+
+    isSortedAscending: boolean;
+
+    precedence: Number;
+
+    constructor(userConfigurationId: Number, columnName: string, isSortedAscending: boolean, precedence: Number) {
+        this.userConfigurationId = userConfigurationId;
+        this.columnName = columnName;
+        this.isSortedAscending = isSortedAscending;
+        this.precedence = precedence;
+    }
 }
 
 export class ToDoTaskConfig {
-    columnSortOrderConfig?: ColumnSortOrder[];
+    userConfigurationId: Number;
 
-    hideCompletedAndCancelled?: boolean;
+    columnSortOrderConfig: ColumnSortOrder[];
+
+    hideCompletedAndCancelled: boolean;
+
+    constructor(userConfigurationId: Number, columnSortOrderConfig: ColumnSortOrder[],
+                hideCompletedAndCancelled: boolean) {
+        this.userConfigurationId = userConfigurationId;
+        this.columnSortOrderConfig = columnSortOrderConfig;
+        this.hideCompletedAndCancelled = hideCompletedAndCancelled;
+    }
 }
 
 export const Root: FunctionComponent = () => {
@@ -56,13 +88,24 @@ export const Root: FunctionComponent = () => {
     const [selectedNavigationItem, setSelectedNavigationItem] = useState(MenuItem.HOME);
 
     //== methods ======================================================================================================
-    
+
     async function loadUser(): Promise<User> {
         const response = await fetch('api/User/GetLoggedInUser');
         return await response.json();
     }
 
     //== execution ====================================================================================================
+
+    // TODO: Refactor this away?
+    if (doRefresh) {
+        refresh();
+        setDoRefresh(false);
+    }
+
+    if (activeUser === undefined) {
+        // Don't render anything until the user has loaded.
+        return <Fragment/>;
+    }
 
     let activeComponent;
     switch (selectedNavigationItem) {
@@ -78,14 +121,14 @@ export const Root: FunctionComponent = () => {
             break;
 
         case MenuItem.TODO_TASKS:
-            activeComponent = <ToDoTaskViewer/>
+            activeComponent = <ToDoTaskViewer config={activeUser.configuration.toDoTaskConfig}/>
             break;
 
         case MenuItem.TEST:
             activeComponent = <Tester/>
             break;
     }
-    
+
     function refresh() {
         loadUser().then(data => {
             console.log("Calling setActiveUser...");
@@ -93,12 +136,6 @@ export const Root: FunctionComponent = () => {
         });
     }
 
-    // TODO: Refactor this away?
-    if (doRefresh) {
-        refresh();
-        setDoRefresh(false);
-    }
-    
     //== render =======================================================================================================
 
     return (

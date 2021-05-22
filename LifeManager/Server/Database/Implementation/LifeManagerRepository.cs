@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Castle.Core.Internal;
 using LifeManager.Server.Model;
 using LifeManager.Server.User;
 using LifeManager.Server.User.Configuration;
@@ -35,20 +34,55 @@ namespace LifeManager.Server.Database.Implementation {
              * To identify the query that's triggering this warning call
              * 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'
              */
-            return DetachedEntityOrNull(_dbContext.User
+            UserEntity userEntity = _dbContext.User
                 .Include(user => user.UserConfigurationEntity)
                 .ThenInclude(config => config.SortedColumns)
-                .FirstOrDefault(entity => entity.Id == id));
+                .FirstOrDefault(entity => entity.Id == id);
+
+            if (userEntity == null) {
+                return null;
+            }
+
+            foreach (var userConfigurationEntity in userEntity.UserConfigurationEntity) {
+                foreach (ColumnSortOrderEntity columnSortOrderEntity in userConfigurationEntity.SortedColumns) {
+                    Detach(columnSortOrderEntity);
+                }
+            }
+
+            return DetachedEntityOrNull(userEntity);
         }
 
-        public UserConfigurationEntity LoadUserConfiguration(long userId) {
-            IList<UserConfigurationEntity> configItems = _dbContext.User.Find(userId).UserConfigurationEntity;
-            return DetachedEntityOrNull(configItems.IsNullOrEmpty() ? null : configItems[0]);
+        public UserConfigurationEntity LoadUserConfiguration(long userConfigurationId) {
+            UserConfigurationEntity userConfigurationEntity = _dbContext.UserConfiguration
+                .Include(userConfiguration => userConfiguration.SortedColumns)
+                .FirstOrDefault(userConfiguration => userConfiguration.Id == userConfigurationId);
+
+            if (userConfigurationEntity == null) {
+                return null;
+            }
+
+            foreach (ColumnSortOrderEntity columnSortOrderEntity in userConfigurationEntity.SortedColumns) {
+                Detach(columnSortOrderEntity);
+            }
+
+            return DetachedEntityOrNull(userConfigurationEntity);
+        }
+
+        public UserConfigurationEntity LoadUserConfigurationAttached(long userConfigurationId) {
+            return _dbContext.UserConfiguration
+                .Include(userConfiguration => userConfiguration.SortedColumns)
+                .FirstOrDefault(userConfiguration => userConfiguration.Id == userConfigurationId);
         }
 
         public void SaveUserConfiguration(UserConfigurationEntity entity) {
             _dbContext.Set<UserConfigurationEntity>().Update(entity);
             _dbContext.SaveChanges();
+
+            foreach (ColumnSortOrderEntity columnSortOrderEntity in entity.SortedColumns) {
+                Detach(columnSortOrderEntity);
+            }
+
+            Detach(entity);
         }
 
         //== queries ================================================================================================================================

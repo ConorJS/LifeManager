@@ -8,6 +8,7 @@ import {LmAddFab} from "../../../components/lm-add-fab/lm-add-fab";
 import {LmInput} from "../../../components/lm-input/lm-input";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import {ConfirmationModal} from "../../../components/confirmation-modal/confirmation-modal";
+import {ToDoTaskConfig} from "../../root";
 
 //== types ============================================================================================================
 
@@ -63,7 +64,11 @@ export enum ItemAttribute {
     PRIORITY
 }
 
-export const ToDoTaskViewer: FunctionComponent = () => {
+interface ToDoTaskViewerProps {
+    config: ToDoTaskConfig;
+}
+
+export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: ToDoTaskViewerProps) => {
     //== attributes ===================================================================================================
 
     const [doRefresh, setDoRefresh] = useState<boolean>(true);
@@ -229,6 +234,25 @@ export const ToDoTaskViewer: FunctionComponent = () => {
         });
     }
 
+    function saveConfig(config: ToDoTaskConfig): Promise<void> {
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(config)
+        };
+
+        return new Promise<void>((resolve) => {
+            fetch('api/ToDoTask/UpdateUserConfig', requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    stopAction();
+                    resolve();
+                    refresh();
+                });
+        });
+    }
+
     function refresh(): void {
         loadAllTasks().then(data => {
             console.log("Calling setToDoTasks...");
@@ -341,8 +365,10 @@ export const ToDoTaskViewer: FunctionComponent = () => {
             <div>
                 <ToDoTaskTable
                     toDoTasks={toDoTasks}
+                    config={props.config}
                     taskSelected={editItem}
-                    saveToDoTask={saveToDoTask}/>
+                    saveToDoTask={saveToDoTask}
+                    saveConfig={saveConfig}/>
             </div>
             {modalElement}
         </div>

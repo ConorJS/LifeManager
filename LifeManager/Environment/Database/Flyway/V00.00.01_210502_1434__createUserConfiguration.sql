@@ -14,10 +14,10 @@ ALTER TABLE "UserConfiguration"
 
 CREATE TABLE "UserConfiguration_ColumnSortOrder"
 (
-    "Id"                  BIGINT GENERATED ALWAYS AS IDENTITY UNIQUE,
     "UserConfigurationId" BIGINT       NOT NULL,
     "TableName"           VARCHAR(255) NOT NULL,
     "ColumnName"          VARCHAR(255) NOT NULL,
+    "IsSortedAscending"   BOOLEAN      NOT NULL,
     "Precedence"          INT          NOT NULL
 );
 
@@ -29,8 +29,4 @@ ALTER TABLE "UserConfiguration_ColumnSortOrder"
 INSERT INTO lifemanager."UserConfiguration"("UserId", "DateTimeCreated", "DateTimeLastModified",
                                             "ToDoTaskHideCompletedAndCancelled")
 VALUES (1, now(), now(), false);
-
-INSERT INTO lifemanager."UserConfiguration_ColumnSortOrder"("UserConfigurationId",
-                                                            "TableName", "ColumnName", "Precedence")
-VALUES (1, 'ToDoTask', 'Status', 0);
 

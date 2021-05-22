@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LifeManager.Server.User.Configuration {
     [Table("UserConfiguration_ColumnSortOrder")]
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global - EF Core Entity cannot be sealed.
     public class ColumnSortOrderEntity {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public long UserConfigurationId { get; set; }
         
         [ForeignKey("UserConfigurationId")]
         public virtual UserConfigurationEntity Configuration { get; set; }
@@ -14,6 +12,8 @@ namespace LifeManager.Server.User.Configuration {
         public string TableName { get; set; }
 
         public string ColumnName { get; set; }
+        
+        public bool IsSortedAscending { get; set; }
 
         public int Precedence { get; set; }
     }

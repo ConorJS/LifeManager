@@ -9,6 +9,10 @@ namespace LifeManager.Server.Database.Implementation {
 
         public LifeManagerDatabaseContext(DbContextOptions<LifeManagerDatabaseContext> options) : base(options) { }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+            //optionsBuilder.EnableSensitiveDataLogging();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.HasDefaultSchema("lifemanager");
 
@@ -16,6 +20,10 @@ namespace LifeManager.Server.Database.Implementation {
                 .Entity<ToDoTaskEntity>()
                 .Property(e => e.Status)
                 .HasConversion<string>();
+
+            modelBuilder
+                .Entity<ColumnSortOrderEntity>()
+                .HasKey(e => new {e.UserConfigurationId, e.TableName, e.ColumnName});
         }
 
         //== entity definitions =====================================================================================================================

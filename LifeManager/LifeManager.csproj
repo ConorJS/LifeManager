@@ -47,6 +47,7 @@
         <TypeScriptCompile Include="ClientApp\src\tools\element-tools.tsx" />
         <TypeScriptCompile Include="ClientApp\src\tools\number-tools.tsx" />
         <TypeScriptCompile Include="ClientApp\src\tools\react-select-tools.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\tools\state-tools.tsx" />
         <TypeScriptCompile Include="ClientApp\src\tools\string-tools.tsx" />
     </ItemGroup>
 
