@@ -55,11 +55,12 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             .map(function (columnSortOrder) {
                 return {id: columnSortOrder.columnName, desc: !columnSortOrder.isSortedAscending}
             }));
+        setHideCompleteCancelledToggle(config.hideCompletedAndCancelled);
 
         props.saveConfig(config).then(() => console.log("Async config save completed successfully."));
     }, [config]);
 
-    //== attributes ===================================================================================================
+    //== methods ======================================================================================================
 
     function blockEventPropagation(mouseEvent: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>): void {
         mouseEvent.stopPropagation();
@@ -79,7 +80,10 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
      */
     function updateSetting(setting: string, setTo: boolean): void {
         if (setting === HIDE_COMPLETE_CANCELLED) {
-            setHideCompleteCancelledToggle(setTo);
+            setConfig({
+                ...config,
+                hideCompletedAndCancelled: setTo
+            });
 
         } else {
             throw Error(`Unrecognized setting ${setting} changed.`);
@@ -138,6 +142,8 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         return config.columnSortOrderConfig
             .findIndex(sortOrderConfig => sortOrderConfig.columnName === column.id);
     }
+
+    //== table state ==================================================================================================
 
     const columns: Column<ToDoTask>[] = React.useMemo(
         () => [
@@ -252,6 +258,8 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             />
         </div>
 
+    //== render =======================================================================================================
+    
     return (
         <MaUTable {...getTableProps()} className="to-do-task-table lm-shadowed">
             <TableHead>

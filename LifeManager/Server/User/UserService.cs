@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LifeManager.Server.Database;
 using LifeManager.Server.User.Configuration;
@@ -67,7 +68,16 @@ namespace LifeManager.Server.User {
                     Precedence = columnSortOrderConfig.Precedence
                 })
                 .ToList().ForEach(entity => userConfigurationEntity.SortedColumns.Add(entity));
-
+            
+            switch (tableViewConfiguration) {
+                case UserConfiguration.ToDoTaskTableViewConfiguration config :
+                    userConfigurationEntity.ToDoTaskHideCompletedAndCancelled = config.HideCompletedAndCancelled;
+                    break;
+                
+                default :
+                    throw new InvalidOperationException($"Can't save table configuration for type {tableViewConfiguration.GetType()}");
+            }
+            
             _lifeManagerRepository.SaveUserConfiguration(userConfigurationEntity);
         }
     }
