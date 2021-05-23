@@ -7,8 +7,6 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import './to-do-task-table.scss'
@@ -259,17 +257,20 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         </div>
 
     interface SortArrowProps {
-        x1: number,
-        y1: number,
-        x2: number,
-        y2: number,
-        x3: number,
-        y3: number,
+        x1: boolean,
+        y1: boolean,
+        x2: boolean,
+        y2: boolean,
+        x3: boolean,
+        y3: boolean,
         left: boolean
     }
 
     const SortArrow: React.FC<SortArrowProps> = ({...props}): any => {
-        const polygonPoints: string = `${props.x1},${props.y1} ${props.x2},${props.y2} ${props.x3},${props.y3}`;
+        const x: number = 6;
+        const y: number = 30;
+        const polygonPoints: string =
+            `${props.x1 ? x : 0},${props.y1 ? y : 0} ${props.x2 ? x : 0},${props.y2 ? y : 0} ${props.x3 ? x : 0},${props.y3 ? y : 0}`;
         return (
             <span className="arrow-down" style={{
                 height: "100%",
@@ -277,34 +278,23 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 left: props.left ? 0 : undefined, right: props.left ? undefined : 0,
                 top: 0.5
             }}>
-                <svg height="30" width="6" fill={AppConstants.LM_GREEN_STRONG}>
-                <polygon points={polygonPoints} className="triangle"/>
-                Sorry, your browser does not support inline SVG. {props.x1}
+                <svg height={y} width={x} fill={AppConstants.LM_GREEN_STRONG}>
+                    <polygon points={polygonPoints} className="triangle"/>
                 </svg>
             </span>
         )
     };
-    const leftArrowUp = <SortArrow x1={0} y1={0} x2={6} y2={0} x3={0} y3={30} left={true}/>;
-    const rightArrowUp = <SortArrow x1={0} y1={0} x2={6} y2={0} x3={6} y3={30} left={false}/>;
-    const leftArrowDown = <SortArrow x1={0} y1={0} x2={0} y2={30} x3={6} y3={30} left={true}/>;
-    const rightArrowDown = <SortArrow x1={0} y1={30} x2={6} y2={30} x3={6} y3={0} left={false}/>;
+    const leftArrowUp = <SortArrow x1={false} y1={false} x2={true} y2={false} x3={false} y3={true} left={true}/>;
+    const rightArrowUp = <SortArrow x1={false} y1={false} x2={true} y2={false} x3={true} y3={true} left={false}/>;
+    const leftArrowDown = <SortArrow x1={false} y1={false} x2={false} y2={true} x3={true} y3={true} left={true}/>;
+    const rightArrowDown = <SortArrow x1={false} y1={true} x2={true} y2={true} x3={true} y3={false} left={false}/>;
 
-    function leftArrow(sorted: boolean, desc: boolean | undefined): JSX.Element | undefined {
+    function arrow(left: boolean, sorted: boolean, desc: boolean | undefined): JSX.Element | undefined {
         if (desc) {
-            return leftArrowDown;
+            return left ? leftArrowDown : rightArrowDown;
         }
         if (sorted) {
-            return leftArrowUp;
-        }
-        return undefined;
-    }
-
-    function rightArrow(sorted: boolean, desc: boolean | undefined): JSX.Element | undefined {
-        if (desc) {
-            return rightArrowDown;
-        }
-        if (sorted) {
-            return rightArrowUp;
+            return left ? leftArrowUp : rightArrowUp;
         }
         return undefined;
     }
@@ -327,7 +317,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                                        }}>
 
                                 {/* Left sorting arrow indicator */}
-                                {leftArrow(column.isSorted, column.isSortedDesc)}
+                                {arrow(true, column.isSorted, column.isSortedDesc)}
 
                                 {/* The settings icon (should only show for the 'Status' column) */}
                                 {column.id === 'status' ? statusSettingsWidget : <React.Fragment/>}
@@ -344,7 +334,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                                 {column.render('Header')}
 
                                 {/* Right sorting arrow indicator */}
-                                {rightArrow(column.isSorted, column.isSortedDesc)}
+                                {arrow(false, column.isSorted, column.isSortedDesc)}
 
                             </TableCell>
                         ))}
