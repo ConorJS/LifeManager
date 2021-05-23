@@ -258,8 +258,59 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             />
         </div>
 
+    interface SortArrowProps {
+        x1: number,
+        y1: number,
+        x2: number,
+        y2: number,
+        x3: number,
+        y3: number,
+        left: boolean
+    }
+
+    const SortArrow: React.FC<SortArrowProps> = ({...props}): any => {
+        const polygonPoints: string = `${props.x1},${props.y1} ${props.x2},${props.y2} ${props.x3},${props.y3}`;
+        return (
+            <span className="arrow-down" style={{
+                height: "100%",
+                position: "absolute",
+                left: props.left ? 0 : undefined, right: props.left ? undefined : 0,
+                top: 0.5
+            }}>
+                <svg height="30" width="6" fill={AppConstants.LM_GREEN_STRONG}>
+                <polygon points={polygonPoints} className="triangle"/>
+                Sorry, your browser does not support inline SVG. {props.x1}
+                </svg>
+            </span>
+        )
+    };
+    const leftArrowUp = <SortArrow x1={0} y1={0} x2={6} y2={0} x3={0} y3={30} left={true}/>;
+    const rightArrowUp = <SortArrow x1={0} y1={0} x2={6} y2={0} x3={6} y3={30} left={false}/>;
+    const leftArrowDown = <SortArrow x1={0} y1={0} x2={0} y2={30} x3={6} y3={30} left={true}/>;
+    const rightArrowDown = <SortArrow x1={0} y1={30} x2={6} y2={30} x3={6} y3={0} left={false}/>;
+
+    function leftArrow(sorted: boolean, desc: boolean | undefined): JSX.Element | undefined {
+        if (desc) {
+            return leftArrowDown;
+        }
+        if (sorted) {
+            return leftArrowUp;
+        }
+        return undefined;
+    }
+
+    function rightArrow(sorted: boolean, desc: boolean | undefined): JSX.Element | undefined {
+        if (desc) {
+            return rightArrowDown;
+        }
+        if (sorted) {
+            return rightArrowUp;
+        }
+        return undefined;
+    }
+
     //== render =======================================================================================================
-    
+
     return (
         <MaUTable {...getTableProps()} className="to-do-task-table lm-shadowed">
             <TableHead>
@@ -268,12 +319,17 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                         {headerGroup.headers.map(column => (
                             <TableCell {...column.getHeaderProps(column.getSortByToggleProps({title: undefined}))}
                                        width={column.width}
+                                       style={{position: "relative"}}
                                        className={`lm-text no-select table-header-cell ${column.isSorted ? "table-header-cell-selected" : ""} column-with-dividers`}
                                        onClick={(event: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>) => {
                                            blockEventPropagation(event);
                                            toggleSort(column);
                                        }}>
 
+                                {/* Left sorting arrow indicator */}
+                                {leftArrow(column.isSorted, column.isSortedDesc)}
+
+                                {/* The settings icon (should only show for the 'Status' column) */}
                                 {column.id === 'status' ? statusSettingsWidget : <React.Fragment/>}
                                 {column.id === 'status' ?
                                     <SettingsIcon className="status-settings-widget-button"
@@ -284,15 +340,11 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                                     : <React.Fragment/>
                                 }
 
+                                {/* Draw the heading (the column name) */}
                                 {column.render('Header')}
 
-                                <span>
-                                    {column.isSorted
-                                        ? column.isSortedDesc
-                                            ? <ArrowDropDownIcon/>
-                                            : <ArrowDropUpIcon/>
-                                        : ''}
-                                  </span>
+                                {/* Right sorting arrow indicator */}
+                                {rightArrow(column.isSorted, column.isSortedDesc)}
 
                             </TableCell>
                         ))}

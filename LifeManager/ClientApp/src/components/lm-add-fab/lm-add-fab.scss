@@ -4,6 +4,9 @@
   background-color: $lm-green-strong !important;
   color: white !important;
   
+  /* To stay in front of relative-positioned column headers */
+  z-index: 1;
+  
   &:focus {
     outline: none;
   }

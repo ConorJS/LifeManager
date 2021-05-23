@@ -10,11 +10,9 @@ $column-divider-grey: #e0e0e0;
 th.table-header-cell {
   background-color: $lm-green-strong;
   color: white;
-  font-weight: bold;
   height: 31.5px;
-
-  /* Needs to be !important to override .MuiTableCell-root in react-table */
-  padding: 4px 12px 2px !important;
+  padding: 0;
+  text-align: center;
 
   user-select: none;
 }
