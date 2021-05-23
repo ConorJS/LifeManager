@@ -246,9 +246,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    stopAction();
                     resolve();
-                    refresh();
                 });
         });
     }
