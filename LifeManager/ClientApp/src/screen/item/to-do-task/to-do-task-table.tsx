@@ -43,10 +43,21 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     const [hideCompleteCancelledToggle, setHideCompleteCancelledToggle] = useState(false);
     const [config, setConfig] = useState(props.config);
 
+    //== update effects ===============================================================================================
+
     useEffect(() => {
         console.log(`Pre-save of config at ${new Date()}`);
-        props.saveConfig(config).then(value => console.log("Async config save completed successfully."));
-    }, [config])
+
+        setSortBy(config.columnSortOrderConfig
+            .sort(function (a, b) {
+                return a.precedence.valueOf() - b.precedence.valueOf();
+            })
+            .map(function (columnSortOrder) {
+                return {id: columnSortOrder.columnName, desc: !columnSortOrder.isSortedAscending}
+            }));
+
+        props.saveConfig(config).then(() => console.log("Async config save completed successfully."));
+    }, [config]);
 
     //== attributes ===================================================================================================
 
@@ -96,30 +107,28 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     function toggleSort(column: ColumnInstance<ToDoTask>): void {
         const configId: Number = config.userConfigurationId;
         const columnId = column.id;
-
         const index: number = getOrDefaultColumnSortOrderIndex(column);
+        if (column.isSorted && column.isSortedDesc) {
+            // Descending sort -> No sort
+            StateTools.updateArray(config, setConfig, 'columnSortOrderConfig', undefined, index);
+            return;
+        }
 
-        // TODO: Multi-column sorting will need to set/adjust precedence value(s) accordingly.
+        // If we're not removing a sort order for a column (which is quite simple), we need to create/update one.        
+        const otherSortOrderCount: number = config.columnSortOrderConfig
+            .filter(sortOrderConfig => sortOrderConfig.columnName !== columnId)
+            .length
         const columnSortOrder: ColumnSortOrder = index === -1 ?
-            new ColumnSortOrder(configId, columnId, false, 0) :
-            // TODO: Does this need to copy the ColumnSortOrder in this manner, to not break the 'config' state
-            //  when we subsequently update isSortedAscending?
+            new ColumnSortOrder(configId, columnId, false, otherSortOrderCount) :
             config.columnSortOrderConfig[index];
 
-        if (column.isSorted && column.isSortedDesc) {
-            // Descending sort changes to no sort.
-            column.clearSortBy();
-            StateTools.updateArray(config, setConfig, 'columnSortOrderConfig', undefined, index);
-
-        } else if (column.isSorted && !column.isSortedDesc) {
-            // Ascending sort changes to descending sort.
-            column.toggleSortBy(true);
+        if (column.isSorted && !column.isSortedDesc) {
+            // Ascending sort -> Descending sort
             columnSortOrder.isSortedAscending = false;
             StateTools.updateArray(config, setConfig, 'columnSortOrderConfig', columnSortOrder, index);
 
         } else {
-            // No sort changes to ascending sort.
-            column.toggleSortBy(false);
+            // No sort -> Ascending sort
             columnSortOrder.isSortedAscending = true;
             StateTools.updateArray(config, setConfig, 'columnSortOrderConfig', columnSortOrder, index);
         }
@@ -221,14 +230,16 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         getTableBodyProps,
         headerGroups,
         rows,
-        prepareRow
+        prepareRow,
+        setSortBy
     } = useTable(
         {
             columns: columns,
             data: props.toDoTasks,
             initialState: {
                 sortBy: initialSortState()
-            }
+            },
+            autoResetSortBy: false
         },
         useSortBy
     )
