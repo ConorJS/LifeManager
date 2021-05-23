@@ -263,12 +263,13 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         y2: boolean,
         x3: boolean,
         y3: boolean,
-        left: boolean
+        left: boolean,
+        up: boolean
     }
 
     const SortArrow: React.FC<SortArrowProps> = ({...props}): any => {
         const x: number = 6;
-        const y: number = 30;
+        const y: number = 30.5;
         const polygonPoints: string =
             `${props.x1 ? x : 0},${props.y1 ? y : 0} ${props.x2 ? x : 0},${props.y2 ? y : 0} ${props.x3 ? x : 0},${props.y3 ? y : 0}`;
         return (
@@ -276,7 +277,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 height: "100%",
                 position: "absolute",
                 left: props.left ? 0 : undefined, right: props.left ? undefined : 0,
-                top: 0.5
+                top: props.up ? 0.25 : 0.5
             }}>
                 <svg height={y} width={x} fill={AppConstants.LM_GREEN_STRONG}>
                     <polygon points={polygonPoints} className="triangle"/>
@@ -284,10 +285,10 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             </span>
         )
     };
-    const leftArrowUp = <SortArrow x1={false} y1={false} x2={true} y2={false} x3={false} y3={true} left={true}/>;
-    const rightArrowUp = <SortArrow x1={false} y1={false} x2={true} y2={false} x3={true} y3={true} left={false}/>;
-    const leftArrowDown = <SortArrow x1={false} y1={false} x2={false} y2={true} x3={true} y3={true} left={true}/>;
-    const rightArrowDown = <SortArrow x1={false} y1={true} x2={true} y2={true} x3={true} y3={false} left={false}/>;
+    const leftArrowUp = <SortArrow x1={false} y1={false} x2={true} y2={false} x3={false} y3={true} left={true} up={true}/>;
+    const rightArrowUp = <SortArrow x1={false} y1={false} x2={true} y2={false} x3={true} y3={true} left={false} up={true}/>;
+    const leftArrowDown = <SortArrow x1={false} y1={false} x2={false} y2={true} x3={true} y3={true} left={true} up={false}/>;
+    const rightArrowDown = <SortArrow x1={false} y1={true} x2={true} y2={true} x3={true} y3={false} left={false} up={false}/>;
 
     function arrow(left: boolean, sorted: boolean, desc: boolean | undefined): JSX.Element | undefined {
         if (desc) {
