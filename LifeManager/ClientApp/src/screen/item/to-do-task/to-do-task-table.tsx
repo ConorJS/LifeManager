@@ -268,7 +268,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     }
 
     const SortArrow: React.FC<SortArrowProps> = ({...props}): any => {
-        const x: number = 6;
+        const x: number = 14;
         const y: number = 30.5;
         const polygonPoints: string =
             `${props.x1 ? x : 0},${props.y1 ? y : 0} ${props.x2 ? x : 0},${props.y2 ? y : 0} ${props.x3 ? x : 0},${props.y3 ? y : 0}`;
@@ -279,7 +279,16 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 left: props.left ? 0 : undefined, right: props.left ? undefined : 0,
                 top: props.up ? 0.25 : 0.5
             }}>
-                <svg height={y} width={x} fill={AppConstants.LM_GREEN_STRONG}>
+                <svg height={y} 
+                     width={x} 
+                     fill="url(#sortArrowGrad)"
+                     shapeRendering="auto">
+                    <defs>
+                        <linearGradient id="sortArrowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style={{stopColor: AppConstants.LM_GREEN_STRONG, stopOpacity: 1}} />
+                            <stop offset="100%" style={{stopColor: AppConstants.LM_GREEN, stopOpacity: 1}} />
+                        </linearGradient>
+                    </defs>
                     <polygon points={polygonPoints} className="triangle"/>
                 </svg>
             </span>
