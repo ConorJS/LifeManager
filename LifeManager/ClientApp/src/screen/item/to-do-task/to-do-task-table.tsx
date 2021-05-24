@@ -255,7 +255,17 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                             widgetClosed={() => setStatusSettingsModalOpen(false)}
             />
         </div>
-
+    
+    interface SortOrderPrecedenceMarkerProps {
+        precedence: number
+    }
+    
+    const SortOrderPrecedenceMarker: React.FC<SortOrderPrecedenceMarkerProps> = ({...props}): any => {
+        return (
+            <span style={{fontSize: 11, position: "absolute", bottom: -4, left: 4, zIndex: 1}}>{props.precedence}</span>
+        );
+    }
+    
     interface SortArrowProps {
         x1: boolean,
         y1: boolean,
@@ -342,6 +352,10 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
 
                                 {/* Draw the heading (the column name) */}
                                 {column.render('Header')}
+                                
+                                {/*The sort order precedence number, if multiple columns are sorted*/}
+                                {(config.columnSortOrderConfig.length > 1 && column.sortedIndex !== -1) ? 
+                                    <SortOrderPrecedenceMarker precedence={column.sortedIndex + 1}/> : undefined}
 
                                 {/* Right sorting arrow indicator */}
                                 {arrow(false, column.isSorted, column.isSortedDesc)}
