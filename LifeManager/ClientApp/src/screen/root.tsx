@@ -130,9 +130,9 @@ export const Root: FunctionComponent = () => {
     }
 
     function refresh() {
-        loadUser().then(data => {
+        loadUser().then(userData => {
             console.log("Calling setActiveUser...");
-            setActiveUser(data);
+            setActiveUser(userData);
         });
     }
 
@@ -159,7 +159,12 @@ export const Root: FunctionComponent = () => {
                     <img className="navigation-button"
                          src="/resources/navigationimages/task.png"
                          alt="Task list (Notepad; abstract/stencil)"
-                         onClick={() => setSelectedNavigationItem(MenuItem.TODO_TASKS)}/>
+                         onClick={() => {
+                             loadUser().then((userData) => {
+                                 setActiveUser(userData);
+                                 setSelectedNavigationItem(MenuItem.TODO_TASKS)
+                             });
+                         }}/>
                 </button>
 
                 <button>
