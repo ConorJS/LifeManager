@@ -1,5 +1,34 @@
 ﻿export class StringTools {
     /**
+     * Determines if a string is blank.
+     * 
+     * A string is blank if it is null, empty, or consists only of whitespace (spaces, tabs and newlines).
+     * 
+     * @param str The string;
+     */
+    public static isBlank(str?: string): boolean {
+        if (!str) {
+            return true;
+        }
+
+        for (let i: number = 0; i < str.length; i++) {
+            const char = str[i];
+            if (char !== ' ' && char !== '\t' && char !== '\r' && char !== '\n') {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
+     * The inverse of {@link isBlank}.
+     */
+    public static isNotBlank(str?: string): boolean {
+        return !this.isBlank(str);
+    }
+    
+    /**
      * Generates an ID using random alphanumeric characters.
      *
      * @param idLength The length the ID should be. Optional, if not provided, then 8 will be used.

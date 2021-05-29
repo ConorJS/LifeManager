@@ -9,6 +9,10 @@ import {LmInput} from "../../../components/lm-input/lm-input";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import {ConfirmationModal} from "../../../components/confirmation-modal/confirmation-modal";
 import {ToDoTaskConfig} from "../../root";
+import {Typeahead} from 'react-bootstrap-typeahead';
+import {StringTools} from "../../../tools/string-tools";
+import {StateTools} from "../../../tools/state-tools";
+import {ElementTools} from "../../../tools/element-tools";
 
 //== types ============================================================================================================
 
@@ -22,6 +26,8 @@ export class ActiveItemDetails {
     newRelativeSize: number = 1;
 
     newPriority: number = 1;
+
+    newDependentTasks: Number[] = [];
 }
 
 export class ToDoTask {
@@ -76,7 +82,9 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
     const [activeAction, setActiveAction] = useState<Action>(Action.NONE);
     const [activeItemDetails, setActiveItemDetails] = useState<ActiveItemDetails>(new ActiveItemDetails());
     const [itemBeingEdited, setItemBeingEdited] = useState<ToDoTask>();
+    const [dependentTaskBeingEdited, setDependentTaskBeingEdited] = useState<string[]>([]);
     const [inRemovalModal, setInRemovalModal] = useState(false);
+    const [inAdvancedOptionsModal, setInAdvancedOptionsModal] = useState(false);
 
     //== methods ======================================================================================================
 
@@ -251,6 +259,51 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
         });
     }
 
+    function tasksMappedToSearchableStrings(): string[] {
+        return toDoTasks
+            .filter(task => StringTools.isNotBlank(task.name))
+            .filter(task => task.id !== undefined && activeItemDetails.newDependentTasks.indexOf(task.id) === -1)
+            .map(function (task) {
+                return task.name;
+            });
+    }
+
+    function toDoTaskIdFromName(toDoTaskName: string): Number {
+        if (toDoTaskName === undefined) {
+            // Selection cleared
+            return -1;
+        }
+        const selectedDependentTaskArray: ToDoTask[] = toDoTasks.filter(task => task.name === toDoTaskName);
+        if (selectedDependentTaskArray.length !== 1) {
+            throw Error(`Task ${toDoTaskName} was selected, 
+                    but this matched ${selectedDependentTaskArray.length} task(s): ${selectedDependentTaskArray}`);
+        }
+
+        const selectedDependentTask: ToDoTask = selectedDependentTaskArray[0];
+        if (!selectedDependentTask.id) {
+            throw Error(`Task ${toDoTaskName} was selected, but this task has no id (it hasn't been saved yet)`);
+        }
+
+        return selectedDependentTask.id;
+    }
+
+    function applyDependentTaskSelection(): void {
+        // If length === 0, no task was selected. Length should never exceed 1.
+        if (dependentTaskBeingEdited.length !== 0) {
+            activeItemDetails.newDependentTasks.push(toDoTaskIdFromName(dependentTaskBeingEdited[0]));
+            setDependentTaskBeingEdited([]);
+        }
+    }
+
+    function removeDependentTask(task: ToDoTask): void {
+        const index = activeItemDetails.newDependentTasks.findIndex(dependentTaskId => task.id === dependentTaskId);
+        if (index === -1) {
+            throw Error(`Can't remove task with id ${task.id}, it isn't in the dependencies list.`);
+        }
+
+        StateTools.updateArray(activeItemDetails, setActiveItemDetails, "newDependentTasks", undefined, index);
+    }
+
     function refresh(): void {
         loadAllTasks().then(data => {
             console.log("Calling setToDoTasks...");
@@ -300,10 +353,67 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
                 warningMessage={`Are you sure you want to remove the task '${itemBeingEdited?.name}'?`}
             />
 
+    } else if (inAdvancedOptionsModal) {
+        const dependenciesList: JSX.Element[] = activeItemDetails.newDependentTasks
+            .map(function (taskId) {
+                const matchingTaskArray: ToDoTask[] = toDoTasks.filter(task => task.id === taskId);
+                if (matchingTaskArray.length === 0) {
+                    throw Error(`Dependent task with id ${taskId} can't be found.`);
+                }
+
+                return matchingTaskArray[0];
+            })
+            .map(function (task, index) {
+                const key: string = ElementTools.makeListElementId(
+                    "DependenciesList", StringTools.generateId().toString(), index);
+                return <div key={key}>
+                    <span>{task.name} [{task.status}]</span>
+                    <button onClick={() => removeDependentTask(task)}>-</button>
+                </div>
+            });
+
+        modalElement =
+            <LmModal handleClose={() => setInAdvancedOptionsModal(false)}>
+                <div className="column-modal-container">
+                    <div>
+                        <div>Task: "{activeItemDetails.newName}"</div>
+                        <div>Advanced Options</div>
+                    </div>
+
+                    <div>
+                        {/*fixed height*/}
+                        {/*start with one empty input*/}
+                        {/*unlimited empty input fields, but becomes vertical scrolling @ max height*/}
+                        <span>Dependencies</span>
+                        <span>
+                            <Typeahead id="dependenciesPicker"
+                                       options={tasksMappedToSearchableStrings()}                                       
+                                       onChange={setDependentTaskBeingEdited}
+                                       placeholder="Search for a task..."
+                                       selected={dependentTaskBeingEdited}/>
+                            {/*TODO: Disable if task id being edited is -1 (blank)*/}
+                            <button onClick={applyDependentTaskSelection}>+</button>
+                        </span>
+
+                        {dependenciesList}
+                    </div>
+
+                    <div className="modal-buttons-container">
+                        <button className="btn lm-button positive modal-button"
+                                onClick={(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+                                    setInAdvancedOptionsModal(false)
+                                    event.stopPropagation();
+                                }}>
+                            Back
+                        </button>
+                    </div>
+                </div>
+            </LmModal>;
+
     } else if (creating() || editing()) {
         modalElement =
             <LmModal handleClose={() => setActiveAction(Action.NONE)} widthPixels={400} heightPixels={575}>
-                <div className="editing-item-modal-container">
+                <div className="column-modal-container">
                     <div>{editing() ? "Edit" : "Creat"}ing a To Do task...</div>
 
                     <div className="modal-field">
@@ -333,6 +443,13 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
                                  value={activeItemDetails.newComments}
                                  useTextArea={true}
                                  onChange={(event) => activeItemAttributeChangeHandler(event, ItemAttribute.COMMENTS)}/>
+                    </div>
+
+                    <div className="advanced-options-link"
+                         onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                             setInAdvancedOptionsModal(true);
+                             event.stopPropagation();
+                         }}>Advanced
                     </div>
 
                     {deleteButton}

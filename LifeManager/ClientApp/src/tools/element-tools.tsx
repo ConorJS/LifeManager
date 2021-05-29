@@ -20,6 +20,7 @@ export class ElementTools {
     }
     
     /**
+     * TODO: This doesn't use 'parentId', but perhaps it should, if multiple methods call this with the same parentName?
      * Creates an ID for a member of a collection element.
      *
      * This achieves three goals:

@@ -1,6 +1,6 @@
 ﻿@import '../../../app-constants.scss';
 
-.editing-item-modal-container {
+.column-modal-container {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -28,6 +28,24 @@ div.modal-buttons-container {
 
 button.modal-button {
   width: 100px;
+}
+
+.advanced-options-link {
+  float: left;
+  margin-top: -10px;
+  margin-left: 20px;
+
+  &:hover {
+    color: $lm_red;
+  }
+}
+
+.advanced-options-cancel {
+  margin-top: -10px;
+
+  &:hover {
+    color: $lm_red;
+  }
 }
 
 .remove-item {
