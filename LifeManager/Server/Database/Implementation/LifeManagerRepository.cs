@@ -91,6 +91,10 @@ namespace LifeManager.Server.Database.Implementation {
         public void SaveEntity<T>(T entity) where T : class, IItemEntity {
             switch (entity) {
                 case ToDoTaskEntity toDoTaskEntity:
+                    if (toDoTaskEntity.Id == 0) {
+                        break;
+                    }
+                    
                     ToDoTaskEntity existing = LoadToDoTask(entity.Id);
                     foreach (ToDoTaskDependencyEntity existingDependency in existing.Dependencies) {
                         if (toDoTaskEntity.Dependencies.All(e => e.ToDoTaskDependencyId != existingDependency.ToDoTaskDependencyId)) {
