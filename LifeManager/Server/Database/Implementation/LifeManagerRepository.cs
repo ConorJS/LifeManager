@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Castle.Core.Internal;
 using LifeManager.Server.Model;
+using LifeManager.Server.Model.Entity;
 using LifeManager.Server.User;
 using LifeManager.Server.User.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +45,7 @@ namespace LifeManager.Server.Database.Implementation {
                 return null;
             }
 
+            // TODO: Move this to DetachedEntityOrNull
             foreach (var userConfigurationEntity in userEntity.UserConfigurationEntity) {
                 foreach (ColumnSortOrderEntity columnSortOrderEntity in userConfigurationEntity.SortedColumns) {
                     Detach(columnSortOrderEntity);
@@ -85,7 +88,7 @@ namespace LifeManager.Server.Database.Implementation {
             Detach(entity);
         }
 
-        //== queries ================================================================================================================================
+        //== general item queries ===================================================================================================================
 
         public List<T> LoadEntities<T>(long ownedByUserId) where T : class, IItemEntity {
             List<T> entities = _dbContext.Set<T>()
@@ -97,6 +100,7 @@ namespace LifeManager.Server.Database.Implementation {
             return entities;
         }
 
+        [Obsolete("Don't try to generalise entity retrieval in any way")]
         public T LoadEntity<T>(long id) where T : class, IItemEntity {
             var entity = DetachedEntityOrNull(_dbContext.Set<T>().Find(id));
 
@@ -108,8 +112,52 @@ namespace LifeManager.Server.Database.Implementation {
         }
 
         public void SaveEntity<T>(T entity) where T : class, IItemEntity {
+            switch (entity) {
+                case ToDoTaskEntity toDoTaskEntity:
+                    ToDoTaskEntity existing = LoadToDoTask(entity.Id);
+                    foreach (ToDoTaskDependencyEntity existingDependency in existing.Dependencies) {
+                        if (toDoTaskEntity.Dependencies.All(e => e.ToDoTaskDependencyId != existingDependency.ToDoTaskDependencyId)) {
+                            _dbContext.Entry(existingDependency).State = EntityState.Deleted;
+                        }
+                    }
+
+                    _dbContext.SaveChanges();
+                    DetachedEntityOrNull(existing);
+
+                    foreach (ToDoTaskDependencyEntity dependency in toDoTaskEntity.Dependencies) {
+                        _dbContext.Entry(dependency).State = existing.Dependencies
+                            .Any(e => dependency.ToDoTaskDependencyId == e.ToDoTaskDependencyId)
+                            ? EntityState.Modified
+                            : EntityState.Added;
+                    }
+
+                    break;
+            }
+
             _dbContext.Set<T>().Update(entity);
             _dbContext.SaveChanges();
+        }
+
+        //== specific item queries ==================================================================================================================
+
+        public ToDoTaskEntity LoadToDoTask(long id) {
+            IList<ToDoTaskEntity> entities = _dbContext.ToDoTask
+                .Include(e => e.Dependencies)
+                .Where(e => e.Id == id)
+                .ToList();
+
+            if (entities.IsNullOrEmpty()) {
+                throw new InvalidOperationException($"Tried to load a ToDoTask entity (id = ${id}), but it does not exist.");
+            }
+
+            return entities[0];
+        }
+
+        public IEnumerable<ToDoTaskEntity> LoadAllToDoTasksForUser(long userId) {
+            return _dbContext.ToDoTask
+                .Include(e => e.Dependencies)
+                .Where(e => e.OwnedByUserId == userId)
+                .Where(e => e.Active);
         }
 
         //== helpers ================================================================================================================================
@@ -117,6 +165,15 @@ namespace LifeManager.Server.Database.Implementation {
         private T DetachedEntityOrNull<T>(T entity) where T : class {
             if (entity == null) {
                 return null;
+            }
+
+            switch (entity) {
+                case ToDoTaskEntity toDoTaskEntity:
+                    foreach (var toDoTaskDependencyEntity in toDoTaskEntity.Dependencies) {
+                        Detach(toDoTaskDependencyEntity);
+                    }
+
+                    break;
             }
 
             Detach(entity);

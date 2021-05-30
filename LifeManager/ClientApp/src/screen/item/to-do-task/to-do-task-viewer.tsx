@@ -47,12 +47,16 @@ export class ToDoTask {
 
     priority: number;
 
-    constructor(name: string, status: string, comments: string, relativeSize: number, priority: number) {
+    dependencies: Number[];
+    
+    constructor(name: string, status: string, comments: string, relativeSize: number, priority: number, 
+                dependencies: Number[]) {
         this.name = name;
         this.status = status;
         this.comments = comments;
         this.relativeSize = relativeSize;
         this.priority = priority;
+        this.dependencies = dependencies;
     }
 }
 
@@ -96,11 +100,13 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
     function changeAction(activeItemType: Action): void {
         setActiveItemDetails({
             ...activeItemDetails,
+            // All 'new' fields reset here.
             newName: '',
             newStatus: 'Ready',
             newComments: '',
             newRelativeSize: 1,
-            newPriority: 1
+            newPriority: 1,
+            newDependentTasks: []
         });
 
         setActiveAction(activeItemType);
@@ -163,7 +169,8 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
             newStatus: toDoTask.status,
             newComments: toDoTask.comments,
             newRelativeSize: toDoTask.relativeSize,
-            newPriority: toDoTask.priority
+            newPriority: toDoTask.priority,
+            newDependentTasks: toDoTask.dependencies
         })
         setItemBeingEdited(toDoTask)
     }
@@ -177,7 +184,8 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
 
         const toDoTask = new ToDoTask(
             activeItemDetails.newName, activeItemDetails.newStatus,
-            activeItemDetails.newComments, activeItemDetails.newRelativeSize, activeItemDetails.newPriority);
+            activeItemDetails.newComments, activeItemDetails.newRelativeSize, activeItemDetails.newPriority, 
+            activeItemDetails.newDependentTasks);
 
         const requestOptions = {
             method: 'POST',
@@ -206,7 +214,8 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
             name: activeItemDetails.newName,
             comments: activeItemDetails.newComments,
             relativeSize: activeItemDetails.newRelativeSize,
-            priority: activeItemDetails.newPriority
+            priority: activeItemDetails.newPriority,
+            dependencies: activeItemDetails.newDependentTasks
         }
 
         saveToDoTask(updatedTask).then();
@@ -387,7 +396,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
                         <span>Dependencies</span>
                         <span>
                             <Typeahead id="dependenciesPicker"
-                                       options={tasksMappedToSearchableStrings()}                                       
+                                       options={tasksMappedToSearchableStrings()}
                                        onChange={setDependentTaskBeingEdited}
                                        placeholder="Search for a task..."
                                        selected={dependentTaskBeingEdited}/>

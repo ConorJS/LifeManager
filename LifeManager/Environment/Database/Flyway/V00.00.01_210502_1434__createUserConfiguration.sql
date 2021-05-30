@@ -18,7 +18,8 @@ CREATE TABLE "UserConfiguration_ColumnSortOrder"
     "TableName"           VARCHAR(255) NOT NULL,
     "ColumnName"          VARCHAR(255) NOT NULL,
     "IsSortedAscending"   BOOLEAN      NOT NULL,
-    "Precedence"          INT          NOT NULL
+    "Precedence"          INT          NOT NULL,
+    PRIMARY KEY ("UserConfigurationId", "TableName", "ColumnName")
 );
 
 ALTER TABLE "UserConfiguration_ColumnSortOrder"

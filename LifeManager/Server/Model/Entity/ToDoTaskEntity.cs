@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,5 +28,8 @@ namespace LifeManager.Server.Model.Entity {
         public int RelativeSize { get; set; }
 
         public int Priority { get; set; }
+        
+        [InverseProperty("ToDoTask")]
+        public virtual ICollection<ToDoTaskDependencyEntity> Dependencies { get; set; }
     }
 }

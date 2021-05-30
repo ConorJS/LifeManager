@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -24,5 +25,7 @@ namespace LifeManager.Server.Model.Domain {
         public int RelativeSize { get; set; }
 
         public int Priority { get; set; }
+        
+        public ICollection<long> Dependencies { get; set; }
     }
 }

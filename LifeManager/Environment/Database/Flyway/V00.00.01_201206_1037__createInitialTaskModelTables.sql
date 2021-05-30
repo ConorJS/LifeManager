@@ -2,7 +2,7 @@
 
 CREATE TABLE "Appointment"
 (
-    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY UNIQUE,
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE "Appointment"
 
 CREATE TABLE "Chore"
 (
-    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY UNIQUE,
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE "Chore"
 
 CREATE TABLE "LeisureActivity"
 (
-    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY UNIQUE,
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE "LeisureActivity"
 
 CREATE TABLE "Principle"
 (
-    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY UNIQUE,
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE "Principle"
 
 CREATE TABLE "RecurringTask"
 (
-    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY UNIQUE,
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE "RecurringTask"
 
 CREATE TABLE "ToDoTask"
 (
-    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY,
+    "Id"                   BIGINT GENERATED ALWAYS AS IDENTITY UNIQUE,
     "DateTimeCreated"      TIMESTAMP WITHOUT TIME ZONE,
     "DateTimeLastModified" TIMESTAMP WITHOUT TIME ZONE,
     "Active"               BOOL         NOT NULL,

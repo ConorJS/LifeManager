@@ -1,4 +1,6 @@
-﻿using LifeManager.Server.Model.Domain;
+﻿using System.Collections.Generic;
+using System.Linq;
+using LifeManager.Server.Model.Domain;
 using LifeManager.Server.Model.Entity;
 
 namespace LifeManager.Server.Model.Mapper.Implementation {
@@ -12,7 +14,10 @@ namespace LifeManager.Server.Model.Mapper.Implementation {
         public ToDoTask ToDomain(ToDoTaskEntity entity) {
             ToDoTask domain = new ToDoTask {
                 Status = entity.Status,
-                Priority = entity.Priority
+                Priority = entity.Priority,
+                Dependencies = entity.Dependencies == null
+                    ? new List<long>()
+                    : entity.Dependencies.Select(dependencyEntity => dependencyEntity.ToDoTaskDependencyId).ToList()
             };
 
             _taskMapper.ToDomain(entity, domain);
@@ -23,7 +28,11 @@ namespace LifeManager.Server.Model.Mapper.Implementation {
         public ToDoTaskEntity ToEntity(ToDoTask domain) {
             ToDoTaskEntity entity = new ToDoTaskEntity {
                 Status = domain.Status,
-                Priority = domain.Priority
+                Priority = domain.Priority,
+                Dependencies = domain.Dependencies.Select(dependencyId => new ToDoTaskDependencyEntity {
+                    ToDoTaskEntityId = domain.Id,
+                    ToDoTaskDependencyId = dependencyId
+                }).ToList()
             };
 
             _taskMapper.ToEntity(domain, entity);

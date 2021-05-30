@@ -21,6 +21,7 @@ namespace LifeManager.Server.Service.Implementation.Tool {
 
         //== methods ================================================================================================================================
 
+        [Obsolete("Don't try to generalise entity retrieval in any way")]
         public List<T> AllEntitiesForLoggedInUser<T>() where T : class, IItemEntity {
             return _lifeManagerRepository.LoadEntities<T>(_userService.GetLoggedInUser().Id);
         }

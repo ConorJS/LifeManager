@@ -24,6 +24,10 @@ namespace LifeManager.Server.Database.Implementation {
             modelBuilder
                 .Entity<ColumnSortOrderEntity>()
                 .HasKey(e => new {e.UserConfigurationId, e.TableName, e.ColumnName});
+
+            modelBuilder
+                .Entity<ToDoTaskDependencyEntity>()
+                .HasKey(e => new {e.ToDoTaskEntityId, e.ToDoTaskDependencyId});
         }
 
         //== entity definitions =====================================================================================================================
