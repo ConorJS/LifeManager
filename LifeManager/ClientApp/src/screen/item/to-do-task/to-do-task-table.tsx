@@ -33,13 +33,127 @@ interface ToDoTaskTableProps {
 }
 
 export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDoTaskTableProps) => {
-    //== attributes ===================================================================================================
+    //== constants ====================================================================================================
 
     const HIDE_COMPLETE_CANCELLED: string = "Hide Completed & Cancelled";
+
+    //== table state ==================================================================================================
+
+    const columns: Column<ToDoTask>[] = React.useMemo(
+        () => [
+            {
+                id: 'priority',
+                Header: "Priority",
+                accessor: row => <PriorityIndicator priorityNumber={row.priority}/>,
+                width: 60,
+                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number =>
+                    NumberTools.compare(rowA.original.priority, rowB.original.priority)
+            },
+            {
+                id: 'size',
+                Header: "Size",
+                accessor: row => <SizeIndicator outerDimensions={45} sizeNumber={row.relativeSize}/>,
+                width: 60,
+                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number =>
+                    -NumberTools.compare(rowA.original.relativeSize, rowB.original.relativeSize)
+            },
+            {
+                id: 'name',
+                Header: 'Name',
+                accessor: row => {
+                    const maxCommentLength: number = 250;
+                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 250, true);
+                    const truncatedComments: string = (row.comments && row.comments.length > maxCommentLength)
+                        ? row.comments.substring(0, maxCommentLength)
+                        : row.comments;
+
+                    const smallerFontSize: number = 12;
+                    const nameFontWeight: number = 600;
+                    const nameStart = <span style={{fontWeight: nameFontWeight}}>{truncated}</span>
+                    const nameEnd = !cut ? undefined :
+                        <span style={{fontWeight: nameFontWeight, fontSize: smallerFontSize}}>{cut}</span>
+                    return <ExtraOnHover
+                        always={
+                            <div style={{marginBottom: 8}}>
+                                <div>
+                                    {nameStart}
+                                </div>
+                                <div>
+                                    {nameEnd}
+                                </div>
+                            </div>
+                        }
+                        extra={
+                            <div style={{wordBreak: 'break-all'}}>
+                                <span style={{fontSize: smallerFontSize}}>{truncatedComments}</span>
+                            </div>}
+                    />
+                },
+                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number =>
+                    StringTools.compareBlanksLast(rowA.original.name, rowB.original.name),
+                width: 250
+            },
+            {
+                id: 'status',
+                Header: "Status",
+                accessor: row => (
+                    <LmReactSelect
+                        options={[
+                            new LmReactSelectOptions('Ready', chroma('#888888')),
+                            new LmReactSelectOptions('In Progress', chroma("#0ba5ec")),
+                            new LmReactSelectOptions('Complete', chroma(AppConstants.LM_GREEN_STRONG)),
+                            new LmReactSelectOptions('Cancelled', chroma(AppConstants.LM_RED_STRONG)),
+                        ]}
+                        valueChanged={(option: string) => {
+                            return props.saveToDoTask({
+                                ...row,
+                                status: option
+                            })
+                        }}
+                        selection={row.status}
+                        widthPixels={150}
+                    />
+                ),
+                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number => {
+                    const statusPrecedence = new Map<string, number>([
+                        ['In Progress', 0],
+                        ['Ready', 1],
+                        ['Complete', 2],
+                        ['Cancelled', 3]
+                    ]);
+
+                    return NumberTools.compare(
+                        ObjectTools.getOrFail(statusPrecedence, rowA.original.status),
+                        ObjectTools.getOrFail(statusPrecedence, rowB.original.status));
+                },
+                width: 175
+            }
+        ], [props]);
+
+    //== attributes ===================================================================================================
 
     const [statusSettingsWidgetOpen, setStatusSettingsModalOpen] = useState(false);
     const [hideCompleteCancelledToggle, setHideCompleteCancelledToggle] = useState(false);
     const [config, setConfig] = useState(props.config);
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        setSortBy
+    } = useTable(
+        {
+            columns: columns,
+            data: props.toDoTasks,
+            initialState: {
+                sortBy: initialSortState()
+            },
+            autoResetSortBy: false
+        },
+        useSortBy
+    )
 
     //== update effects ===============================================================================================
 
@@ -54,7 +168,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         setHideCompleteCancelledToggle(config.hideCompletedAndCancelled);
 
         props.saveConfig(config).then(() => console.log("Async config save completed successfully."));
-    }, [config, props]);
+    }, [config, props, setSortBy]);
 
     //== methods ======================================================================================================
 
@@ -139,112 +253,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             .findIndex(sortOrderConfig => sortOrderConfig.columnName === column.id);
     }
 
-    //== table state ==================================================================================================
-
-    const columns: Column<ToDoTask>[] = React.useMemo(
-        () => [
-            {
-                id: 'priority',
-                Header: "Priority",
-                accessor: row => <PriorityIndicator priorityNumber={row.priority}/>,
-                width: 60,
-                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number => NumberTools.compare(rowA.original.priority, rowB.original.priority)
-            },
-            {
-                id: 'size',
-                Header: "Size",
-                accessor: row => <SizeIndicator outerDimensions={45} sizeNumber={row.relativeSize}/>,
-                width: 60,
-                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number => -NumberTools.compare(rowA.original.relativeSize, rowB.original.relativeSize)
-            },
-            {
-                id: 'name',
-                Header: 'Name',
-                accessor: row => {
-                    const maxCommentLength: number = 250;
-                    const {truncated, cut} = ElementTools.truncateTextToFitInWidth(row.name, 250, true);
-                    const truncatedComments: string = (row.comments && row.comments.length > maxCommentLength)
-                        ? row.comments.substring(0, maxCommentLength)
-                        : row.comments;
-
-                    const smallerFontSize: number = 12;
-                    const nameFontWeight: number = 600;
-                    const nameStart = <span style={{fontWeight: nameFontWeight}}>{truncated}</span>
-                    const nameEnd = !cut ? undefined :
-                        <span style={{fontWeight: nameFontWeight, fontSize: smallerFontSize}}>{cut}</span>
-                    return <ExtraOnHover
-                        always={
-                            <div style={{marginBottom: 8}}>
-                                <div>
-                                    {nameStart}
-                                </div>
-                                <div>
-                                    {nameEnd}
-                                </div>
-                            </div>
-                        }
-                        extra={
-                            <div style={{wordBreak: 'break-all'}}>
-                                <span style={{fontSize: smallerFontSize}}>{truncatedComments}</span>
-                            </div>}
-                    />
-                },
-                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number => StringTools.compareBlanksLast(rowA.original.name, rowB.original.name),
-                width: 250
-            },
-            {
-                id: 'status',
-                Header: "Status",
-                accessor: row => (
-                    <LmReactSelect
-                        options={[
-                            new LmReactSelectOptions('Ready', chroma('#888888')),
-                            new LmReactSelectOptions('In Progress', chroma("#0ba5ec")),
-                            new LmReactSelectOptions('Complete', chroma(AppConstants.LM_GREEN_STRONG)),
-                            new LmReactSelectOptions('Cancelled', chroma(AppConstants.LM_RED_STRONG)),
-                        ]}
-                        valueChanged={(option: string) => {
-                            return props.saveToDoTask({
-                                ...row,
-                                status: option
-                            })
-                        }}
-                        selection={row.status}
-                        widthPixels={150}
-                    />
-                ),
-                sortType: (rowA: Row<ToDoTask>, rowB: Row<ToDoTask>): number => {
-                    const statusPrecedence = new Map<string, number>([
-                        ['In Progress', 0],
-                        ['Ready', 1],
-                        ['Complete', 2],
-                        ['Cancelled', 3]
-                    ]);
-
-                    return NumberTools.compare(ObjectTools.getOrFail(statusPrecedence, rowA.original.status), ObjectTools.getOrFail(statusPrecedence, rowB.original.status));
-                },
-                width: 175
-            }
-        ], [props]);
-
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        setSortBy
-    } = useTable(
-        {
-            columns: columns,
-            data: props.toDoTasks,
-            initialState: {
-                sortBy: initialSortState()
-            },
-            autoResetSortBy: false
-        },
-        useSortBy
-    )
+    //== render =======================================================================================================
 
     let statusSettingsWidget =
         <div style={{display: (statusSettingsWidgetOpen ? "block" : "none")}}>
@@ -253,17 +262,17 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                             widgetClosed={() => setStatusSettingsModalOpen(false)}
             />
         </div>
-    
+
     interface SortOrderPrecedenceMarkerProps {
         precedence: number
     }
-    
+
     const SortOrderPrecedenceMarker: React.FC<SortOrderPrecedenceMarkerProps> = ({...props}): any => {
         return (
             <span style={{fontSize: 11, position: "absolute", bottom: -4, left: 4, zIndex: 1}}>{props.precedence}</span>
         );
     }
-    
+
     interface SortArrowProps {
         x1: boolean,
         y1: boolean,
@@ -287,14 +296,14 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
                 left: props.left ? 0 : undefined, right: props.left ? undefined : 0,
                 top: props.up ? 0.25 : 0.5
             }}>
-                <svg height={y} 
-                     width={x} 
+                <svg height={y}
+                     width={x}
                      fill="url(#sortArrowGrad)"
                      shapeRendering="auto">
                     <defs>
                         <linearGradient id="sortArrowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style={{stopColor: AppConstants.LM_GREEN_STRONG, stopOpacity: 1}} />
-                            <stop offset="100%" style={{stopColor: AppConstants.LM_GREEN, stopOpacity: 1}} />
+                            <stop offset="0%" style={{stopColor: AppConstants.LM_GREEN_STRONG, stopOpacity: 1}}/>
+                            <stop offset="100%" style={{stopColor: AppConstants.LM_GREEN, stopOpacity: 1}}/>
                         </linearGradient>
                     </defs>
                     <polygon points={polygonPoints} className="triangle"/>
@@ -302,10 +311,14 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             </span>
         )
     };
-    const leftArrowUp = <SortArrow x1={false} y1={false} x2={true} y2={false} x3={false} y3={true} left={true} up={true}/>;
-    const rightArrowUp = <SortArrow x1={false} y1={false} x2={true} y2={false} x3={true} y3={true} left={false} up={true}/>;
-    const leftArrowDown = <SortArrow x1={false} y1={false} x2={false} y2={true} x3={true} y3={true} left={true} up={false}/>;
-    const rightArrowDown = <SortArrow x1={false} y1={true} x2={true} y2={true} x3={true} y3={false} left={false} up={false}/>;
+    const leftArrowUp = <SortArrow x1={false} y1={false} x2={true} y2={false} x3={false} y3={true}
+                                   left={true} up={true}/>;
+    const rightArrowUp = <SortArrow x1={false} y1={false} x2={true} y2={false} x3={true} y3={true}
+                                    left={false} up={true}/>;
+    const leftArrowDown = <SortArrow x1={false} y1={false} x2={false} y2={true} x3={true} y3={true}
+                                     left={true} up={false}/>;
+    const rightArrowDown = <SortArrow x1={false} y1={true} x2={true} y2={true} x3={true} y3={false}
+                                      left={false} up={false}/>;
 
     function arrow(left: boolean, sorted: boolean, desc: boolean | undefined): JSX.Element | undefined {
         if (desc) {
@@ -316,8 +329,6 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         }
         return undefined;
     }
-
-    //== render =======================================================================================================
 
     return (
         <MaUTable {...getTableProps()} className="to-do-task-table lm-shadowed">
@@ -350,9 +361,9 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
 
                                 {/* Draw the heading (the column name) */}
                                 {column.render('Header')}
-                                
+
                                 {/*The sort order precedence number, if multiple columns are sorted*/}
-                                {(config.columnSortOrderConfig.length > 1 && column.sortedIndex !== -1) ? 
+                                {(config.columnSortOrderConfig.length > 1 && column.sortedIndex !== -1) ?
                                     <SortOrderPrecedenceMarker precedence={column.sortedIndex + 1}/> : undefined}
 
                                 {/* Right sorting arrow indicator */}
