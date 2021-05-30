@@ -1,4 +1,4 @@
-== VMWare Workstation virtual machine configuration ====================================================
+== VMWare Workstation virtual machine configuration ===================================================================
 
 # Create VM
 ## Ubuntu (from disc image)
@@ -14,7 +14,7 @@
 ### Processors: 1, 6 cores per processor
 ### Network Adapter: Check 'Bridged: Connected directly to the physical network'
 
-== Initial Setup =======================================================================================
+== Initial Setup ======================================================================================================
 
 # Skip 'Online Accounts'
 ## 'Next' top-right through all 
@@ -24,7 +24,7 @@
 # [QOL] Longer screen lock delay
 Win/Action key -> Activities -> Privacy (left pane) -> Screen Lock (left pane) -> Set 'Blank Screen Delay' to 15 minutes
 
-== Repository ==========================================================================================
+== Repository =========================================================================================================
 
 # Install Git
 sudo apt install git
@@ -35,7 +35,7 @@ git config --global credential.helper store
 # Clone LifeManager
 git clone https://github.com/ConorJS/LifeManager.git ~/LifeManager/Repository
 
-== Configure terminal ==================================================================================
+== Configure terminal =================================================================================================
 
 # Update .bashrc
 gio open ~/.bashrc
@@ -56,7 +56,7 @@ gsettings set org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profi
 # [QOL] High ~/.bash_history limit:
 HISTFILESIZE=1000
 
-== Basic programs =======================================================================================
+== Basic programs =====================================================================================================
 
 # [QOL] Download/install/favorite Chrome
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -74,7 +74,7 @@ touch a
 gio open .
 Right click 'a' in the file explorer > Properties > Open With > Notepadqq > Set as default
 
-== Docker installation (necessary for Kubernetes) =======================================================
+== Docker installation (necessary for Kubernetes) =====================================================================
 
 # Allow apt to use a repository over HTTPS
 sudo apt-get install \
@@ -114,7 +114,7 @@ cd ~/LifeManager/Repository
 sudo chmod 555 Docker.sh
 ./Docker.sh
 
-== Kubernetes (installation - once only per VM) ===================================================
+== Kubernetes (installation - once only per VM) =======================================================================
 # More info (Minikube): https://minikube.sigs.k8s.io/docs/start/
 
 # Install kubectl
@@ -129,7 +129,12 @@ kubectl version --client
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
-============= Kubernetes (Appliation deployment) =====================================================
+# Gets the Minikube server IP instance, and adds ''<ip>	lifemanager.info' to hosts file.
+minikube start
+sudo -- sh -c "printf '\n%s\tlifemanager.info' $(minikube ip) >> /etc/hosts"
+minikube stop
+
+============= Kubernetes (Application deployment) =====================================================================
 
 # Start Minikube
 minikube start
@@ -150,20 +155,21 @@ kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
 kubectl apply -f ingress.yaml
 
-# Gets the Minikube server IP instance, and adds ''<ip>	lifemanager.info' to hosts file.
-sudo -- sh -c "printf '\n%s\tlifemanager.info' $(minikube ip) >> /etc/hosts"
-
 # Enabling the minikube ingress controller
 minikube addons enable ingress
 
+============= Kubernetes (Application re-deployment) ==================================================================
+
 # Redeploying the LifeManager application
+docker image prune -f
+docker image prune -fa
 lm
 kubectl delete -f deployment.yaml
 COMMIT=$(git rev-parse --verify HEAD)
 docker image build . -t "lifemanager-image:latest" -t "lifemanager-image:${COMMIT}"
 kubectl create -f deployment.yaml
 
-== Kubernetes (Post-installation testing - optional) =================================================
+== Kubernetes (Post-installation testing - optional) ==================================================================
 
 # [OPTIONAL] Check the Minikube pod is running
 kubectl get po -A
@@ -171,7 +177,7 @@ kubectl get po -A
 # [OPTIONAL] Run the Minikube dashboard
 minikube dashboard
 
-============= Kubernetes (PostgreSQL database) =======================================================
+============= Kubernetes (PostgreSQL database) ========================================================================
 
 # Create the Docker image for the Postgres deployment (must be within minikube's Docker service)
 lm
@@ -214,6 +220,18 @@ kubectl create -f postgres-storage.yaml
 kubectl create -f postgres-deployment.yaml 
 kubectl create -f postgres-service.yaml
 
+# Remove the Postgres database
+lm
+cd LifeManager/Environment/Database
+kubectl delete -f postgres-deployment.yaml 
+kubectl delete -f postgres-service.yaml 
+kubectl delete -f postgres-storage.yaml 
+minikube stop
+sudo rm -rf /var/lib/docker/volumes/minikube/_data/data/psql
+docker image prune -f
+docker image prune -fa
+minikube start
+
 #[USEFUL] Remove the Postgres Kubernetes objects in an order that works
 kubectl delete -f postgres-deployment.yaml 
 kubectl delete -f postgres-service.yaml 
@@ -224,7 +242,7 @@ kubectl get svc lifemanager-postgres-service
 kubectl get pod | grep lifemanager-deployment | awk '{print $1}'
 psql -h localhost -U lmadmin --password -p <port> postgres-persistent-storage
 
-============= Kubernetes (Flyway)=====================================================================
+============= Kubernetes (Flyway)======================================================================================
 
 # Running Flyway migration job
 lm
@@ -232,7 +250,7 @@ cd LifeManager/Environment/Database/Flyway/
 docker image build . -t "lifemanager-flyway-image:latest" -t "lifemanager-flyway-image:${COMMIT}"
 kubectl apply -f flyway-migration-job.yaml
 
-============= Kubernetes (helpful/to be integrated) ==================================================
+============= Kubernetes (helpful/to be integrated) ===================================================================
 
 # See if the active terminal is running with minikube's Docker driver
 echo $MINIKUBE_ACTIVE_DOCKERD
@@ -258,7 +276,7 @@ kubectl get [deploy|svc|pod]
 # Delete all LifeManager deployments|services|pods
 kubectl get [deploy|svc|pod] awk '/lifemanager/{print $1}' | xargs kubectl delete [deploy|svc|pod] 
 
-============= Optional ===============================================================================
+============= Optional ================================================================================================
 
 # Install net-tools (ifconfig)
 sudo apt install net-tools
@@ -270,7 +288,7 @@ sudo apt install apt-file
 apt-get update 
 apt-get install iputils-ping
 
-============= Generally helpful ======================================================================
+============= Generally helpful =======================================================================================
 
 # Search apt index
 apt-cache search <keyword>
@@ -278,7 +296,7 @@ apt-cache search <keyword>
 # Recursively show files in filesystem, with full paths and file sizes
 du -a
 
-============= Doesn't work (yet) =====================================================================
+============= Doesn't work (yet) ======================================================================================
 
 ## Fix mouse scroll
 # Install xserver-xorg-input-evdev (fixes issue where you can't scroll while moving mouse in a Linux VM)
@@ -295,11 +313,12 @@ o /usr/share/X11/xorg.conf.d/40-libinput.conf
 # Change 'Driver "libinput"' to 'Driver "evdev"'
 
 
-========================================================================================================
-============= OLD ======================================================================================
-========================================================================================================
+=======================================================================================================================
+============= OLD =====================================================================================================
+=======================================================================================================================
 
-============= Docker (PostgreSQL database) =============================================================
+
+============= Docker (PostgreSQL database) ============================================================================
 
 ## Creating an appropriately tagged LifeManager PostgreSQL Docker image (duplicated in Kubernetes Postgres section)
 lm
@@ -341,7 +360,7 @@ docker exec -it $(docker ps | grep lifemanager-db-image | awk '{print  $1 " bash
 psql -h localhost -U lmadmin -d lifemanager
 \l
 
-============= Docker (Flyway) ========================================================================
+============= Docker (Flyway) =========================================================================================
 
 # Runs the Flyway docker instance, providing the LifeManager Flyway configuration and migration script paths.
 lm
@@ -355,7 +374,7 @@ docker run --rm \
 	-validateMigrationNaming=true \
 	migrate
 
-== Docker (helpful) ===============================================================================
+== Docker (helpful) ===================================================================================================
 
 # Bash shell in a Docker instance
 docker exec -it <container id> /bin/bash
@@ -378,7 +397,7 @@ docker container list -a | awk '/<name section e.g. lifemanager-db>/{print $1}' 
 # Remove all stopped Docker containers in a (mostly) safe mannner, will also hit containers with 'Exited' and 'ago' in the image/container name.
 docker container list -a | grep Exited | awk '/ago/{print $1}' | xargs docker container rm 
 
-== Kubernetes (old) ==================================================================================
+== Kubernetes (old) ===================================================================================================
 
 # Create/expose test deployment
 kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.4
