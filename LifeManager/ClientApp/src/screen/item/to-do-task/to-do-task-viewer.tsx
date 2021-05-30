@@ -195,8 +195,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
 
         fetch('api/ToDoTask/Create', requestOptions)
             .then(response => response.json())
-            .then(data => {
-                console.log(data);
+            .then(() => {
                 stopAction();
                 refresh();
             });
@@ -231,8 +230,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
         return new Promise<void>((resolve) => {
             fetch('api/ToDoTask/Update', requestOptions)
                 .then(response => response.json())
-                .then(data => {
-                    console.log(data);
+                .then(() => {
                     stopAction();
                     resolve();
                     refresh();
@@ -261,10 +259,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
         return new Promise<void>((resolve) => {
             fetch('api/ToDoTask/UpdateUserConfig', requestOptions)
                 .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    resolve();
-                });
+                .then(resolve);
         });
     }
 
@@ -272,9 +267,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
         return toDoTasks
             .filter(task => StringTools.isNotBlank(task.name))
             .filter(task => task.id !== undefined && activeItemDetails.newDependentTasks.indexOf(task.id) === -1)
-            .map(function (task) {
-                return task.name;
-            });
+            .map(task => task.name);
     }
 
     function toDoTaskIdFromName(toDoTaskName: string): Number {
@@ -314,10 +307,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
     }
 
     function refresh(): void {
-        loadAllTasks().then(data => {
-            console.log("Calling setToDoTasks...");
-            setToDoTasks(data);
-        });
+        loadAllTasks().then(setToDoTasks);
     }
 
     //== execution ====================================================================================================

@@ -44,8 +44,6 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
     //== update effects ===============================================================================================
 
     useEffect(() => {
-        console.log(`Pre-save of config at ${new Date()}`);
-
         setSortBy(config.columnSortOrderConfig
             .sort(function (a, b) {
                 return a.precedence.valueOf() - b.precedence.valueOf();
@@ -56,7 +54,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
         setHideCompleteCancelledToggle(config.hideCompletedAndCancelled);
 
         props.saveConfig(config).then(() => console.log("Async config save completed successfully."));
-    }, [config]);
+    }, [config, props]);
 
     //== methods ======================================================================================================
 

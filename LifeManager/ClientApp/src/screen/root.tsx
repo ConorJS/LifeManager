@@ -130,10 +130,7 @@ export const Root: FunctionComponent = () => {
     }
 
     function refresh() {
-        loadUser().then(userData => {
-            console.log("Calling setActiveUser...");
-            setActiveUser(userData);
-        });
+        loadUser().then(setActiveUser);
     }
 
     //== render =======================================================================================================

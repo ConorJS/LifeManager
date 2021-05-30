@@ -40,7 +40,6 @@
         // @ts-ignore
         newObjectState[fieldName] = items;
         
-        console.log(newObjectState);
         setState(newObjectState);
     }
 }

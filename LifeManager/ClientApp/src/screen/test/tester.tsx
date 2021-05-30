@@ -1,5 +1,4 @@
 ﻿import React, {FunctionComponent, useEffect, useState} from "react";
-import {StateTools} from "../../tools/state-tools";
 import {Typeahead} from 'react-bootstrap-typeahead';
 
 export class SomeType {
@@ -14,18 +13,11 @@ export class SomeType {
 }
 
 export const Tester: FunctionComponent = () => {
-    const [someState, setSomeState] = useState(new SomeType([1, 2, 3], 'dummy'));
+    const [someState] = useState(new SomeType([1, 2, 3], 'dummy'));
 
     useEffect(() => {
         console.log(someState);
     }, [someState]);
-
-
-    function clickHandler() {
-        console.log("Pressed");
-
-        StateTools.updateArray(someState, setSomeState, 'someArray', 5, 1);
-    }
 
     return (
         <Typeahead
