@@ -41,17 +41,6 @@ namespace LifeManager.Server.Database.Implementation {
                 .ThenInclude(config => config.SortedColumns)
                 .FirstOrDefault(entity => entity.Id == id);
 
-            if (userEntity == null) {
-                return null;
-            }
-
-            // TODO: Move this to DetachedEntityOrNull
-            foreach (var userConfigurationEntity in userEntity.UserConfigurationEntity) {
-                foreach (ColumnSortOrderEntity columnSortOrderEntity in userConfigurationEntity.SortedColumns) {
-                    Detach(columnSortOrderEntity);
-                }
-            }
-
             return DetachedEntityOrNull(userEntity);
         }
 
@@ -59,14 +48,6 @@ namespace LifeManager.Server.Database.Implementation {
             UserConfigurationEntity userConfigurationEntity = _dbContext.UserConfiguration
                 .Include(userConfiguration => userConfiguration.SortedColumns)
                 .FirstOrDefault(userConfiguration => userConfiguration.Id == userConfigurationId);
-
-            if (userConfigurationEntity == null) {
-                return null;
-            }
-
-            foreach (ColumnSortOrderEntity columnSortOrderEntity in userConfigurationEntity.SortedColumns) {
-                Detach(columnSortOrderEntity);
-            }
 
             return DetachedEntityOrNull(userConfigurationEntity);
         }
@@ -81,11 +62,7 @@ namespace LifeManager.Server.Database.Implementation {
             _dbContext.Set<UserConfigurationEntity>().Update(entity);
             _dbContext.SaveChanges();
 
-            foreach (ColumnSortOrderEntity columnSortOrderEntity in entity.SortedColumns) {
-                Detach(columnSortOrderEntity);
-            }
-
-            Detach(entity);
+            DetachedEntityOrNull(entity);
         }
 
         //== general item queries ===================================================================================================================
@@ -162,6 +139,12 @@ namespace LifeManager.Server.Database.Implementation {
 
         //== helpers ================================================================================================================================
 
+        /**
+         * Detaches an entity, and returns the detached entity.
+         *
+         * This aims to propagate through relationships (in the owner -> child direction), thus detaching child entities, too.
+         * These are implemented manually. In entity graphs more than 1 relationship deep, this will be used recursively.
+         */
         private T DetachedEntityOrNull<T>(T entity) where T : class {
             if (entity == null) {
                 return null;
@@ -172,7 +155,18 @@ namespace LifeManager.Server.Database.Implementation {
                     foreach (var toDoTaskDependencyEntity in toDoTaskEntity.Dependencies) {
                         Detach(toDoTaskDependencyEntity);
                     }
-
+                    break;
+                
+                case UserEntity userEntity:
+                    foreach (var userConfigurationEntity in userEntity.UserConfigurationEntity) {
+                        DetachedEntityOrNull(userConfigurationEntity);
+                    }
+                    break;
+                
+                case UserConfigurationEntity userConfigurationEntity:
+                    foreach (ColumnSortOrderEntity columnSortOrderEntity in userConfigurationEntity.SortedColumns) {
+                        Detach(columnSortOrderEntity);
+                    }
                     break;
             }
 
