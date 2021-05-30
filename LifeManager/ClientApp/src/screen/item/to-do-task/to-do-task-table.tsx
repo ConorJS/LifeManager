@@ -167,7 +167,7 @@ export const ToDoTaskTable: FunctionComponent<ToDoTaskTableProps> = (props: ToDo
             }));
         setHideCompleteCancelledToggle(config.hideCompletedAndCancelled);
 
-        props.saveConfig(config).then(() => console.log("Async config save completed successfully."));
+        props.saveConfig(config).then();
     }, [config, props, setSortBy]);
 
     //== methods ======================================================================================================
