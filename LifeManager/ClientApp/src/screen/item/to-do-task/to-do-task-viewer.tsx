@@ -48,8 +48,8 @@ export class ToDoTask {
     priority: number;
 
     dependencies: Number[];
-    
-    constructor(name: string, status: string, comments: string, relativeSize: number, priority: number, 
+
+    constructor(name: string, status: string, comments: string, relativeSize: number, priority: number,
                 dependencies: Number[]) {
         this.name = name;
         this.status = status;
@@ -184,7 +184,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
 
         const toDoTask = new ToDoTask(
             activeItemDetails.newName, activeItemDetails.newStatus,
-            activeItemDetails.newComments, activeItemDetails.newRelativeSize, activeItemDetails.newPriority, 
+            activeItemDetails.newComments, activeItemDetails.newRelativeSize, activeItemDetails.newPriority,
             activeItemDetails.newDependentTasks);
 
         const requestOptions = {
@@ -270,10 +270,10 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
             .map(task => task.name);
     }
 
-    function toDoTaskIdFromName(toDoTaskName: string): Number {
+    function toDoTaskFromName(toDoTaskName: string): ToDoTask | undefined {
         if (toDoTaskName === undefined) {
             // Selection cleared
-            return -1;
+            return undefined;
         }
         const selectedDependentTaskArray: ToDoTask[] = toDoTasks.filter(task => task.name === toDoTaskName);
         if (selectedDependentTaskArray.length !== 1) {
@@ -286,15 +286,71 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
             throw Error(`Task ${toDoTaskName} was selected, but this task has no id (it hasn't been saved yet)`);
         }
 
-        return selectedDependentTask.id;
+        return selectedDependentTask;
+    }
+
+    function toDoTaskFromId(toDoTaskId: Number): ToDoTask {
+        const selectedDependentTaskArray: ToDoTask[] = toDoTasks.filter(task => task.id === toDoTaskId);
+        if (selectedDependentTaskArray.length !== 1) {
+            throw Error(`Task ${toDoTaskId} was selected, 
+                    but this matched ${selectedDependentTaskArray.length} task(s): ${selectedDependentTaskArray}`);
+        }
+
+        return selectedDependentTaskArray[0];
+    }
+
+    function toDoTaskIdFromName(toDoTaskName: string): Number {
+        const task: ToDoTask | undefined = toDoTaskFromName(toDoTaskName);
+        if (task === undefined || task.id === undefined) {
+            return -1;
+        }
+
+        return task.id;
     }
 
     function applyDependentTaskSelection(): void {
         // If length === 0, no task was selected. Length should never exceed 1.
-        if (dependentTaskBeingEdited.length !== 0) {
-            activeItemDetails.newDependentTasks.push(toDoTaskIdFromName(dependentTaskBeingEdited[0]));
-            setDependentTaskBeingEdited([]);
+        const singletonEditedTask: string | undefined =
+            dependentTaskBeingEdited.length === 0 ? undefined : dependentTaskBeingEdited[0]
+
+        if (!!singletonEditedTask) {
+            // Validate the selection
+            const dependentToDoTaskId: Number = toDoTaskIdFromName(dependentTaskBeingEdited[0])
+            if (isValidDependency(dependentToDoTaskId)) {
+                activeItemDetails.newDependentTasks.push(dependentToDoTaskId);
+                setDependentTaskBeingEdited([]);
+            } else {
+                // TODO: Some UI message indicating the dependency is invalid (circular dependency)
+            }
         }
+    }
+
+    function isValidDependency(dependentToDoTaskId: Number): boolean {
+        if (!itemBeingEdited || itemBeingEdited.id === undefined) {
+            // New tasks can choose any dependencies. Nothing can depend on them yet; no self/circular dependencies 
+            // can be established during task creation.
+            return true;
+        }
+
+        if (itemBeingEdited.id === dependentToDoTaskId) {
+            return false;
+        }
+
+        // Traverse dependency tree of new dependency, ensure we never see the task being edited. 
+        // If it is, this would mean the task we wish to add as a dependency already depends on the task we are editing.
+        // If we made the task we are editing depend on this descendant dependency, this would create a circular 
+        // dependency, which is nonsensical.
+        return !isDescendantDependency(dependentToDoTaskId, itemBeingEdited.id);
+    }
+
+    //A, E
+    function isDescendantDependency(targetDependencyId: Number, potentialDescendantDependencyId: Number): boolean {
+        if (targetDependencyId === potentialDescendantDependencyId) {
+            return true;
+        }
+
+        return toDoTaskFromId(targetDependencyId).dependencies
+            .some(dependencyId => isDescendantDependency(dependencyId, potentialDescendantDependencyId));
     }
 
     function removeDependentTask(task: ToDoTask): void {
