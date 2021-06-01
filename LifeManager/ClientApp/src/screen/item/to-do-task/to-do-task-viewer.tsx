@@ -263,8 +263,9 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
         });
     }
 
-    function tasksMappedToSearchableStrings(): string[] {
+    function tasksMappedToSearchableStrings(skipTasks: Number[]): string[] {
         return toDoTasks
+            .filter(task => task.id !== undefined && !skipTasks.includes(task.id))
             .filter(task => StringTools.isNotBlank(task.name))
             .filter(task => task.id !== undefined && activeItemDetails.newDependentTasks.indexOf(task.id) === -1)
             .map(task => task.name);
@@ -343,7 +344,6 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
         return !isDescendantDependency(dependentToDoTaskId, itemBeingEdited.id);
     }
 
-    //A, E
     function isDescendantDependency(targetDependencyId: Number, potentialDescendantDependencyId: Number): boolean {
         if (targetDependencyId === potentialDescendantDependencyId) {
             return true;
@@ -436,13 +436,14 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
                     </div>
 
                     <div>
+                        {/*TODO*/}
                         {/*fixed height*/}
                         {/*start with one empty input*/}
                         {/*unlimited empty input fields, but becomes vertical scrolling @ max height*/}
                         <span>Dependencies</span>
                         <span>
                             <Typeahead id="dependenciesPicker"
-                                       options={tasksMappedToSearchableStrings()}
+                                       options={tasksMappedToSearchableStrings(activeItemDetails.newDependentTasks)}
                                        onChange={setDependentTaskBeingEdited}
                                        placeholder="Search for a task..."
                                        selected={dependentTaskBeingEdited}/>
