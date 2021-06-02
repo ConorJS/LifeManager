@@ -35,6 +35,7 @@
         <TypeScriptCompile Include="ClientApp\src\components\lm-add-fab\lm-add-fab.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\lm-input\lm-input.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\lm-react-select\lm-react-select.tsx" />
+        <TypeScriptCompile Include="ClientApp\src\components\modal\error-modal\error-modal.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\modal\lm-modal.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\priority-indicator\priority-indicator.tsx" />
         <TypeScriptCompile Include="ClientApp\src\components\priority-picker\priority-picker.tsx" />

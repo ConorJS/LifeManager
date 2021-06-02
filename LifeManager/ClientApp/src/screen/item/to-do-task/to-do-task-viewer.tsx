@@ -13,9 +13,11 @@ import {Typeahead} from 'react-bootstrap-typeahead';
 import {StringTools} from "../../../tools/string-tools";
 import {StateTools} from "../../../tools/state-tools";
 import {ElementTools} from "../../../tools/element-tools";
+import {ErrorModal} from "../../../components/modal/error-modal/error-modal";
 
 //== types ============================================================================================================
 
+// TODO: Use public parameter constructor shorthand (and throughout project)
 export class ActiveItemDetails {
     newName: string = '';
 
@@ -87,6 +89,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
     const [activeItemDetails, setActiveItemDetails] = useState<ActiveItemDetails>(new ActiveItemDetails());
     const [itemBeingEdited, setItemBeingEdited] = useState<ToDoTask>();
     const [dependentTaskBeingEdited, setDependentTaskBeingEdited] = useState<string[]>([]);
+    const [showingCircularDependenciesErrorModal, setShowingCircularDependenciesErrorModal] = useState(false);
     const [inRemovalModal, setInRemovalModal] = useState(false);
     const [inAdvancedOptionsModal, setInAdvancedOptionsModal] = useState(false);
 
@@ -321,7 +324,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
                 activeItemDetails.newDependentTasks.push(dependentToDoTaskId);
                 setDependentTaskBeingEdited([]);
             } else {
-                // TODO: Some UI message indicating the dependency is invalid (circular dependency)
+                setShowingCircularDependenciesErrorModal(true);
             }
         }
     }
@@ -391,6 +394,7 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
     }
 
     let modalElement;
+    // TODO: Move each modal creator to a method 
     if (inRemovalModal) {
         modalElement =
             <ConfirmationModal
@@ -402,11 +406,13 @@ export const ToDoTaskViewer: FunctionComponent<ToDoTaskViewerProps> = (props: To
                     setActiveAction(Action.NONE);
                     removeToDoTask(itemBeingEdited);
                 }}
-                rejectionBehaviour={() => {
-                    setInRemovalModal(false)
-                }}
+                rejectionBehaviour={() => setInRemovalModal(false)}
                 warningMessage={`Are you sure you want to remove the task '${itemBeingEdited?.name}'?`}
             />
+
+    } else if (showingCircularDependenciesErrorModal) {
+        modalElement = <ErrorModal handleClose={() => setShowingCircularDependenciesErrorModal(false)}
+                                   errorMessage="This would create a circular dependency!"/>
 
     } else if (inAdvancedOptionsModal) {
         const dependenciesList: JSX.Element[] = activeItemDetails.newDependentTasks
