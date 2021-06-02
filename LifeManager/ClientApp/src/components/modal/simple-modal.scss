@@ -1,15 +1,15 @@
-﻿div.confirmation-modal-elements-container {
+﻿div.simple-modal-elements-container {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
 
-div.confirmation-modal-message {
+div.simple-modal-message {
   margin: 0 55px;
 }
 
-div.confirmation-modal-buttons-container {
+div.simple-modal-buttons-container {
   bottom: 15px;
   display: flex;
   justify-content: space-around;

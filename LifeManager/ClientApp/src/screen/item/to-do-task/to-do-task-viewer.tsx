@@ -7,13 +7,13 @@ import {PriorityPicker} from "../../../components/priority-picker/priority-picke
 import {LmAddFab} from "../../../components/lm-add-fab/lm-add-fab";
 import {LmInput} from "../../../components/lm-input/lm-input";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import {ConfirmationModal} from "../../../components/confirmation-modal/confirmation-modal";
 import {ToDoTaskConfig} from "../../root";
 import {Typeahead} from 'react-bootstrap-typeahead';
 import {StringTools} from "../../../tools/string-tools";
 import {StateTools} from "../../../tools/state-tools";
 import {ElementTools} from "../../../tools/element-tools";
 import {ErrorModal} from "../../../components/modal/error-modal/error-modal";
+import {ConfirmationModal} from "../../../components/modal/confirmation-modal/confirmation-modal";
 
 //== types ============================================================================================================
 
